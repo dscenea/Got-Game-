@@ -1842,3 +1842,31 @@ b.onclick=function(){
 welcome.append(b);
 })();
 </script>
+
+<script id="gg-community-mini-v70">
+(function(){
+const dash=document.getElementById('dashboard'),area=document.getElementById('ggWorkspace'),nav=dash?.querySelector('.coord-nav');if(!area||!nav)return;
+const key='gg-community-prototype';let entries=[];try{entries=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){}
+const save=()=>localStorage.setItem(key,JSON.stringify(entries));
+const clean=v=>String(v||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function open(tab='posts'){
+ window.ggView('teams');area.hidden=false;dash.classList.add('gg-subscreen');
+ area.innerHTML='<div class="gg-eyebrow">COMUNIDAD</div><h1>Comunidad</h1><div class="gg-community-tabs" id="gcTabs"></div><section id="gcContent"></section>';
+ const tabs=area.querySelector('#gcTabs'),content=area.querySelector('#gcContent');
+ [['posts','Publicaciones'],['network','Red de clubes'],['social','Redes sociales']].forEach(([k,n])=>{let b=document.createElement('button');b.textContent=n;b.className=k===tab?'active':'';b.onclick=()=>open(k);tabs.append(b)});
+ if(tab==='posts'){content.innerHTML='<h2>Publicaciones</h2><form id="gcPost"><input required placeholder="Título" id="gcTitle" class="gg-demo-input"><textarea required placeholder="Novedad del club" id="gcText" class="gg-demo-input"></textarea><button class="gg-button selected">Publicar</button></form><div id="gcPosts"></div>';
+ let posts=[];try{posts=JSON.parse(localStorage.getItem('gg-community-posts')||'[]')}catch(e){}
+ const render=()=>document.getElementById('gcPosts').innerHTML=posts.slice().reverse().map(p=>'<div class="gg-demo-card"><h3>'+clean(p.title)+'</h3><p>'+clean(p.text)+'</p></div>').join('');
+ document.getElementById('gcPost').onsubmit=e=>{e.preventDefault();posts.push({title:document.getElementById('gcTitle').value,text:document.getElementById('gcText').value});localStorage.setItem('gg-community-posts',JSON.stringify(posts));open('posts')};render();
+ }else if(tab==='network'){content.innerHTML='<h2>Red de clubes</h2><div class="gg-community-tabs"><button id="gcFind">Buscar clubes</button><button id="gcEvents">Convocatorias</button><button id="gcCreate">Crear torneo o amistoso</button></div><div id="gcResult"></div>';
+ const host=document.getElementById('gcResult');
+ document.getElementById('gcFind').onclick=()=>{host.innerHTML='<input class="gg-demo-input" placeholder="Buscar clubes o localidad" id="gcQuery"><div id="gcClubs"></div>';const clubs=['Basket Rioja · Logroño','CD Najerilla · Nájera','Basket Arnedo · Arnedo','Deportivo Iregua · Alberite'];const draw=()=>document.getElementById('gcClubs').innerHTML=clubs.filter(c=>c.toLowerCase().includes(document.getElementById('gcQuery').value.toLowerCase())).map(c=>'<div class="gg-demo-card">'+c+'<p><button class="gg-button" onclick="document.getElementById(\'gcCreate\').click()">Proponer encuentro</button></p></div>').join('');document.getElementById('gcQuery').oninput=draw;draw()};
+ document.getElementById('gcEvents').onclick=()=>{host.innerHTML='<h3>Encuentros publicados</h3>'+entries.map((e,i)=>'<div class="gg-demo-card"><h3>'+clean(e.title)+'</h3><p>'+clean(e.type)+' · '+clean(e.sport)+' · '+clean(e.city)+' · '+clean(e.date)+'</p><button class="gg-button" data-i="'+i+'">'+(e.interested?'Interés registrado':'Me interesa')+'</button></div>').join('');host.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{entries[+b.dataset.i].interested=true;save();document.getElementById('gcEvents').click()})};
+ document.getElementById('gcCreate').onclick=()=>{host.innerHTML='<form id="gcForm" class="gg-demo-card"><h3>Crear convocatoria</h3><input id="gcName" class="gg-demo-input" required placeholder="Nombre del evento"><select id="gcType"><option>Torneo</option><option>Amistoso</option></select><select id="gcSport"><option>Baloncesto</option><option>Fútbol</option></select><input id="gcCity" class="gg-demo-input" required placeholder="Localidad"><input id="gcDate" type="date" required class="gg-demo-input"><button class="gg-button selected">Publicar convocatoria</button><p class="gg-muted">Demo local: todavía no se envía a otros clubes.</p></form>';document.getElementById('gcForm').onsubmit=e=>{e.preventDefault();let v=id=>document.getElementById(id).value;entries.push({title:v('gcName'),type:v('gcType'),sport:v('gcSport'),city:v('gcCity'),date:v('gcDate')});save();document.getElementById('gcEvents').click()}};
+ document.getElementById('gcFind').click();
+ }else{content.innerHTML='<h2>Redes sociales</h2><form id="gcSocial" class="gg-demo-card"><label>Instagram<input id="gcInstagram" class="gg-demo-input" type="url"></label><label>Facebook<input id="gcFacebook" class="gg-demo-input" type="url"></label><button class="gg-button selected">Guardar enlaces</button></form>';let saved={};try{saved=JSON.parse(localStorage.getItem('gg-community-social')||'{}')}catch(e){};document.getElementById('gcInstagram').value=saved.instagram||'';document.getElementById('gcFacebook').value=saved.facebook||'';document.getElementById('gcSocial').onsubmit=e=>{e.preventDefault();localStorage.setItem('gg-community-social',JSON.stringify({instagram:document.getElementById('gcInstagram').value,facebook:document.getElementById('gcFacebook').value}));alert('Enlaces guardados en esta demo')}};
+}
+const b=[...nav.querySelectorAll(':scope > button')].find(x=>x.textContent.trim()==='Comunidad');if(b)b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();open('posts')},true);
+window.ggOpenCommunity=open;
+})();
+</script>
