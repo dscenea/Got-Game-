@@ -1515,6 +1515,40 @@ const ggMobileExampleClubs=[{name:'Club Deportivo Ebro',city:'Logroño',sport:'B
 @media(max-width:350px){#dashboard .coord-nav>button{font-size:9px!important}}
 </style>
 
+<style id="gg-v87-wizard-icons">
+#wzSports .wz-sporticon{width:72px!important;height:72px!important;border-radius:17px!important;background:#102a50!important;display:grid!important;place-items:center!important;overflow:hidden!important}
+#wzSports .gg-sport-art{width:62px!important;height:62px!important;object-fit:contain!important}
+#wzSports .wz-choice{min-width:0}
+</style>
+<script id="gg-v87-wizard-icons-script">
+/* Use the same sport-specific line icon vocabulary as the sport dashboards,
+   rather than the older multicolour illustrations in the setup wizard. */
+(function(){
+const paths={
+'Baloncesto':'<circle cx="32" cy="32" r="23"/><path d="M9 32h46M32 9v46M15 15c15 8 18 26 10 39M49 15C34 23 31 41 39 54"/>',
+'Fútbol':'<circle cx="32" cy="32" r="23"/><path d="m32 21 11 8-4 13H25l-4-13zM32 21V9M21 29l-11-4M25 42l-7 10M39 42l7 10M43 29l11-4"/>',
+'Voleibol':'<circle cx="32" cy="32" r="23"/><path d="M32 9c-8 13-7 23 5 31M12 23c18-2 30 5 35 21M18 50c3-14 15-23 35-22"/>',
+'Balonmano':'<circle cx="32" cy="32" r="23"/><path d="M13 20 32 10l19 10M9 32h46M17 49l15-16 15 16"/>',
+'Tenis':'<circle cx="32" cy="32" r="23"/><path d="M18 14c16 8 16 28 0 36M46 14c-16 8-16 28 0 36"/>',
+'Pádel':'<rect x="16" y="7" width="32" height="39" rx="15"/><path d="M32 46v12M26 58h12"/><circle cx="25" cy="22" r="2"/><circle cx="36" cy="22" r="2"/><circle cx="30" cy="33" r="2"/><circle cx="40" cy="33" r="2"/>',
+'Atletismo':'<circle cx="38" cy="12" r="5"/><path d="m33 23-11 12 13 5 6 15M31 26l15 7M22 35 9 48M35 40l-13 14"/>',
+'Natación':'<circle cx="40" cy="16" r="5"/><path d="m12 33 15-11 15 10M8 44q7-7 14 0t14 0t14 0t8 0M8 54q7-7 14 0t14 0t14 0t8 0"/>',
+'Ciclismo':'<circle cx="16" cy="45" r="11"/><circle cx="49" cy="45" r="11"/><path d="m16 45 14-22 19 22H30l-8-15M27 18h9"/>',
+'Gimnasia':'<circle cx="32" cy="12" r="5"/><path d="M32 19v20M12 25l20 9 20-9M32 39 18 55M32 39l14 16"/>',
+'Judo':'<path d="m21 10-11 13 9 12 4-7v27h18V28l4 7 9-12-11-13-11 10zM32 20v35M22 38h20"/>',
+'Karate':'<path d="M16 12h32l-7 17 8 25H15l8-25zM32 12v42M19 35h26M26 30l12 12"/>',
+'Rugby':'<path d="M10 45Q13 15 53 12Q50 43 10 45Z"/><path d="m23 35 18-15M27 27l8 8M32 22l8 8"/>',
+'Hockey':'<path d="M14 10 30 44h20v9H25L7 16z"/><circle cx="52" cy="39" r="5"/>',
+'Patinaje':'<path d="M14 12h24l4 23 10 6v8H13v-9l7-8z"/><circle cx="19" cy="55" r="3"/><circle cx="33" cy="55" r="3"/><circle cx="47" cy="55" r="3"/>',
+'Triatlón':'<circle cx="18" cy="43" r="9"/><circle cx="46" cy="43" r="9"/><path d="m18 43 12-20 16 20H30M29 12h10M9 58q8-5 16 0t16 0t15 0"/>',
+'Bádminton':'<path d="M17 12 41 36M13 8l13 2 18 23-8 8-23-18zM41 36l14 14M51 46l6 6"/>',
+'Otro deporte':'<circle cx="32" cy="32" r="23"/><path d="M32 19v26M19 32h26"/>'
+};
+const icons={};for(const [name,path] of Object.entries(paths)){icons[name]='<svg viewBox="0 0 64 64" width="62" height="62" aria-hidden="true" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">'+path+'</svg>';}
+function sync(){const grid=document.getElementById('wzSports');if(!grid)return;for(const card of grid.querySelectorAll('.wz-choice')){const label=card.querySelector('strong')?.textContent?.trim();const target=card.querySelector('.wz-sporticon');if(target&&icons[label]&&target.dataset.ggModernIcon!==label){target.innerHTML=icons[label];target.dataset.ggModernIcon=label;}}}
+let queued=false;new MutationObserver(()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;sync()})}).observe(document.getElementById('wzSports')||document.body,{childList:true,subtree:true});sync();
+})();
+</script>
 </body></html><style>
 /* v32 — el SVG del balón ocupa toda la circunferencia, sin círculo exterior duplicado */
 .basket-ball{
