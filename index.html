@@ -1277,7 +1277,7 @@ function saveClubSetting(){
  if(key==='language'){data.language=settingsLanguage;try{localStorage.setItem('gg-interface-language',settingsLanguage);}catch{}}
  persistClubSettings();finishClubSetting();
 }
-function clubLogout(){if(clubSettingsSection)cancelClubSetting();closeClubSettings();data={};dashboardSelectedSport=null;document.getElementById('password').value='';go('welcome');}
+function clubLogout(){if(clubSettingsSection)cancelClubSetting();closeClubSettings();data={};dashboardSelectedSport=null;const email=document.getElementById('email'),password=document.getElementById('password');if(email)email.value='';if(password)password.value='';const dash=document.getElementById('dashboard');if(dash)dash.classList.remove('gg-logrobasket-demo');go('welcome');}
 
 let proposedLogoColors=null;
 const colorProposal=document.createElement('div');colorProposal.className='logo-color-proposal';colorProposal.hidden=true;document.querySelector('.wz-logo-row').after(colorProposal);
@@ -2075,8 +2075,8 @@ observer.observe(main,{childList:true,subtree:false});
 const originalGo=go;
 go=function(id){originalGo(id);if(id==='dashboard'){currentSport=(data.sports||[]).length===1?data.sports[0]:null;currentModule=null;setTimeout(()=>{paintSports();if(currentSport)showSport()},0)}};
 if(welcome){
- const btn=document.createElement('button');btn.className='gg-demo-shortcut';btn.type='button';btn.textContent='Acceso rápido · LogroBasket Club (1 deporte)';
- btn.onclick=()=>{data={club:'LogroBasket Club',sports:['Baloncesto'],clubPalette:['#a20f16','#ffffff','#171717'],roleColors:{coord:'#a20f16'},facilities:[{name:'Polideportivo Lobete',sports:['Baloncesto'],spaces:[]}]};document.getElementById('clubSmall').textContent=data.club;go('dashboard')};
+ const btn=document.createElement('button');btn.className='gg-demo-shortcut';btn.type='button';btn.textContent='Acceso rápido · Logrobasket (1 deporte)';
+ btn.onclick=()=>{data={club:'Logrobasket',sports:['Baloncesto'],clubPalette:['#a20f16','#ffffff','#171717'],roleColors:{coord:'#a20f16'},facilities:[{name:'Polideportivo Lobete',sports:['Baloncesto'],spaces:[]}]};document.getElementById('clubSmall').textContent=data.club;go('dashboard')};
  welcome.append(btn);
 }
 paintSports();
@@ -2099,9 +2099,9 @@ paintSports();
 <script id="gg-logrobasket-theme-v73-script">
 (function(){
 const dash=document.getElementById('dashboard'),main=document.getElementById('ggV71Main');if(!dash||!main)return;
-const logo='<img class="gg-v71-logo" src="https://static.wixstatic.com/media/aa07a0_b6f68cfbb6d944b9919368425e348b21~mv2.png/v1/fill/w_980%2Ch_980%2Cal_c%2Cq_90%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/aa07a0_b6f68cfbb6d944b9919368425e348b21~mv2.png" alt="Escudo de LogroBasket Club" loading="lazy" referrerpolicy="no-referrer">';
+const logo='<img class="gg-v71-logo" src="https://static.wixstatic.com/media/aa07a0_b6f68cfbb6d944b9919368425e348b21~mv2.png/v1/fill/w_980%2Ch_980%2Cal_c%2Cq_90%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/aa07a0_b6f68cfbb6d944b9919368425e348b21~mv2.png" alt="Escudo de Logrobasket" loading="lazy" referrerpolicy="no-referrer">';
 function refresh(){
- const isMita=(typeof data!=='undefined'&&data.club==='LogroBasket Club');
+ const isMita=(typeof data!=='undefined'&&data.club==='Logrobasket');
  dash.classList.toggle('gg-logrobasket-demo',isMita);
  if(!isMita)return;
  const header=main.querySelector('.gg-v71-header');
