@@ -2340,6 +2340,13 @@ function open(key){
  const groups=document.createElement('div');groups.className='gg-v89-settings-groups';
  sections.forEach(([heading,keys])=>{const section=document.createElement('section');section.className='gg-v89-settings-section';const title=document.createElement('h2');title.textContent=heading;section.append(title);const grid=document.createElement('div');grid.className='gg-v84-settings-grid';keys.forEach(key=>{const tile=settingsGrid.querySelector('[data-club-setting="'+key+'"]');if(tile)grid.append(tile)});section.append(grid);groups.append(section)});
  settingsGrid.replaceWith(groups);
+ const organizationGrid=groups.querySelectorAll('.gg-v84-settings-grid')[1];
+ const organizationLinks=[['teams','Equipos y plantillas','Consulta los equipos y sus jugadores'],['coaches','Entrenadores','Accede al personal técnico del club'],['people','Usuarios y permisos','Directorio de responsables y entrenadores']];
+ organizationLinks.forEach(([key,title,description])=>{const button=document.createElement('button');button.type='button';button.dataset.organizationLink=key;const strong=document.createElement('strong');strong.textContent=title;const small=document.createElement('small');small.textContent=description;const arrow=document.createElement('span');arrow.setAttribute('aria-hidden','true');arrow.textContent='→';button.append(strong,small,arrow);organizationGrid.append(button)});
+ organizationGrid.querySelectorAll('[data-organization-link]').forEach(button=>button.onclick=()=>{const key=button.dataset.organizationLink;
+ if(key==='people'||key==='coaches'){const peopleNav=bottom.querySelector('[data-section="people"]');if(peopleNav)peopleNav.click();if(key==='coaches'){const coachFilter=workspace.querySelector('[data-person-filter="entrenador"]');if(coachFilter)coachFilter.click()}return}
+ if(key==='teams'){const teamsNav=bottom.querySelector('[data-section="teams"]');if(teamsNav){teamsNav.click();return}reset();active('people');dash.classList.add('gg-v83-workspace');workspace.hidden=false;window.ggView?.('teams');backButton();window.scrollTo(0,0)}
+ });
  groups.lastElementChild.querySelector('.gg-v84-settings-grid').insertAdjacentHTML('beforeend','<button type="button" id="ggClubLogoutV88" class="gg-v88-logout"><strong>Cerrar sesión</strong><small>Volver a la pantalla de acceso</small><span aria-hidden="true">→</span></button>');
  workspace.querySelector('#ggClubLogoutV88').onclick=()=>{if(typeof clubLogout==='function')clubLogout();};
  backButton();
