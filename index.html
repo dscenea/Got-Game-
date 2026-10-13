@@ -2041,34 +2041,34 @@ observer.observe(main,{childList:true,subtree:false});
 const originalGo=go;
 go=function(id){originalGo(id);if(id==='dashboard'){currentSport=(data.sports||[]).length===1?data.sports[0]:null;currentModule=null;setTimeout(()=>{paintSports();if(currentSport)showSport()},0)}};
 if(welcome){
- const btn=document.createElement('button');btn.className='gg-demo-shortcut';btn.type='button';btn.textContent='Acceso rápido · Mita Basket (1 deporte)';
- btn.onclick=()=>{data={club:'Mita Basket',sports:['Baloncesto'],clubPalette:['#4268f5','#ffffff'],roleColors:{coord:'#4268f5'},facilities:[{name:'Pabellón Ámbar',sports:['Baloncesto'],spaces:[]}]};document.getElementById('clubSmall').textContent=data.club;go('dashboard')};
+ const btn=document.createElement('button');btn.className='gg-demo-shortcut';btn.type='button';btn.textContent='Acceso rápido · LogroBasket Club (1 deporte)';
+ btn.onclick=()=>{data={club:'LogroBasket Club',sports:['Baloncesto'],clubPalette:['#a20f16','#ffffff','#171717'],roleColors:{coord:'#a20f16'},facilities:[{name:'Polideportivo Lobete',sports:['Baloncesto'],spaces:[]}]};document.getElementById('clubSmall').textContent=data.club;go('dashboard')};
  welcome.append(btn);
 }
 paintSports();
 })();
 </script>
 
-<style id="gg-mita-theme-v73">
-#dashboard.gg-v71.gg-mita-demo .top{display:none!important}
-#dashboard.gg-v71.gg-mita-demo .gg-v71-header{background:linear-gradient(118deg,#233258 0%,#4268f5 65%,#b6c9ff 100%)!important;color:white}
-#dashboard.gg-v71.gg-mita-demo .gg-v71-header:before{background:radial-gradient(circle at 82% 40%,#fff5 0 9%,transparent 35%),repeating-linear-gradient(140deg,transparent 0 45px,#ffffff12 48px 76px,transparent 80px 150px);opacity:.5}
-#dashboard.gg-v71.gg-mita-demo .gg-v71-logo{width:102px;height:102px;min-width:102px;filter:drop-shadow(0 4px 12px #15255165)}
-#dashboard.gg-v71.gg-mita-demo .gg-v71-gear{background:#ffffff20;border-color:#ffffff80}
-#dashboard.gg-v71.gg-mita-demo .gg-v71-back{background:#4268f5;color:white}
-#dashboard.gg-v71.gg-mita-demo .gg-v71-module svg{stroke:#4268f5}
-#dashboard.gg-v71.gg-mita-demo .gg-v71-sport-detail{background:#344fc0}
-#dashboard.gg-v71.gg-mita-demo .gg-v71-bottom{background:#24345b}
-#dashboard.gg-v71.gg-mita-demo .gg-v71-bottom button.active{color:#b7caff}
-#dashboard.gg-v71.gg-mita-demo .gg-v71-heading #ggV71Switch{display:none!important}
+<style id="gg-logrobasket-theme-v73">
+#dashboard.gg-v71.gg-logrobasket-demo .top{display:none!important}
+#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-header{background:linear-gradient(118deg,#233258 0%,#a20f16 65%,#b6c9ff 100%)!important;color:white}
+#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-header:before{background:radial-gradient(circle at 82% 40%,#fff5 0 9%,transparent 35%),repeating-linear-gradient(140deg,transparent 0 45px,#ffffff12 48px 76px,transparent 80px 150px);opacity:.5}
+#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-logo{width:102px;height:102px;min-width:102px;filter:drop-shadow(0 4px 12px #15255165)}
+#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-gear{background:#ffffff20;border-color:#ffffff80}
+#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-back{background:#a20f16;color:white}
+#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-module svg{stroke:#a20f16}
+#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-sport-detail{background:#8c1118}
+#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-bottom{background:#171717}
+#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-bottom button.active{color:#fff4e8}
+#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-heading #ggV71Switch{display:none!important}
 </style>
-<script id="gg-mita-theme-v73-script">
+<script id="gg-logrobasket-theme-v73-script">
 (function(){
 const dash=document.getElementById('dashboard'),main=document.getElementById('ggV71Main');if(!dash||!main)return;
-const logo='<svg class="gg-v71-logo" viewBox="0 0 120 120" role="img" aria-label="Logo Mita Basket"><circle cx="60" cy="60" r="55" fill="#fff"/><circle cx="60" cy="60" r="48" fill="#4268f5"/><circle cx="60" cy="60" r="41" fill="none" stroke="#fff" stroke-width="2" opacity=".5"/><path d="M31 30c18 9 28 23 29 56M89 30C71 39 61 53 60 86M22 59h76M60 17v84" fill="none" stroke="#fff" stroke-width="3" opacity=".5"/><text x="60" y="70" fill="#fff" font-family="Arial,sans-serif" font-size="30" font-weight="1000" letter-spacing="-2" text-anchor="middle" stroke="#4268f5" stroke-width="3" paint-order="stroke">mita</text><path d="M42 80q18 9 36 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>';
+const logo='<img class="gg-v71-logo" src="https://static.wixstatic.com/media/aa07a0_b6f68cfbb6d944b9919368425e348b21~mv2.png/v1/fill/w_980%2Ch_980%2Cal_c%2Cq_90%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/aa07a0_b6f68cfbb6d944b9919368425e348b21~mv2.png" alt="Escudo de LogroBasket Club" loading="lazy" referrerpolicy="no-referrer">';
 function refresh(){
- const isMita=(typeof data!=='undefined'&&data.club==='Mita Basket');
- dash.classList.toggle('gg-mita-demo',isMita);
+ const isMita=(typeof data!=='undefined'&&data.club==='LogroBasket Club');
+ dash.classList.toggle('gg-logrobasket-demo',isMita);
  if(!isMita)return;
  const header=main.querySelector('.gg-v71-header');
  if(header){const old=header.querySelector('.gg-v71-logo');if(old)old.outerHTML=logo;const small=header.querySelector('small');if(small)small.textContent='CLUB DE BALONCESTO'}
@@ -2091,7 +2091,7 @@ refresh();
 #dashboard.gg-v71 .gg-v71-bottom{grid-template-columns:repeat(5,minmax(0,1fr))}
 #dashboard.gg-v71 .gg-v71-bottom button{font-size:10px;gap:5px}
 #dashboard.gg-v71 .gg-v71-bottom button svg{width:23px;height:23px}
-#dashboard.gg-v71.gg-mita-demo .gg-v71-header{background:linear-gradient(125deg,#22345d,#4268f5 72%,#b9ccff)!important}
+#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-header{background:linear-gradient(125deg,#22345d,#a20f16 72%,#b9ccff)!important}
 #dashboard.gg-v71 .gg-v71-sport .gg-v71-symbol svg{stroke:white!important}
 #dashboard.gg-v71 .gg-v71-module{min-height:118px}
 </style>
@@ -2130,7 +2130,7 @@ function update(){main.querySelectorAll('.gg-v71-sport').forEach(card=>{const na
 new MutationObserver(update).observe(main,{childList:true,subtree:false});update();
 })();
 </script>
-<style id="gg-v76-cleanup">#dashboard.gg-v71.gg-mita-demo #ggV71Switch,#dashboard.gg-v71.gg-mita-demo #ggV72Switch{display:none!important}#dashboard.gg-v71 .gg-v71-module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#dashboard.gg-v71 .gg-v71-module{min-height:132px}</style><style id="gg-v77-layout">#dashboard.gg-v71 .gg-v71-module-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important}#dashboard.gg-v71 .gg-v71-module{min-height:118px!important;padding:14px 9px!important;font-size:clamp(11px,2.8vw,15px)!important;overflow-wrap:anywhere}#dashboard.gg-v71 .gg-v71-module svg{width:29px;height:29px}#ggV77Extras{margin:20px 0 30px}#ggV77Extras h3{font-size:22px;margin:25px 0 12px}.gg-v77-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.gg-v77-stats>div{border:1px solid #d9dfe9;border-radius:17px;background:#fff;padding:16px 10px;display:flex;flex-direction:column;gap:6px}.gg-v77-stats strong{font-size:28px;color:#173d83}.gg-v77-stats span{font-size:12px;font-weight:700;color:#384b68}.gg-v77-feed{display:grid;gap:12px}.gg-v77-feed article{border:1px solid #dce1e9;border-radius:18px;background:white;padding:18px;display:flex;flex-direction:column;gap:8px}.gg-v77-feed small{font-size:11px;letter-spacing:1px;color:#4268f5;font-weight:800}.gg-v77-feed b{font-size:18px}.gg-v77-feed p{margin:0;color:#647084}.gg-v77-feed button{align-self:flex-start;background:none;border:0;color:#174b98;font-weight:800;padding:8px 0}</style>
+<style id="gg-v76-cleanup">#dashboard.gg-v71.gg-logrobasket-demo #ggV71Switch,#dashboard.gg-v71.gg-logrobasket-demo #ggV72Switch{display:none!important}#dashboard.gg-v71 .gg-v71-module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#dashboard.gg-v71 .gg-v71-module{min-height:132px}</style><style id="gg-v77-layout">#dashboard.gg-v71 .gg-v71-module-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important}#dashboard.gg-v71 .gg-v71-module{min-height:118px!important;padding:14px 9px!important;font-size:clamp(11px,2.8vw,15px)!important;overflow-wrap:anywhere}#dashboard.gg-v71 .gg-v71-module svg{width:29px;height:29px}#ggV77Extras{margin:20px 0 30px}#ggV77Extras h3{font-size:22px;margin:25px 0 12px}.gg-v77-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.gg-v77-stats>div{border:1px solid #d9dfe9;border-radius:17px;background:#fff;padding:16px 10px;display:flex;flex-direction:column;gap:6px}.gg-v77-stats strong{font-size:28px;color:#173d83}.gg-v77-stats span{font-size:12px;font-weight:700;color:#384b68}.gg-v77-feed{display:grid;gap:12px}.gg-v77-feed article{border:1px solid #dce1e9;border-radius:18px;background:white;padding:18px;display:flex;flex-direction:column;gap:8px}.gg-v77-feed small{font-size:11px;letter-spacing:1px;color:#a20f16;font-weight:800}.gg-v77-feed b{font-size:18px}.gg-v77-feed p{margin:0;color:#647084}.gg-v77-feed button{align-self:flex-start;background:none;border:0;color:#174b98;font-weight:800;padding:8px 0}</style>
 <style id="gg-desktop-responsive-v78">
 /* Desktop-only workspace: same navigation and state as mobile, no duplicated views. */
 @media (min-width: 1024px) {
@@ -2166,12 +2166,12 @@ new MutationObserver(update).observe(main,{childList:true,subtree:false});update
 </style>
 <style id="gg-v80-cohesion">
 :root{--ebro-red:#c52237;--ebro-blue:#123e87;--ebro-white:#fff}
-#dashboard.gg-v71:not(.gg-mita-demo) .gg-v71-header{background:linear-gradient(115deg,#102b60 0%,#194b9b 48%,#c52237 100%)!important}
-#dashboard.gg-v71:not(.gg-mita-demo) .gg-v71-bottom{background:#123e87!important;color:#fff!important}
-#dashboard.gg-v71:not(.gg-mita-demo) .gg-v71-bottom button.active{color:#fff!important;background:#c52237!important}
-#dashboard.gg-v71:not(.gg-mita-demo) .gg-v71-bottom button{color:#fff!important}
-#dashboard.gg-v71:not(.gg-mita-demo) .gg-v71-module svg{stroke:#123e87!important}
-#dashboard.gg-v71:not(.gg-mita-demo) .gg-v71-sport{--sport-dark:#123e87;--sport-light:#c52237}
+#dashboard.gg-v71:not(.gg-logrobasket-demo) .gg-v71-header{background:linear-gradient(115deg,#102b60 0%,#194b9b 48%,#c52237 100%)!important}
+#dashboard.gg-v71:not(.gg-logrobasket-demo) .gg-v71-bottom{background:#123e87!important;color:#fff!important}
+#dashboard.gg-v71:not(.gg-logrobasket-demo) .gg-v71-bottom button.active{color:#fff!important;background:#c52237!important}
+#dashboard.gg-v71:not(.gg-logrobasket-demo) .gg-v71-bottom button{color:#fff!important}
+#dashboard.gg-v71:not(.gg-logrobasket-demo) .gg-v71-module svg{stroke:#123e87!important}
+#dashboard.gg-v71:not(.gg-logrobasket-demo) .gg-v71-sport{--sport-dark:#123e87;--sport-light:#c52237}
 #ggV71Switch,#ggV72Switch{display:none!important}
 .gg-unified-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0}
 .gg-unified-icon svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -2291,4 +2291,4 @@ bottom.addEventListener('click',e=>{
 .wz-choice{min-width:0!important;overflow:hidden!important}
 .wz-choice strong{overflow-wrap:anywhere}
 .sport-selector-icon .gg-sport-art{width:100%!important;height:100%!important;object-fit:contain!important}
-</style><style id="gg-v85-people-style">.gg-v85-filters{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.gg-v85-filters button{border:1px solid #d6deea;background:white;border-radius:30px;padding:10px 15px;font-weight:700}.gg-v85-filters button.active{background:#123e87;color:white}.gg-v85-person{display:flex;align-items:center;justify-content:space-between;gap:12px;background:white;border:1px solid #d6deea;border-radius:18px;padding:17px;margin:10px 0}.gg-v85-person strong,.gg-v85-person small{display:block}.gg-v85-person small{color:#666;margin-top:5px}.gg-v85-person button,.gg-v85-compose button{border:0;border-radius:12px;background:#123e87;color:white;padding:12px;cursor:pointer}.gg-v85-compose{background:white;padding:20px;border-radius:18px;margin:20px 0}.gg-v85-compose textarea{width:100%;box-sizing:border-box;border:1px solid #ccc;border-radius:12px;padding:12px}@media(max-width:420px){.gg-v85-person{align-items:flex-start;flex-direction:column}.gg-v85-person button{align-self:flex-end}}</style><style id="gg-v86-polish">#ggV86Search{width:100%;border:1px solid #d6deea;border-radius:15px;padding:14px 16px;font-size:16px;background:white;color:#151515;margin:8px 0 16px}.gg-v86-search-label{font-size:13px;font-weight:750;color:#38475e}.gg-team-symbol .gg-sport-art{width:58px;height:58px;object-fit:contain}.gg-team-symbol:has(.gg-sport-art){background:transparent!important}#ggWorkspace .gg-roster{min-width:590px}</style><script id="gg-v86-sport-art-sync">(()=>{function sync(root=document){if(typeof ggSportIcon!=='function')return;root.querySelectorAll('.gg-v71-sport,.gg-v71-sport-card,.sport-selector-button,.wz-choice,.sport-card,.gg-team-card').forEach(card=>{const label=(card.dataset.sport||card.textContent||'').trim();const sports=['Baloncesto','Fútbol','Voleibol','Balonmano','Tenis','Pádel','Atletismo','Natación','Bádminton','Rugby','Hockey','Ciclismo'];const sport=sports.find(x=>label.toLocaleLowerCase('es').includes(x.toLocaleLowerCase('es')));if(!sport)return;const target=card.querySelector('.gg-v71-symbol,.sport-selector-icon,.wz-sporticon,.sport-mark,.gg-team-symbol');if(target&&!target.querySelector('.gg-sport-art'))target.innerHTML=ggSportIcon(sport)})}let queued=false;new MutationObserver(()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;sync()})}).observe(document.body,{subtree:true,childList:true});sync()})();</script>
+</style><style id="gg-v85-people-style">.gg-v85-filters{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.gg-v85-filters button{border:1px solid #d6deea;background:white;border-radius:30px;padding:10px 15px;font-weight:700}.gg-v85-filters button.active{background:#123e87;color:white}.gg-v85-person{display:flex;align-items:center;justify-content:space-between;gap:12px;background:white;border:1px solid #d6deea;border-radius:18px;padding:17px;margin:10px 0}.gg-v85-person strong,.gg-v85-person small{display:block}.gg-v85-person small{color:#666;margin-top:5px}.gg-v85-person button,.gg-v85-compose button{border:0;border-radius:12px;background:#123e87;color:white;padding:12px;cursor:pointer}.gg-v85-compose{background:white;padding:20px;border-radius:18px;margin:20px 0}.gg-v85-compose textarea{width:100%;box-sizing:border-box;border:1px solid #ccc;border-radius:12px;padding:12px}@media(max-width:420px){.gg-v85-person{align-items:flex-start;flex-direction:column}.gg-v85-person button{align-self:flex-end}}</style><style id="gg-v86-polish">#ggV86Search{width:100%;border:1px solid #d6deea;border-radius:15px;padding:14px 16px;font-size:16px;background:white;color:#151515;margin:8px 0 16px}.gg-v86-search-label{font-size:13px;font-weight:750;color:#38475e}.gg-team-symbol .gg-sport-art{width:58px;height:58px;object-fit:contain}.gg-team-symbol:has(.gg-sport-art){background:transparent!important}#ggWorkspace .gg-roster{min-width:590px}</style><script id="gg-v86-sport-art-sync">(()=>{function sync(root=document){if(typeof ggSportIcon!=='function')return;root.querySelectorAll('.gg-v71-sport,.gg-v71-sport-card,.sport-selector-button,.wz-choice,.sport-card,.gg-team-card').forEach(card=>{const label=(card.dataset.sport||card.textContent||'').trim();const sports=['Baloncesto','Fútbol','Voleibol','Balonmano','Tenis','Pádel','Atletismo','Natación','Bádminton','Rugby','Hockey','Ciclismo'];const sport=sports.find(x=>label.toLocaleLowerCase('es').includes(x.toLocaleLowerCase('es')));if(!sport)return;const target=card.querySelector('.gg-v71-symbol,.sport-selector-icon,.wz-sporticon,.sport-mark,.gg-team-symbol');if(target&&!target.querySelector('.gg-sport-art'))target.innerHTML=ggSportIcon(sport)})}let queued=false;new MutationObserver(()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;sync()})}).observe(document.body,{subtree:true,childList:true});sync()})();</script><style id="gg-logrobasket-finish">#dashboard.gg-logrobasket-demo{--club-accent:#a20f16;--club-primary:#a20f16;--club-secondary:#ffffff}#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-header{background:linear-gradient(120deg,#790c14 0%,#ae1720 65%,#e2e2e2 100%)!important;color:#fff}#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-header:before{opacity:.14}#dashboard.gg-logrobasket-demo .gg-v71-logo{width:100px;height:100px;object-fit:contain;border-radius:16px;background:#fff;padding:5px}#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-bottom{background:#171717!important}#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-bottom button.active{color:#fff!important}#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-bottom button.active:before{background:#a20f16!important}#dashboard.gg-logrobasket-demo .gg-v71-module svg{stroke:#a20f16!important}#dashboard.gg-logrobasket-demo .gg-v77-stats strong{color:#a20f16!important}#dashboard.gg-logrobasket-demo #ggV71Switch,#dashboard.gg-logrobasket-demo #ggV72Switch{display:none!important}</style>
