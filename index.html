@@ -2115,7 +2115,7 @@ function showSport(){
 function showModule(i){
  currentModule=i;
  const name=getSport(),title=modules[i][0];
- const goBack=()=>{currentSport=name;currentModule=null;document.querySelector('#ggV71Bottom [data-section="home"]')?.click();setTimeout(()=>{paintSports();showSport();window.scrollTo(0,0)},60)};
+ const goBack=()=>{currentSport=name;currentModule=null;const home=document.querySelector('#ggV71Bottom [data-section="home"]');if(home)home.click();else{paintSports();showSport()}setTimeout(()=>{if(!main.querySelector('.gg-v71-module-grid')){paintSports();showSport()}window.scrollTo(0,0)},80)};
  main.innerHTML='<button class="gg-v71-page-back" id="ggV72Back">← Volver al panel</button><div class="gg-v71-sport-detail">'+icon(name)+'<h3>'+title+'</h3></div><div class="gg-v71-card" id="ggV72ModuleContent"></div>';
  document.getElementById('ggV72Back').onclick=goBack;
  const body=document.getElementById('ggV72ModuleContent');
@@ -2130,9 +2130,9 @@ function showModule(i){
  body.innerHTML='<h3>'+title+' · '+name+'</h3><p>'+description[i]+'</p><div class="gg-v82-actions">'+(links[i]||[]).map(([label,key])=>'<button type="button" data-v82-open="'+key+'">'+label+' →</button>').join('')+'</div>';
  body.querySelectorAll('[data-v82-open]').forEach(btn=>btn.onclick=()=>{
  const key=btn.dataset.v82Open;
- if(key==='teams'){window.ggView?.('teams');document.querySelector('#ggV71Bottom [data-section="home"]')?.classList.remove('active');window.scrollTo(0,0);return}
+ if(key==='teams'){const people=document.querySelector('#ggV71Bottom [data-section="people"]');if(people)people.click();else window.ggView?.('teams');window.scrollTo(0,0);return}
  if(['posts','clubs','social'].includes(key)){window.ggOpenCommunity?.(key);return}
- window.ggView?.(key);
+ if(key==='calendar'){const calendar=document.querySelector('#ggV71Bottom [data-section="calendar"]');if(calendar)calendar.click();else window.ggView?.('calendar')}else window.ggView?.(key);
  window.scrollTo(0,0);
  });
  window.scrollTo(0,0);
