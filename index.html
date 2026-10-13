@@ -1698,3 +1698,44 @@ window.ggView=function(view){if(view==='club'){community('posts');return}oldView
 if(buttons[4]){buttons[4].onclick=e=>{e.preventDefault();e.stopPropagation();community('posts')};}
 })();
 </script>
+
+<style id="gg-team-detail-v65">
+.gg-team-extra{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:22px 0}
+.gg-team-panel{border:1px solid #e5dfd2;background:#fff;border-radius:16px;padding:18px}
+.gg-team-panel h2{font-size:19px;margin:0 0 12px}
+.gg-team-empty{padding:15px;border-radius:12px;background:#f6f4ef;color:#59564e;font-size:14px}
+</style>
+<script id="gg-team-detail-v65-script">
+(function(){
+const dash=document.getElementById('dashboard'),area=document.getElementById('ggWorkspace'),nav=dash?.querySelector('.coord-nav');
+if(!dash||!area||!nav)return;
+const oldTeam=window.ggTeam;
+window.ggTeam=function(id){
+ oldTeam(id);
+ const panels=document.createElement('div');panels.className='gg-team-extra';
+ const schedule=document.createElement('section');schedule.className='gg-team-panel';
+ schedule.innerHTML='<h2>Horario del equipo</h2><p class="gg-muted">Entrenamientos y partidos de la semana.</p><div class="gg-team-empty">Consulta las actividades programadas en el calendario. Los horarios se mostrarán aquí cuando estén vinculados al equipo.</div>';
+ const action=document.createElement('button');action.className='gg-button';action.textContent='Gestionar horario';action.style.marginTop='12px';action.onclick=()=>{if(typeof window.ggTeamWeek==='function')window.ggTeamWeek()};schedule.append(action);
+ const news=document.createElement('section');news.className='gg-team-panel';
+ news.innerHTML='<h2>Últimas novedades</h2><p class="gg-muted">Avisos relevantes para coordinación.</p><div class="gg-team-empty">No hay novedades específicas registradas para este equipo. Aquí aparecerán cambios de horario, incidencias y avisos cuando se vinculen al equipo.</div>';
+ panels.append(schedule,news);area.append(panels);
+};
+const communityButton=[...nav.querySelectorAll(':scope > button')].find(b=>b.textContent.trim()==='Comunidad');
+if(communityButton){
+ communityButton.addEventListener('click',function(e){
+ e.preventDefault();e.stopImmediatePropagation();
+ const workspace=document.getElementById('ggWorkspace');
+ dash.querySelectorAll('.gg-home-hidden').forEach(el=>{});
+ [...dash.children].filter(el=>!el.matches('.top,.coord-nav,#clubSettingsMenu,#clubSettingsEditor,#ggWorkspace')).forEach(el=>el.classList.add('gg-home-hidden'));
+ workspace.hidden=false;dash.classList.add('gg-subscreen');
+ const tabs=[['Publicaciones','Noticias y avisos del club'],['Red de clubes','Conexiones y colaboraciones entre clubes'],['Redes sociales','Canales oficiales del club']];
+ workspace.innerHTML='<div class="gg-eyebrow">COMUNIDAD</div><h1>Comunidad</h1><div class="gg-community-tabs"></div><section class="gg-team-panel" id="gg-community-body"></section>';
+ const tabHost=workspace.querySelector('.gg-community-tabs'),body=workspace.querySelector('#gg-community-body');
+ tabs.forEach(([label,description],i)=>{const b=document.createElement('button');b.textContent=label;b.onclick=()=>{[...tabHost.children].forEach(x=>x.classList.toggle('active',x===b));body.replaceChildren();const h=document.createElement('h2');h.textContent=label;const p=document.createElement('p');p.className='gg-muted';p.textContent=description;body.append(h,p);if(i===0){const info=document.createElement('p');info.textContent='Las publicaciones del club se mostrarán en esta sección.';body.append(info)}else if(i===1){const info=document.createElement('p');info.textContent='Directorio de clubes: pendiente de conexión con los datos del club.';body.append(info)}else{const info=document.createElement('p');info.textContent='Configura aquí los enlaces a las redes oficiales del club.';body.append(info)}};tabHost.append(b)});
+ tabHost.firstElementChild.click();
+ [...nav.querySelectorAll(':scope > button')].forEach(b=>{if(!b.classList.contains('coord-settings-btn'))b.classList.toggle('active',b===communityButton)});
+ window.scrollTo(0,0);
+ },true);
+}
+})();
+</script>
