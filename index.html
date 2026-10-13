@@ -1606,3 +1606,11 @@ const ggMobileExampleClubs=[{name:'Club Deportivo Ebro',city:'Logroño',sport:'B
 #dashboard .coord-nav .coord-settings-btn{position:relative;z-index:1}
 @media(prefers-reduced-motion:reduce){#dashboard .coord-nav::before,#dashboard .coord-nav button{transition:none!important}}
 </style>
+<style id="gg-nav-final-override">
+/* Prioridad final: cuadrícula compacta en dos filas */
+#dashboard nav.coord-nav{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;grid-auto-flow:row!important;grid-auto-rows:minmax(44px,auto)!important;gap:5px!important;align-items:stretch!important;position:relative!important;top:auto!important;bottom:auto!important;width:calc(100% + 12px)!important;max-width:none!important;margin:0 -6px 22px!important;padding:7px!important;overflow:visible!important;box-sizing:border-box!important}
+#dashboard nav.coord-nav::before{display:none!important;content:none!important}
+#dashboard nav.coord-nav>button{position:relative!important;z-index:1!important;display:flex!important;align-items:center!important;justify-content:center!important;min-width:0!important;width:100%!important;min-height:44px!important;height:auto!important;padding:8px 3px!important;margin:0!important;border-radius:11px!important;white-space:normal!important;overflow-wrap:anywhere!important;line-height:1.15!important;font-size:10px!important;transform:none!important}
+#dashboard nav.coord-nav>button.active:not(.coord-settings-btn),#dashboard.has-club-brand nav.coord-nav>button.active:not(.coord-settings-btn){background:var(--club-secondary,#FFC107)!important;color:var(--club-secondary-text,#111)!important}
+#dashboard nav.coord-nav>button.gg-network-trigger{font-size:10px!important}
+</style>
