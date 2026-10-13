@@ -2014,14 +2014,26 @@ function showSport(){
 function showModule(i){
  currentModule=i;
  const name=getSport(),title=modules[i][0];
- main.innerHTML='<button class="gg-v71-page-back" id="ggV72Back">← Volver al inicio</button><div class="gg-v71-sport-detail">'+icon(name)+'<h3>'+title+'</h3>'+((data.sports||[]).length>1?'<button id="ggV72Switch">Cambiar deporte</button>':'')+'</div><div class="gg-v71-card" id="ggV72ModuleContent"></div>';
- document.getElementById('ggV72Back').onclick=()=>{window.ggView?.('home');setTimeout(()=>{showSport();window.scrollTo(0,0)},0)};
- const moduleSwitch=document.getElementById('ggV72Switch');if(moduleSwitch)moduleSwitch.onclick=()=>{currentSport=null;window.ggView?.('home');main.querySelector('[data-section]')?.click()};
+ const goBack=()=>{window.ggView?.('home');setTimeout(()=>{currentSport=name;showSport();window.scrollTo(0,0)},30)};
+ main.innerHTML='<button class="gg-v71-page-back" id="ggV72Back">← Volver al panel</button><div class="gg-v71-sport-detail">'+icon(name)+'<h3>'+title+'</h3></div><div class="gg-v71-card" id="ggV72ModuleContent"></div>';
+ document.getElementById('ggV72Back').onclick=goBack;
  const body=document.getElementById('ggV72ModuleContent');
- if(i===0){body.innerHTML='<h3>Equipos de '+name+'</h3><p>Plantillas, horarios y novedades por equipo.</p><button class="gg-v71-back" id="ggV72Open">Consultar equipos</button>';document.getElementById('ggV72Open').onclick=()=>{window.ggView('teams');const grid=document.querySelector('#ggWorkspace .gg-team-grid');grid?.querySelectorAll(':scope > *').forEach(c=>{const t=c.textContent||'';c.hidden=!t.includes(name)})}}
- else if(i===3||i===4){body.innerHTML='<h3>Calendario de '+name+'</h3><p>Consulta horarios y actividades del deporte seleccionado.</p><button class="gg-v71-back" id="ggV72Open">Abrir calendario</button>';document.getElementById('ggV72Open').onclick=()=>window.ggView('calendar')}
- else if(i===5){body.innerHTML='<h3>Comunidad de '+name+'</h3><p>Publicaciones y convocatorias relacionadas con '+name+'.</p><button class="gg-v71-back" id="ggV72Open">Abrir Comunidad</button>';document.getElementById('ggV72Open').onclick=()=>window.ggOpenCommunity?.('posts')}
- else body.innerHTML='<h3>'+title+'</h3><p>Área de '+name+'. Esta sección está pendiente de conectar con los datos y permisos reales del club.</p>';
+ const links={
+ 0:[['Ver plantillas y equipos','teams'],['Consultar horarios','calendar']],
+ 2:[['Ver equipos y entrenadores','teams']],
+ 3:[['Consultar calendario de instalaciones','calendar']],
+ 4:[['Abrir calendario','calendar']],
+ 5:[['Publicaciones','posts'],['Red de clubes','clubs'],['Redes sociales','social']]
+ };
+ const description={0:'Plantillas, asistencia y fichas de los equipos.',2:'Personal técnico y asignaciones de los equipos.',3:'Instalaciones, pistas y disponibilidad.',4:'Entrenamientos, partidos y actividades.',5:'Publicaciones, colaboración entre clubes y redes sociales.'};
+ body.innerHTML='<h3>'+title+' · '+name+'</h3><p>'+description[i]+'</p><div class="gg-v82-actions">'+(links[i]||[]).map(([label,key])=>'<button type="button" data-v82-open="'+key+'">'+label+' →</button>').join('')+'</div>';
+ body.querySelectorAll('[data-v82-open]').forEach(btn=>btn.onclick=()=>{
+ const key=btn.dataset.v82Open;
+ if(['posts','clubs','social'].includes(key)){window.ggOpenCommunity?.(key);return}
+ window.ggView?.(key);
+ window.scrollTo(0,0);
+ });
+ window.scrollTo(0,0);
 }
 const observer=new MutationObserver(()=>{if(!dash.classList.contains('gg-v71'))return;paintSports();if(getSport()&&main.querySelector('[data-module]'))showSport()});
 observer.observe(main,{childList:true,subtree:false});
@@ -2192,4 +2204,11 @@ new MutationObserver(update).observe(main,{childList:true,subtree:false});update
  }
  let pending=false;new MutationObserver(()=>{if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;apply()})}).observe(document.body,{childList:true,subtree:true});apply();
 })();
-</script>
+</script><style id="gg-v82-navigation">
+#dashboard.gg-v71 .gg-v82-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:12px;margin-top:20px}
+#dashboard.gg-v71 .gg-v82-actions button{background:#123e87;color:white;border:0;border-radius:14px;padding:16px;font-weight:750;text-align:left;cursor:pointer}
+#dashboard.gg-v71 .gg-v71-page-back{cursor:pointer}
+#dashboard.gg-v71 .gg-v71-bottom{z-index:150}
+#dashboard.gg-v71 .gg-v71-module-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:540px){#dashboard.gg-v71 .gg-v71-module-grid{grid-template-columns:repeat(3,minmax(0,1fr))}#dashboard.gg-v71 .gg-v71-module{min-height:118px;padding:12px 8px;font-size:12px}#dashboard.gg-v71 .gg-v71-module span{overflow-wrap:anywhere}}
+</style>
