@@ -1787,3 +1787,21 @@ window.ggCurrentSport=()=>selected;
 draw();
 })();
 </script>
+
+<style id="gg-sport-selector-hotfix-v67">
+#dashboard #ggSportContext{display:none!important}
+#dashboard #dashboardSportSelector:not([hidden]){display:block!important;margin:12px 0 22px!important}
+#dashboard #dashboardSportSelector .sport-selector-scroll{display:flex!important;gap:10px;overflow-x:auto;scrollbar-width:thin;padding:5px 2px 10px}
+#dashboard #dashboardSportSelector .sport-selector-button{flex:0 0 110px}
+#dashboard.gg-subscreen #dashboardSportSelector:not([hidden]){display:block!important}
+</style>
+<script id="gg-sport-selector-hotfix-v67-script">
+(function(){
+const dash=document.getElementById('dashboard'),nav=dash?.querySelector('.coord-nav'),selector=document.getElementById('dashboardSportSelector');
+if(!dash||!nav||!selector)return;
+nav.insertAdjacentElement('afterend',selector);
+selector.classList.remove('gg-home-hidden');
+const observer=new MutationObserver(()=>{if(selector.classList.contains('gg-home-hidden'))selector.classList.remove('gg-home-hidden')});
+observer.observe(selector,{attributes:true,attributeFilter:['class']});
+})();
+</script>
