@@ -1824,3 +1824,21 @@ function move(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',move,{once:true});else move();
 })();
 </script>
+
+<style id="gg-demo-access-v69">
+.gg-demo-shortcut{display:block;margin:18px auto;padding:13px 17px;background:#fff2c7;border:2px dashed #f2bd2c;border-radius:13px;color:#102448;font-weight:800}
+</style>
+<script id="gg-demo-access-v69-script">
+(function(){
+const welcome=document.getElementById('welcome');
+if(!welcome)return;
+const b=document.createElement('button');b.type='button';b.className='gg-demo-shortcut';b.textContent='Acceso rápido · Club de prueba (2 deportes)';
+b.onclick=function(){
+ data={club:'Club Deportivo Ebro Norte',sports:['Baloncesto','Fútbol'],clubPalette:['#174b98','#ffc107'],roleColors:{coord:'#174b98'},facilities:[{name:'Polideportivo Norte',sports:['Baloncesto'],spaces:[]},{name:'Campos de La Ribera',sports:['Fútbol'],spaces:[]}]};
+ document.getElementById('clubSmall').textContent=data.club;
+ go('dashboard');
+ if(typeof window.ggView==='function')window.ggView('home');
+};
+welcome.append(b);
+})();
+</script>
