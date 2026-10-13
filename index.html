@@ -2211,4 +2211,45 @@ new MutationObserver(update).observe(main,{childList:true,subtree:false});update
 #dashboard.gg-v71 .gg-v71-bottom{z-index:150}
 #dashboard.gg-v71 .gg-v71-module-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
 @media(max-width:540px){#dashboard.gg-v71 .gg-v71-module-grid{grid-template-columns:repeat(3,minmax(0,1fr))}#dashboard.gg-v71 .gg-v71-module{min-height:118px;padding:12px 8px;font-size:12px}#dashboard.gg-v71 .gg-v71-module span{overflow-wrap:anywhere}}
+</style><style id="gg-v83-direct-nav">
+#dashboard.gg-v71.gg-v83-workspace #ggV71Main{display:none!important}
+#dashboard.gg-v71.gg-v83-workspace #ggWorkspace{display:block!important;padding:22px 0 120px!important}
+#dashboard.gg-v71.gg-v83-workspace #ggWorkspace[hidden]{display:none!important}
+#dashboard.gg-v71.gg-v83-workspace .gg-v71-bottom{z-index:200}
+.gg-v83-back{display:inline-flex;align-items:center;gap:7px;margin:0 0 18px;padding:11px 16px;border:1px solid #b9c7de;border-radius:12px;background:white;color:#123e87;font-weight:800}
+.gg-v83-people-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:20px 0}
+.gg-v83-people-grid button{padding:20px;text-align:left;border:1px solid #d6deea;background:white;border-radius:16px;color:#123e87;font-weight:750}
 </style>
+<script id="gg-v83-direct-nav-script">
+(()=>{
+const dash=document.getElementById('dashboard'),bottom=document.getElementById('ggV71Bottom')||dash?.querySelector('.gg-v71-bottom'),main=document.getElementById('ggV71Main'),workspace=document.getElementById('ggWorkspace');
+if(!dash||!bottom||!main||!workspace)return;
+const reset=()=>{dash.classList.remove('gg-v83-workspace');workspace.hidden=true;};
+const active=key=>bottom.querySelectorAll('[data-section]').forEach(b=>b.classList.toggle('active',b.dataset.section===key));
+function backButton(){const b=document.createElement('button');b.className='gg-v83-back';b.textContent='← Volver a inicio';b.onclick=()=>bottom.querySelector('[data-section="home"]')?.click();workspace.prepend(b)}
+function open(key){
+ if(key==='home'){reset();active('home');return}
+ if(key==='settings'){
+ reset();active('settings');
+ const btn=dash.querySelector('.coord-settings-btn');if(btn)btn.click();else{workspace.hidden=false;dash.classList.add('gg-v83-workspace');workspace.innerHTML='<h1>Gestión del club</h1><p>Configuración, instalaciones, permisos y cuotas.</p>';backButton()}
+ window.scrollTo(0,0);return
+ }
+ dash.classList.add('gg-v83-workspace');
+ if(key==='calendar'){window.ggView?.('calendar');backButton()}
+ else if(key==='community'){window.ggOpenCommunity?.('posts');backButton()}
+ else if(key==='people'){
+ window.ggView?.('teams');
+ workspace.hidden=false;
+ workspace.innerHTML='<h1>Personas del club</h1><p>Consulta los equipos, jugadores y entrenadores de los deportes del club.</p><div class="gg-v83-people-grid"><button data-go="teams">Equipos y jugadores →</button><button data-go="calendar">Horarios y actividades →</button></div>';
+ backButton();
+ workspace.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>open(b.dataset.go==='teams'?'teams':'calendar'));
+ }else if(key==='teams'){window.ggView?.('teams');backButton()}
+ active(key==='teams'?'people':key);
+ window.scrollTo(0,0);
+}
+bottom.addEventListener('click',e=>{
+ const button=e.target.closest('[data-section]');if(!button)return;
+ e.preventDefault();e.stopImmediatePropagation();open(button.dataset.section);
+},true);
+})();
+</script>
