@@ -2151,56 +2151,45 @@ new MutationObserver(update).observe(main,{childList:true,subtree:false});update
  #dashboard.gg-v71 .gg-v71-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 </style>
-<style id="gg-v79-profile-icons">
-.gg-role-brand-icon{width:58px;height:58px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:16px;background:linear-gradient(135deg,var(--role-start,#0b326e),var(--role-end,#10a3e9));color:#fff;box-shadow:inset 0 1px 0 #ffffff55}
-.gg-role-brand-icon svg{width:42px;height:42px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+<style id="gg-v80-cohesion">
+:root{--ebro-red:#c52237;--ebro-blue:#123e87;--ebro-white:#fff}
+#dashboard.gg-v71:not(.gg-mita-demo) .gg-v71-header{background:linear-gradient(115deg,#102b60 0%,#194b9b 48%,#c52237 100%)!important}
+#dashboard.gg-v71:not(.gg-mita-demo) .gg-v71-bottom{background:#123e87!important;color:#fff!important}
+#dashboard.gg-v71:not(.gg-mita-demo) .gg-v71-bottom button.active{color:#fff!important;background:#c52237!important}
+#dashboard.gg-v71:not(.gg-mita-demo) .gg-v71-bottom button{color:#fff!important}
+#dashboard.gg-v71:not(.gg-mita-demo) .gg-v71-module svg{stroke:#123e87!important}
+#dashboard.gg-v71:not(.gg-mita-demo) .gg-v71-sport{--sport-dark:#123e87;--sport-light:#c52237}
 #ggV71Switch,#ggV72Switch{display:none!important}
+.gg-unified-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0}
+.gg-unified-icon svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.gg-profile-art{display:none!important}
+@media(max-width:700px){.gg-unified-icon{width:34px;height:34px}}
 </style>
-<script id="gg-v79-profile-icons-script">
-(()=>{
+<script id="gg-v80-cohesion-script">
+(function(){
  const drawings={
- 'familia':'<circle cx="14" cy="13" r="5"/><circle cx="35" cy="12" r="6"/><circle cx="25" cy="32" r="4"/><path d="M5 34v-7a9 9 0 0 1 15-6M30 21a10 10 0 0 1 15 9v5M18 44v-3a7 7 0 0 1 14 0v3"/>',
- 'entrenador':'<circle cx="21" cy="13" r="7"/><path d="M7 43V32a14 14 0 0 1 23-11"/><path d="M32 30c-3 1-5 4-4 7s5 5 8 3l6-6h-7"/><path d="m41 22 2-3m3 9 3-1"/>',
- 'jugador':'<circle cx="17" cy="15" r="6"/><path d="M7 43V30a10 10 0 0 1 18-5l6 9 5-6"/><circle cx="39" cy="12" r="9"/><path d="M30 12h18M39 3v18M33 6q9 6 0 12m12-12q-9 6 0 12"/>',
- 'coordinador':'<circle cx="19" cy="12" r="7"/><path d="M6 43V31a13 13 0 0 1 21-10"/><rect x="29" y="24" width="16" height="21" rx="2"/><path d="M34 24v-3h6v3m-6 9h6m-6 6h5"/>',
- 'personas':'<circle cx="16" cy="14" r="6"/><circle cx="35" cy="14" r="6"/><path d="M4 43v-8a12 12 0 0 1 24 0v8M27 28a12 12 0 0 1 19 10v5"/>',
- 'calendario':'<rect x="7" y="10" width="38" height="34" rx="5"/><path d="M15 5v10m22-10v10M7 21h38m-29 9h3m9 0h3"/>',
- 'comunidad':'<path d="M8 9h36v27H23L12 45v-9H8z"/><path d="M16 20h20m-20 8h13"/>',
- 'archivos':'<path d="M5 16V9h17l6 7h19v27H5z"/><path d="M5 20h42"/>',
- 'instalaciones':'<rect x="4" y="9" width="44" height="34" rx="5"/><path d="M26 9v34M4 20h10v12H4m44-12H38v12h10"/><circle cx="26" cy="26" r="5"/>',
- 'estadisticas':'<path d="M6 45h40M9 39V28h8v11m7 0V18h8v21m7 0V8h8v31"/>',
- 'ajustes':'<circle cx="26" cy="26" r="7"/><path d="m21 5 10 0 2 7 6 3 7-2 5 9-5 5v7l5 5-5 9-7-2-6 3-2 7H21l-2-7-6-3-7 2-5-9 5-5v-7l-5-5 5-9 7 2 6-3z" transform="translate(0 -2) scale(.95)"/>'
+ people:'<circle cx="15" cy="14" r="6"/><circle cx="35" cy="14" r="6"/><path d="M3 44v-9a12 12 0 0 1 24 0v9M28 28a12 12 0 0 1 21 8v8"/>',
+ player:'<circle cx="16" cy="12" r="6"/><path d="M6 43V29a10 10 0 0 1 18-5l7 9 5-7"/><circle cx="39" cy="13" r="9"/><path d="M30 13h18M39 4v18"/>',
+ coach:'<circle cx="17" cy="13" r="6"/><path d="M5 43V31a12 12 0 0 1 24 0v12"/><rect x="32" y="12" width="15" height="27" rx="2"/><path d="M36 19h7m-7 6h7m-7 6h5"/>',
+ family:'<circle cx="14" cy="14" r="5"/><circle cx="35" cy="14" r="5"/><circle cx="25" cy="29" r="4"/><path d="M3 40v-10a11 11 0 0 1 18-8M30 22a11 11 0 0 1 19 8v10M17 46v-5a8 8 0 0 1 16 0v5"/>',
+ coordinator:'<circle cx="18" cy="12" r="6"/><path d="M5 44V31a13 13 0 0 1 22-9"/><rect x="30" y="23" width="16" height="23" rx="2"/><path d="M35 23v-4h6v4m-6 9h6m-6 7h6"/>',
+ teams:'<path d="M6 45V9h40v36M6 20h40M17 9v36M35 9v36"/><circle cx="26" cy="32" r="6"/>',
+ venue:'<rect x="4" y="10" width="44" height="32" rx="3"/><path d="M26 10v32M4 20h11v12H4m44-12H37v12h11"/><circle cx="26" cy="26" r="5"/>',
+ calendar:'<rect x="5" y="10" width="42" height="36" rx="4"/><path d="M15 5v11m22-11v11M5 22h42m-31 9h4m9 0h4"/>',
+ community:'<path d="M5 8h42v30H23L10 47v-9H5z"/><path d="M14 19h24M14 28h17"/>',
+ settings:'<circle cx="26" cy="26" r="8"/><path d="M22 4h8l2 7 6 3 7-2 4 8-5 6v5l5 6-4 8-7-2-6 3-2 7h-8l-2-7-6-3-7 2-4-8 5-6v-5l-5-6 4-8 7 2 6-3z"/>'
  };
- const rules=[
- [/padre|madre|tutor legal|familia/i,'familia','#00605d','#20d6a5'],
- [/entrenador/i,'entrenador','#09266d','#00b5f1'],
- [/jugador/i,'jugador','#a86b00','#ffd83d'],
- [/coordinador/i,'coordinador','#30116f','#b83dff'],
- [/personas/i,'personas','#09266d','#00b5f1'],
- [/calendario/i,'calendario','#09266d','#00b5f1'],
- [/comunidad/i,'comunidad','#ad1053','#ff3d9d'],
- [/archivo/i,'archivos','#d65300','#ffb300'],
- [/instalacion|instalación/i,'instalaciones','#00605d','#20d6a5'],
- [/estadística/i,'estadisticas','#a60036','#ff4949'],
- [/ajustes|configuraci[oó]n/i,'ajustes','#30116f','#b83dff']
- ];
- function decorate(){
- document.querySelectorAll('button, .role-card, .profile-card').forEach(el=>{
- if(el.closest('#ggV71Main,.gg-v71-bottom'))return;
- if(el.dataset.ggRoleDecorated)return;
- const label=(el.innerText||'').trim();
- if(label.length>75||!label||el.querySelector('.gg-role-brand-icon'))return;
- const found=rules.find(([re])=>re.test(label));
- if(!found)return;
- const svg='<span class="gg-role-brand-icon" style="--role-start:'+found[2]+';--role-end:'+found[3]+'" aria-hidden="true"><svg viewBox="0 0 52 52">'+drawings[found[1]]+'</svg></span>';
- const old=el.querySelector('img,svg,.emoji,.icon');
- if(old && old!==el){old.style.display='none';old.insertAdjacentHTML('afterend',svg)}
- else el.insertAdjacentHTML('afterbegin',svg);
- el.dataset.ggRoleDecorated='1';
+ const classify=t=>/padre|madre|tutor/i.test(t)?'family':/jugador/i.test(t)?'player':/entrenador/i.test(t)?'coach':/coordinador/i.test(t)?'coordinator':/instalaci|pista|horario/i.test(t)?'venue':/equipos|plantilla/i.test(t)?'teams':/personas/i.test(t)?'people':/calendario/i.test(t)?'calendar':/comunidad|publicacion/i.test(t)?'community':/club|ajustes|configuraci/i.test(t)?'settings':null;
+ function apply(){
+ document.querySelectorAll('#dashboard .gg-v71-module,#dashboard .gg-v71-bottom button,#dashboard .gg-v71-card').forEach(el=>{
+ const kind=classify((el.textContent||'').trim());if(!kind)return;
+ const current=el.querySelector('.gg-unified-icon');if(current&&current.dataset.kind===kind)return;
+ const legacy=el.querySelector('svg');if(legacy)legacy.style.display='none';
+ if(current)current.remove();
+ const span=document.createElement('span');span.className='gg-unified-icon';span.dataset.kind=kind;span.style.width=el.closest('.gg-v71-bottom')?'24px':'36px';span.style.height=span.style.width;span.innerHTML='<svg viewBox="0 0 52 52" aria-hidden="true">'+drawings[kind]+'</svg>';
+ el.prepend(span);
  });
  }
- let queued=false;
- new MutationObserver(()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;decorate()})}).observe(document.body,{childList:true,subtree:true});
- decorate();
+ let pending=false;new MutationObserver(()=>{if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;apply()})}).observe(document.body,{childList:true,subtree:true});apply();
 })();
 </script>
