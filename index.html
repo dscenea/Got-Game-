@@ -2014,7 +2014,7 @@ function showSport(){
 function showModule(i){
  currentModule=i;
  const name=getSport(),title=modules[i][0];
- const goBack=()=>{window.ggView?.('home');setTimeout(()=>{currentSport=name;showSport();window.scrollTo(0,0)},30)};
+ const goBack=()=>{currentSport=name;currentModule=null;window.ggView?.('home');const home=document.querySelector('#ggV71Bottom [data-section="home"]');home?.click();setTimeout(()=>{paintSports();showSport();window.scrollTo(0,0)},60)};
  main.innerHTML='<button class="gg-v71-page-back" id="ggV72Back">← Volver al panel</button><div class="gg-v71-sport-detail">'+icon(name)+'<h3>'+title+'</h3></div><div class="gg-v71-card" id="ggV72ModuleContent"></div>';
  document.getElementById('ggV72Back').onclick=goBack;
  const body=document.getElementById('ggV72ModuleContent');
@@ -2244,9 +2244,12 @@ function open(key){
  else if(key==='people'){
  window.ggView?.('teams');
  workspace.hidden=false;
- workspace.innerHTML='<h1>Personas del club</h1><p>Consulta los equipos, jugadores y entrenadores de los deportes del club.</p><div class="gg-v83-people-grid"><button data-go="teams">Equipos y jugadores →</button><button data-go="calendar">Horarios y actividades →</button></div>';
+ workspace.innerHTML='<h1>Personas del club</h1><p>Directorio de responsables y entrenadores. Datos de demostración; en producción, solo personas autorizadas.</p><div class="gg-v85-filters"><button data-person-filter="all" class="active">Todas</button><button data-person-filter="familia">Familias</button><button data-person-filter="entrenador">Entrenadores</button></div><div id="ggV85PeopleList"></div>';
  backButton();
- workspace.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>open(b.dataset.go==='teams'?'teams':'calendar'));
+ const people=[['Laura Martínez Ruiz','Madre / tutora legal','familia','Baloncesto'],['Javier Pérez Gil','Padre / tutor legal','familia','Fútbol'],['Ana López Sáenz','Madre / tutora legal','familia','Baloncesto'],['Marta Fernández Díaz','Entrenadora','entrenador','Baloncesto'],['Carlos Moreno López','Entrenador','entrenador','Fútbol'],['Elena García Pérez','Entrenadora','entrenador','Baloncesto']];
+ const clean=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const renderPeople=filter=>{workspace.querySelector('#ggV85PeopleList').innerHTML=people.filter(p=>filter==='all'||p[2]===filter).map((p,i)=>'<article class="gg-v85-person"><div><strong>'+clean(p[0])+'</strong><small>'+clean(p[1])+' · '+clean(p[3])+'</small></div><button type="button" data-person-message="'+clean(p[0])+'">Mensaje →</button></article>').join('');workspace.querySelectorAll('[data-person-message]').forEach(b=>b.onclick=()=>{const who=b.dataset.personMessage;const box=document.createElement('div');box.className='gg-v85-compose';box.innerHTML='<h2>Mensaje a '+clean(who)+'</h2><p>Vista de demostración: no se enviarán mensajes reales.</p><textarea placeholder="Escribe tu mensaje..." rows="4"></textarea><button type="button" data-close-compose>Cancelar</button><button type="button" data-save-compose>Guardar borrador</button><p role="status"></p>';workspace.querySelector('.gg-v85-compose')?.remove();workspace.append(box);box.querySelector('[data-close-compose]').onclick=()=>box.remove();box.querySelector('[data-save-compose]').onclick=()=>{box.querySelector('[role=status]').textContent=box.querySelector('textarea').value.trim()?'Borrador de demostración preparado. No se ha enviado.':'Escribe un mensaje primero.'};box.scrollIntoView({block:'nearest'})})};
+ workspace.querySelectorAll('[data-person-filter]').forEach(b=>b.onclick=()=>{workspace.querySelectorAll('[data-person-filter]').forEach(x=>x.classList.toggle('active',x===b));renderPeople(b.dataset.personFilter)});renderPeople('all');
  }else if(key==='teams'){window.ggView?.('teams');backButton()}
  active(key==='teams'?'people':key);
  window.scrollTo(0,0);
@@ -2287,4 +2290,4 @@ bottom.addEventListener('click',e=>{
 .wz-choice{min-width:0!important;overflow:hidden!important}
 .wz-choice strong{overflow-wrap:anywhere}
 .sport-selector-icon .gg-sport-art{width:100%!important;height:100%!important;object-fit:contain!important}
-</style>
+</style><style id="gg-v85-people-style">.gg-v85-filters{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.gg-v85-filters button{border:1px solid #d6deea;background:white;border-radius:30px;padding:10px 15px;font-weight:700}.gg-v85-filters button.active{background:#123e87;color:white}.gg-v85-person{display:flex;align-items:center;justify-content:space-between;gap:12px;background:white;border:1px solid #d6deea;border-radius:18px;padding:17px;margin:10px 0}.gg-v85-person strong,.gg-v85-person small{display:block}.gg-v85-person small{color:#666;margin-top:5px}.gg-v85-person button,.gg-v85-compose button{border:0;border-radius:12px;background:#123e87;color:white;padding:12px;cursor:pointer}.gg-v85-compose{background:white;padding:20px;border-radius:18px;margin:20px 0}.gg-v85-compose textarea{width:100%;box-sizing:border-box;border:1px solid #ccc;border-radius:12px;padding:12px}@media(max-width:420px){.gg-v85-person{align-items:flex-start;flex-direction:column}.gg-v85-person button{align-self:flex-end}}</style>
