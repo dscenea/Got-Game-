@@ -1657,7 +1657,26 @@ function update(){document.querySelectorAll('#ggV71Bottom button[data-section]')
 }
 let pending=false;new MutationObserver(()=>{if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;update()})}).observe(document.body,{childList:true,subtree:true});update();
 })();</script>
-<style id="gg-v94-wizard-icons">.gg-v92-symbol{display:grid!important;place-items:center!important;min-width:52px;min-height:52px;aspect-ratio:1;border-radius:16px;background:linear-gradient(135deg,var(--gg-sport-start,#08264b),var(--gg-sport-end,#00b8a2));padding:12%;box-sizing:border-box}.gg-v92-symbol svg{width:100%!important;height:100%!important;stroke:#fff!important}.wz-choice .gg-v92-symbol,.wz-sport-card .gg-v92-symbol{width:86px;height:86px}.gg-team-symbol .gg-v92-symbol{width:66px;height:66px}</style></body></html><style>
+<style id="gg-v94-wizard-icons">.gg-v92-symbol{display:grid!important;place-items:center!important;min-width:52px;min-height:52px;aspect-ratio:1;border-radius:16px;background:linear-gradient(135deg,var(--gg-sport-start,#08264b),var(--gg-sport-end,#00b8a2));padding:12%;box-sizing:border-box}.gg-v92-symbol svg{width:100%!important;height:100%!important;stroke:#fff!important}.wz-choice .gg-v92-symbol,.wz-sport-card .gg-v92-symbol{width:86px;height:86px}.gg-team-symbol .gg-v92-symbol{width:66px;height:66px}</style>
+<style id="gg-v95-roster-fixes">
+.gg-v95-back{appearance:none;border:0;background:transparent;color:var(--club-accent,#171717);font-size:30px;line-height:1;width:46px;height:46px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;cursor:pointer;position:relative;z-index:2}.gg-v95-back:hover,.gg-v95-back:focus-visible{background:color-mix(in srgb,currentColor 10%,transparent);outline-offset:3px}
+.gg-v95-rosters{padding:18px 0 120px;max-width:1100px;margin:auto}.gg-v95-rosters h1{font-size:clamp(25px,4vw,40px);margin:8px 0}.gg-v95-rosters p{color:#646464}.gg-v95-teamgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;margin:20px 0}.gg-v95-team{border:1px solid #ddd4c8;background:#fff;border-radius:19px;text-align:left;padding:20px;min-height:150px;display:flex;flex-direction:column;gap:12px;cursor:pointer;color:#151515}.gg-v95-team strong{font-size:20px}.gg-v95-team small{color:#666}.gg-v95-team .gg-v95-go{margin-top:auto;font-weight:800;color:var(--club-accent,#9b1b20)}
+.gg-v95-rosters .gg-table-scroll{max-width:100%;overflow:auto}.gg-v95-rosters .gg-roster{min-width:570px}
+</style>
+<script id="gg-v95-roster-navigation">(()=>{
+const dash=document.getElementById('dashboard');if(!dash)return;
+let page=null,origin=null,selectedSport=null;
+function club(){return window.data?.club||document.querySelector('.gg-v71-header')?.textContent||'Club de demostración'}
+function sports(){const name=club().toLowerCase();if(name.includes('logrobasket'))return ['Baloncesto'];const items=window.data?.sports;if(Array.isArray(items)&&items.length)return items;return ['Baloncesto','Fútbol']}
+function ensure(){if(!page){page=document.createElement('section');page.id='ggV95Rosters';page.className='gg-v95-rosters';page.hidden=true;dash.append(page)}return page}
+function back(){if(selectedSport){selectedSport=null;render();return}close()}
+function render(){const el=ensure();const all=sports();const shown=selectedSport?[selectedSport]:all;el.innerHTML='<button class="gg-v95-back" type="button" aria-label="Volver atrás">‹</button><h1>'+(selectedSport?'Equipos de '+selectedSport:'Equipos y plantillas')+'</h1><p>Plantillas de demostración · temporada 2026/2027</p><div class="gg-v95-teamgrid">'+shown.flatMap(sp=>['Alevín A','Infantil'].map(team=>'<button type="button" class="gg-v95-team" data-v95-team="'+encodeURIComponent(sp+' · '+team)+'"><strong>'+team+'</strong><small>'+sp+' · 8 jugadores de ejemplo</small><span class="gg-v95-go">Abrir plantilla →</span></button>')).join('')+'</div>';el.querySelector('.gg-v95-back').onclick=back;el.querySelectorAll('[data-v95-team]').forEach(b=>b.onclick=()=>{const id=decodeURIComponent(b.dataset.v95Team);window.ggView?.('teams');window.ggTeam?.(id);const ws=document.getElementById('ggWorkspace');if(ws){el.hidden=true;ws.hidden=false;ws.style.display='block';dash.classList.add('gg-v83-workspace')}window.scrollTo(0,0)});}
+function open(sp){origin=document.querySelector('#ggV71Bottom [data-section="home"]');selectedSport=sp||null;const el=ensure();dash.querySelectorAll(':scope > :not(#ggV95Rosters):not(#ggV71Bottom)').forEach(n=>{if(n.offsetParent!==null&&!n.hidden){n.dataset.ggV95Hidden='1';n.style.display='none'}});el.hidden=false;el.style.display='block';render();window.scrollTo(0,0)}
+function close(){const el=ensure();el.hidden=true;el.style.display='none';dash.querySelectorAll('[data-gg-v95-hidden]').forEach(n=>{n.style.removeProperty('display');delete n.dataset.ggV95Hidden});origin?.click();window.scrollTo(0,0)}
+window.ggOpenDemoRosters=open;
+document.addEventListener('click',e=>{const target=e.target.closest('[data-v82-open="teams"]');if(!target)return;e.preventDefault();e.stopImmediatePropagation();open();},true);
+})();</script>
+</body></html><style>
 /* v32 — el SVG del balón ocupa toda la circunferencia, sin círculo exterior duplicado */
 .basket-ball{
   border:0!important;
@@ -2171,7 +2190,7 @@ function showModule(i){
  body.innerHTML='<h3>'+title+' · '+name+'</h3><p>'+description[i]+'</p><div class="gg-v82-actions">'+(links[i]||[]).map(([label,key])=>'<button type="button" data-v82-open="'+key+'">'+label+' →</button>').join('')+'</div>';
  body.querySelectorAll('[data-v82-open]').forEach(btn=>btn.onclick=()=>{
  const key=btn.dataset.v82Open;
- if(key==='teams'){window.ggView?.('teams');window.scrollTo(0,0);return}
+ if(key==='teams'){const teamLink=document.querySelector('#ggV71Bottom [data-section="teams"]');if(teamLink)teamLink.click();else window.ggOpenDemoRosters?.();window.scrollTo(0,0);return}
  if(['posts','clubs','social'].includes(key)){window.ggOpenCommunity?.(key);return}
  if(key==='calendar'){const calendar=document.querySelector('#ggV71Bottom [data-section="calendar"]');if(calendar)calendar.click();else window.ggView?.('calendar')}else window.ggView?.(key);
  window.scrollTo(0,0);
