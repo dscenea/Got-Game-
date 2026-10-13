@@ -1993,22 +1993,22 @@ function showSport(){
  const name=getSport();if(!name)return;
  const h=main.querySelector('.gg-v71-heading');if(!h)return;
  currentSport=name;currentModule=null;
- const card=h.querySelector('h3');if(card)card.textContent='Gestión de '+name;
+ const card=h.querySelector('h3');if(card)card.textContent=(data.sports||[]).length===1?'Panel de coordinación':'Gestión de '+name;
  const grid=main.querySelector('.gg-v71-grid');
  if(grid)grid.style.display='none';
  main.querySelectorAll('[data-module]').forEach(x=>x.remove());
  let old=main.querySelector('.gg-v71-module-grid');if(old)old.remove();
  const g=document.createElement('div');g.className='gg-v71-module-grid';
- modules.forEach(([title,key],i)=>{const b=document.createElement('button');b.className='gg-v71-module';b.innerHTML='<svg viewBox="0 0 32 32" aria-hidden="true">'+icons[key]+'</svg><span>'+title+'</span>';b.onclick=()=>showModule(i);g.append(b)});
+ modules.forEach(([title,key],i)=>{if([1,4,5].includes(i))return;const b=document.createElement('button');b.className='gg-v71-module';b.innerHTML='<svg viewBox="0 0 32 32" aria-hidden="true">'+icons[key]+'</svg><span>'+title+'</span>';b.onclick=()=>showModule(i);g.append(b)});
  h.insertAdjacentElement('afterend',g);
  const back=document.getElementById('ggV71Switch');if(back)back.onclick=()=>{currentSport=null;currentModule=null;window.ggView?.('home');const home=main.querySelector('[data-section]');home?.click()};
 }
 function showModule(i){
  currentModule=i;
  const name=getSport(),title=modules[i][0];
- main.innerHTML='<button class="gg-v71-page-back" id="ggV72Back">← Volver a '+name+'</button><div class="gg-v71-sport-detail">'+icon(name)+'<h3>'+title+'</h3><button id="ggV72Switch">Cambiar deporte</button></div><div class="gg-v71-card" id="ggV72ModuleContent"></div>';
- document.getElementById('ggV72Back').onclick=()=>{window.ggView?.('home');setTimeout(showSport,0)};
- document.getElementById('ggV72Switch').onclick=()=>{currentSport=null;window.ggView?.('home');main.querySelector('[data-section]')?.click()};
+ main.innerHTML='<button class="gg-v71-page-back" id="ggV72Back">← Volver al inicio</button><div class="gg-v71-sport-detail">'+icon(name)+'<h3>'+title+'</h3>'+((data.sports||[]).length>1?'<button id="ggV72Switch">Cambiar deporte</button>':'')+'</div><div class="gg-v71-card" id="ggV72ModuleContent"></div>';
+ document.getElementById('ggV72Back').onclick=()=>{window.ggView?.('home');setTimeout(()=>{showSport();window.scrollTo(0,0)},0)};
+ const moduleSwitch=document.getElementById('ggV72Switch');if(moduleSwitch)moduleSwitch.onclick=()=>{currentSport=null;window.ggView?.('home');main.querySelector('[data-section]')?.click()};
  const body=document.getElementById('ggV72ModuleContent');
  if(i===0){body.innerHTML='<h3>Equipos de '+name+'</h3><p>Plantillas, horarios y novedades por equipo.</p><button class="gg-v71-back" id="ggV72Open">Consultar equipos</button>';document.getElementById('ggV72Open').onclick=()=>{window.ggView('teams');const grid=document.querySelector('#ggWorkspace .gg-team-grid');grid?.querySelectorAll(':scope > *').forEach(c=>{const t=c.textContent||'';c.hidden=!t.includes(name)})}}
  else if(i===3||i===4){body.innerHTML='<h3>Calendario de '+name+'</h3><p>Consulta horarios y actividades del deporte seleccionado.</p><button class="gg-v71-back" id="ggV72Open">Abrir calendario</button>';document.getElementById('ggV72Open').onclick=()=>window.ggView('calendar')}
@@ -2109,3 +2109,4 @@ function update(){main.querySelectorAll('.gg-v71-sport').forEach(card=>{const na
 new MutationObserver(update).observe(main,{childList:true,subtree:false});update();
 })();
 </script>
+<style id="gg-v76-cleanup">#dashboard.gg-v71.gg-mita-demo #ggV71Switch,#dashboard.gg-v71.gg-mita-demo #ggV72Switch{display:none!important}#dashboard.gg-v71 .gg-v71-module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#dashboard.gg-v71 .gg-v71-module{min-height:132px}</style>
