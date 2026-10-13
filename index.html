@@ -1563,7 +1563,21 @@ let queued=false;new MutationObserver(()=>{if(queued)return;queued=true;requestA
 #dashboard.gg-logrobasket-demo .gg-v71-module svg{stroke:#941018!important}
 #dashboard.gg-logrobasket-demo .gg-v71-page-back{border-color:#e6c6c9!important}
 </style>
-</body></html><style>
+<style id="gg-v88-club-palette">
+/* Keep each club's palette coherent throughout the workspace. */
+#dashboard.gg-logrobasket-demo #ggWorkspace{--gg-person-accent:#941018}
+#dashboard.gg-logrobasket-demo #ggWorkspace .gg-v85-filters button.active,
+#dashboard.gg-logrobasket-demo #ggWorkspace .gg-v85-person button,
+#dashboard.gg-logrobasket-demo #ggWorkspace .gg-v85-compose button{background:#941018!important;color:#fff!important}
+#dashboard.gg-logrobasket-demo #ggWorkspace .gg-v85-filters button:not(.active){color:#941018!important;border-color:#dcb6b9!important}
+#dashboard.gg-logrobasket-demo #ggWorkspace .gg-v85-person,
+#dashboard.gg-logrobasket-demo #ggWorkspace #ggV86Search{border-color:#e2c5c7!important}
+#dashboard.gg-logrobasket-demo #ggWorkspace .gg-v86-search-label{color:#651018!important}
+#dashboard.gg-logrobasket-demo #ggWorkspace .gg-v84-settings-grid button>span{color:#941018!important}
+#dashboard.gg-logrobasket-demo #ggWorkspace .gg-v84-club-head{border-bottom-color:#941018!important}
+#dashboard.gg-v71 #ggWorkspace .gg-v88-logout{border-color:#d7a7a9!important;background:#fff8f8!important}
+#dashboard.gg-v71 #ggWorkspace .gg-v88-logout strong{color:#941018!important}
+</style></body></html><style>
 /* v32 — el SVG del balón ocupa toda la circunferencia, sin círculo exterior duplicado */
 .basket-ball{
   border:0!important;
@@ -2281,7 +2295,9 @@ function open(key){
  if(key==='settings'){
  reset();active('settings');
  dash.classList.add('gg-v83-workspace');workspace.hidden=false;
- workspace.innerHTML='<div class="gg-v84-club-head"><span>GOT GAME! / CLUB</span><h1>Gestiona tu club</h1><p>Identidad, instalaciones, organización y configuración.</p></div><div class="gg-v84-settings-grid">'+[['logo','Escudo y colores','Personaliza la identidad visual'],['sports','Deportes','Configura las disciplinas'],['facilities','Instalaciones','Gestiona pistas y espacios'],['modules','Módulos del club','Activa las funciones disponibles'],['language','Idioma','Personaliza el idioma'],['payments','Pagos y cuotas','Configura los cobros del club']].map(([id,title,desc])=>'<button type="button" data-club-setting="'+id+'"><strong>'+title+'</strong><small>'+desc+'</small><span aria-hidden="true">→</span></button>').join('')+'</div>';
+ workspace.innerHTML='<div class="gg-v84-club-head"><span>GOT GAME! / CLUB</span><h1>Gestiona tu club</h1><p>Identidad, instalaciones, organización y configuración.</p></div><div class="gg-v84-settings-grid">'+[['logo','Escudo y colores','Personaliza la identidad visual'],['sports','Deportes','Configura las disciplinas'],['facilities','Instalaciones','Gestiona pistas y espacios'],['language','Idioma','Personaliza el idioma'],['payments','Pagos y cuotas','Configura los cobros del club']].map(([id,title,desc])=>'<button type="button" data-club-setting="'+id+'"><strong>'+title+'</strong><small>'+desc+'</small><span aria-hidden="true">→</span></button>').join('')+'</div>';
+ workspace.querySelector('.gg-v84-settings-grid').insertAdjacentHTML('beforeend','<button type="button" id="ggClubLogoutV88" class="gg-v88-logout"><strong>Cerrar sesión</strong><small>Volver a la pantalla de acceso</small><span aria-hidden="true">→</span></button>');
+ workspace.querySelector('#ggClubLogoutV88').onclick=()=>{if(typeof clubLogout==='function')clubLogout();};
  backButton();
  workspace.querySelectorAll('[data-club-setting]').forEach(b=>b.onclick=()=>{const id=b.dataset.clubSetting;const btn=[...document.querySelectorAll('#clubSettingsMenu button')].find(x=>x.getAttribute('onclick')?.includes("'"+id+"'"));if(btn)btn.click();else{const fallback=document.querySelector('.coord-settings-btn');fallback?.click();}});
  
