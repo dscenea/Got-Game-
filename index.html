@@ -1655,21 +1655,46 @@ const nav=dash.querySelector('.coord-nav');nav.querySelectorAll('button')[4].onc
 #dashboard.gg-subscreen #ggWorkspace{min-height:0!important;padding-top:0!important}
 #dashboard .gg-subscreen-back{display:none!important}
 </style>
-<script id="gg-unified-navigation-script-v63">
+
+
+<script id="gg-community-repair-v64">
 (function(){
-const dash=document.getElementById('dashboard');
-if(!dash)return;
-const nav=dash.querySelector('.coord-nav');
-if(!nav)return;
-const buttons=Array.from(nav.querySelectorAll(':scope > button'));
-const previousView=window.ggView;
-window.ggView=function(view){
- previousView(view);
- if(view==='club'&&typeof window.ggRenderCommunity==='function')window.ggRenderCommunity('posts');
- buttons.forEach((button,i)=>{
-  if(!button.classList.contains('coord-settings-btn'))button.classList.toggle('active',i===(view==='home'?0:view==='teams'?1:view==='calendar'?2:view==='messages'?3:view==='club'?4:-1));
+const dash=document.getElementById('dashboard'),nav=dash?.querySelector('.coord-nav'),area=document.getElementById('ggWorkspace');
+if(!dash||!nav||!area)return;
+const buttons=[...nav.querySelectorAll(':scope > button')];
+const oldView=window.ggView;
+function community(tab='posts'){
+ document.body.classList.remove('gg-network-visible');
+ document.getElementById('gg-mobile-network')?.classList.remove('gg-open');
+ // Prepare the same independent workspace as the other navigation sections.
+ oldView('teams');
+ dash.classList.add('gg-subscreen');
+ area.hidden=false;
+ area.innerHTML='<div class="gg-eyebrow">COMUNIDAD</div><h1>Comunidad</h1><p class="gg-muted">Toda la actividad y las conexiones de tu club.</p><div class="gg-community-tabs" id="ggCommunityTabs"></div><div id="ggCommunityContent"></div>';
+ const tabs=area.querySelector('#ggCommunityTabs'),content=area.querySelector('#ggCommunityContent');
+ [['posts','Publicaciones'],['network','Red de clubes'],['social','Redes sociales']].forEach(([key,label])=>{
+ const b=document.createElement('button');b.type='button';b.textContent=label;b.className=key===tab?'active':'';b.onclick=()=>community(key);tabs.append(b);
  });
-};
-if(buttons[4])buttons[4].onclick=function(event){event.preventDefault();window.ggView('club')};
+ if(tab==='posts'){
+ content.innerHTML='<h2>Publicaciones del club</h2><p class="gg-muted">Noticias, resultados, fotografías y avisos para las familias.</p>';
+ const button=document.createElement('button');button.className='gg-button selected';button.textContent='Ver publicaciones';button.onclick=()=>{if(typeof window.ggRenderCommunity==='function')try{window.ggRenderCommunity('posts')}catch(e){console.error(e)}};content.append(button);
+ }else if(tab==='network'){
+ content.innerHTML='<h2>Red de clubes</h2><p class="gg-muted">Encuentra clubes para amistosos, torneos y colaboraciones.</p>';
+ const source=document.getElementById('gg-mobile-network');
+ const clubs=typeof ggMobileExampleClubs!=='undefined'?ggMobileExampleClubs:[];
+ const input=document.createElement('input');input.className='gg-demo-input';input.placeholder='Buscar clubes';content.append(input);
+ const list=document.createElement('div');content.append(list);
+ function render(){list.replaceChildren();clubs.filter(c=>(c.name+' '+c.city+' '+c.sport).toLowerCase().includes(input.value.toLowerCase())).forEach(c=>{const card=document.createElement('div');card.className='gg-demo-card';card.textContent=c.name+' · '+c.city+' · '+c.sport;list.append(card)});if(!list.children.length)list.textContent='No hay clubes disponibles para esta búsqueda.'}
+ input.oninput=render;render();
+ }else{
+ content.innerHTML='<h2>Redes sociales</h2><p class="gg-muted">Conecta opcionalmente los perfiles oficiales del club.</p>';
+ const b=document.createElement('button');b.className='gg-button selected';b.textContent='Configurar redes sociales';b.onclick=()=>{if(typeof window.ggConnectSocial==='function')window.ggConnectSocial()};content.append(b);
+ }
+ buttons.forEach((b,i)=>{if(!b.classList.contains('coord-settings-btn'))b.classList.toggle('active',i===4)});
+ window.scrollTo(0,0);
+}
+window.ggOpenCommunity=community;
+window.ggView=function(view){if(view==='club'){community('posts');return}oldView(view)};
+if(buttons[4]){buttons[4].onclick=e=>{e.preventDefault();e.stopPropagation();community('posts')};}
 })();
 </script>
