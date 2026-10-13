@@ -1997,11 +1997,19 @@ function showSport(){
  const grid=main.querySelector('.gg-v71-grid');
  if(grid)grid.style.display='none';
  main.querySelectorAll('[data-module]').forEach(x=>x.remove());
- let old=main.querySelector('.gg-v71-module-grid');if(old)old.remove();
+ let old=main.querySelector('.gg-v71-module-grid');if(old)old.remove();const prevExtra=main.querySelector('#ggV77Extras');if(prevExtra)prevExtra.remove();
  const g=document.createElement('div');g.className='gg-v71-module-grid';
  modules.forEach(([title,key],i)=>{if([1,4,5].includes(i))return;const b=document.createElement('button');b.className='gg-v71-module';b.innerHTML='<svg viewBox="0 0 32 32" aria-hidden="true">'+icons[key]+'</svg><span>'+title+'</span>';b.onclick=()=>showModule(i);g.append(b)});
  h.insertAdjacentElement('afterend',g);
- const back=document.getElementById('ggV71Switch');if(back)back.onclick=()=>{currentSport=null;currentModule=null;window.ggView?.('home');const home=main.querySelector('[data-section]');home?.click()};
+ const oldExtra=main.querySelector('#ggV77Extras');if(oldExtra)oldExtra.remove();
+ const extra=document.createElement('div');extra.id='ggV77Extras';
+ const multi=(data.sports||[]).length>1;
+ const counts=name==='Baloncesto'?{teams:4,coaches:7,players:82}:{teams:5,coaches:7,players:84};
+ extra.innerHTML='<div class="gg-v77-stats"><div><strong>'+counts.teams+'</strong><span>Equipos</span></div><div><strong>'+counts.coaches+'</strong><span>Entrenadores</span></div><div><strong>'+counts.players+'</strong><span>Jugadores</span></div></div><h3>Tablón de '+name+'</h3><div class="gg-v77-feed"><article><small>PRÓXIMOS EVENTOS · DEMO</small><b>Planificación semanal</b><p>Consulta los próximos entrenamientos y partidos del deporte.</p><button data-v77-action="calendar">Ver calendario →</button></article><article><small>COORDINACIÓN · DEMO</small><b>Revisión de asistencia</b><p>Comprueba las confirmaciones y las ausencias comunicadas por las familias.</p><button data-v77-action="teams">Ver equipos →</button></article><article><small>COMUNIDAD · DEMO</small><b>Noticias y convocatorias</b><p>Publica novedades y encuentra clubes para organizar amistosos o torneos.</p><button data-v77-action="community">Abrir comunidad →</button></article></div>';
+ g.insertAdjacentElement('afterend',extra);
+ extra.querySelectorAll('[data-v77-action]').forEach(b=>b.onclick=()=>{const k=b.dataset.v77Action;if(k==='community')window.ggOpenCommunity?.('posts');else window.ggView?.(k)});
+
+ const back=document.getElementById('ggV71Switch');if(back)back.onclick=()=>{currentSport=null;currentModule=null;const pick=main.querySelector('.gg-v71-sports');if(pick){pick.style.display='grid';pick.scrollIntoView({block:'start',behavior:'smooth'});const heading=h.querySelector('h3');if(heading)heading.textContent='Elige un deporte';const mod=main.querySelector('.gg-v71-module-grid');if(mod)mod.remove();back.style.display='none';}else{const home=document.querySelector('#ggV71Bottom [data-section="home"]');home?.click();setTimeout(()=>main.querySelector('.gg-v71-sports')?.scrollIntoView({block:'start'}),80)}};
 }
 function showModule(i){
  currentModule=i;
@@ -2109,4 +2117,4 @@ function update(){main.querySelectorAll('.gg-v71-sport').forEach(card=>{const na
 new MutationObserver(update).observe(main,{childList:true,subtree:false});update();
 })();
 </script>
-<style id="gg-v76-cleanup">#dashboard.gg-v71.gg-mita-demo #ggV71Switch,#dashboard.gg-v71.gg-mita-demo #ggV72Switch{display:none!important}#dashboard.gg-v71 .gg-v71-module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#dashboard.gg-v71 .gg-v71-module{min-height:132px}</style>
+<style id="gg-v76-cleanup">#dashboard.gg-v71.gg-mita-demo #ggV71Switch,#dashboard.gg-v71.gg-mita-demo #ggV72Switch{display:none!important}#dashboard.gg-v71 .gg-v71-module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#dashboard.gg-v71 .gg-v71-module{min-height:132px}</style><style id="gg-v77-layout">#dashboard.gg-v71 .gg-v71-module-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important}#dashboard.gg-v71 .gg-v71-module{min-height:118px!important;padding:14px 9px!important;font-size:clamp(11px,2.8vw,15px)!important;overflow-wrap:anywhere}#dashboard.gg-v71 .gg-v71-module svg{width:29px;height:29px}#ggV77Extras{margin:20px 0 30px}#ggV77Extras h3{font-size:22px;margin:25px 0 12px}.gg-v77-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.gg-v77-stats>div{border:1px solid #d9dfe9;border-radius:17px;background:#fff;padding:16px 10px;display:flex;flex-direction:column;gap:6px}.gg-v77-stats strong{font-size:28px;color:#173d83}.gg-v77-stats span{font-size:12px;font-weight:700;color:#384b68}.gg-v77-feed{display:grid;gap:12px}.gg-v77-feed article{border:1px solid #dce1e9;border-radius:18px;background:white;padding:18px;display:flex;flex-direction:column;gap:8px}.gg-v77-feed small{font-size:11px;letter-spacing:1px;color:#4268f5;font-weight:800}.gg-v77-feed b{font-size:18px}.gg-v77-feed p{margin:0;color:#647084}.gg-v77-feed button{align-self:flex-start;background:none;border:0;color:#174b98;font-weight:800;padding:8px 0}</style>
