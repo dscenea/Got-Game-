@@ -1949,3 +1949,78 @@ go=function(id){oldGo(id);if(id==='dashboard'){section='home';sport=sports().len
 draw();
 })();
 </script>
+
+<style id="gg-v72">
+#dashboard.gg-v71 .gg-v71-sport .gg-v71-symbol{width:95px;height:95px;display:block}
+#dashboard.gg-v71 .gg-v71-sport .gg-v71-symbol svg{width:100%;height:100%;stroke:#fff;fill:none;stroke-width:2.7;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 2px 7px #0004)}
+#dashboard.gg-v71 .gg-v71-sport{background:linear-gradient(145deg,var(--sport-dark,#061a35),var(--sport-light,#24569a))}
+#dashboard.gg-v71 .gg-v71-sport:before{width:185px;height:185px;border-width:32px;right:-75px;top:2px}
+#dashboard.gg-v71 .gg-v71-sport .gg-v71-alert{font-size:12px}
+#dashboard.gg-v71 .gg-v71-module-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#dashboard.gg-v71 .gg-v71-module{background:#fff;border:1px solid #dfe2e9;border-radius:18px;padding:17px 12px;min-height:135px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;font-weight:800;color:#102448}
+#dashboard.gg-v71 .gg-v71-module svg{width:31px;height:31px;stroke:#174b98;fill:none;stroke-width:1.8}
+#dashboard.gg-v71 .gg-v71-page-back{display:flex;gap:8px;align-items:center;background:none;border:0;color:#174b98;font-weight:800;padding:10px 0}
+#dashboard.gg-v71 .gg-v71-sport-detail{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;background:#102448;color:#fff;margin:12px 0}
+#dashboard.gg-v71 .gg-v71-sport-detail svg{width:46px;height:46px;stroke:#fff;fill:none;stroke-width:2.5}
+#dashboard.gg-v71 .gg-v71-sport-detail h3{color:white;margin:0}
+#dashboard.gg-v71 .gg-v71-sport-detail button{margin-left:auto;border:1px solid #ffffff80;border-radius:9px;padding:8px;background:#ffffff1c;color:white}
+#dashboard.gg-v71 .gg-v71-legacy-hidden{display:none!important}
+#dashboard.gg-v71 #ggWorkspace:not([hidden]){padding-bottom:95px}
+</style>
+<script id="gg-v72-script">
+(function(){
+const dash=document.getElementById('dashboard'),main=document.getElementById('ggV71Main'),welcome=document.getElementById('welcome');
+if(!dash||!main)return;
+const ballSvg={Baloncesto:'<circle cx="50" cy="50" r="39"/><path d="M50 11v78M11 50h78M23 22c26 13 29 43 5 59M77 22C51 35 48 65 72 81"/>',Fútbol:'<circle cx="50" cy="50" r="39"/><path d="m50 30 19 14-7 22H38l-7-22zM50 30 50 11M31 44 13 35M38 66 26 82M62 66 74 82M69 44 87 35M26 82l-4-17-11-15M74 82l4-17 11-15"/>',Voleibol:'<circle cx="50" cy="50" r="39"/><path d="M21 24q31-3 50 19M12 45q31-9 51 16M31 85q-7-35 20-65M58 88q-4-31 28-43M79 22q-23 20-14 48"/>'};
+const icon=name=>'<svg viewBox="0 0 100 100" aria-hidden="true">'+(ballSvg[name]||ballSvg.Baloncesto)+'</svg>';
+let currentSport=null,currentModule=null;
+const modules=[['Equipos','users'],['Jugadores y familias','people'],['Entrenadores','coach'],['Instalaciones y horarios','calendar'],['Calendario y actividades','calendar'],['Publicaciones y comunidad','community']];
+const icons={users:'<circle cx="15" cy="11" r="5"/><path d="M4 28v-4c0-7 22-7 22 0v4"/>',people:'<circle cx="12" cy="10" r="4"/><circle cx="24" cy="10" r="4"/><path d="M3 28v-4q1-10 12-7M29 28v-4q-1-10-12-7"/>',coach:'<path d="M4 27V6h25v21zM10 11h13M10 17h7M10 23h13"/>',calendar:'<rect x="3" y="7" width="27" height="23" rx="3"/><path d="M9 3v8M24 3v8M3 15h27"/>',community:'<path d="M4 5h25v18H14l-7 6v-6H4zM10 12h13M10 17h9"/>'};
+const getSport=()=>currentSport||((data.sports||[]).length===1?data.sports[0]:null);
+function paintSports(){
+ main.querySelectorAll('.gg-v71-sport').forEach(b=>{
+ const name=b.dataset.sport,el=b.querySelector('.gg-v71-symbol');
+ if(el)el.innerHTML=icon(name);
+ b.style.setProperty('--sport-dark',name==='Baloncesto'?'#172643':name==='Fútbol'?'#092b37':'#342447');
+ b.style.setProperty('--sport-light',name==='Baloncesto'?'#ab6229':name==='Fútbol'?'#207c81':'#745ca6');
+ b.addEventListener('click',()=>{currentSport=name;currentModule=null;setTimeout(showSport,0)});
+ });
+}
+function showSport(){
+ const name=getSport();if(!name)return;
+ const h=main.querySelector('.gg-v71-heading');if(!h)return;
+ currentSport=name;currentModule=null;
+ const card=h.querySelector('h3');if(card)card.textContent='Gestión de '+name;
+ const grid=main.querySelector('.gg-v71-grid');
+ if(grid)grid.style.display='none';
+ main.querySelectorAll('[data-module]').forEach(x=>x.remove());
+ let old=main.querySelector('.gg-v71-module-grid');if(old)old.remove();
+ const g=document.createElement('div');g.className='gg-v71-module-grid';
+ modules.forEach(([title,key],i)=>{const b=document.createElement('button');b.className='gg-v71-module';b.innerHTML='<svg viewBox="0 0 32 32" aria-hidden="true">'+icons[key]+'</svg><span>'+title+'</span>';b.onclick=()=>showModule(i);g.append(b)});
+ h.insertAdjacentElement('afterend',g);
+ const back=document.getElementById('ggV71Switch');if(back)back.onclick=()=>{currentSport=null;currentModule=null;window.ggView?.('home');const home=main.querySelector('[data-section]');home?.click()};
+}
+function showModule(i){
+ currentModule=i;
+ const name=getSport(),title=modules[i][0];
+ main.innerHTML='<button class="gg-v71-page-back" id="ggV72Back">← Volver a '+name+'</button><div class="gg-v71-sport-detail">'+icon(name)+'<h3>'+title+'</h3><button id="ggV72Switch">Cambiar deporte</button></div><div class="gg-v71-card" id="ggV72ModuleContent"></div>';
+ document.getElementById('ggV72Back').onclick=()=>{window.ggView?.('home');setTimeout(showSport,0)};
+ document.getElementById('ggV72Switch').onclick=()=>{currentSport=null;window.ggView?.('home');main.querySelector('[data-section]')?.click()};
+ const body=document.getElementById('ggV72ModuleContent');
+ if(i===0){body.innerHTML='<h3>Equipos de '+name+'</h3><p>Plantillas, horarios y novedades por equipo.</p><button class="gg-v71-back" id="ggV72Open">Consultar equipos</button>';document.getElementById('ggV72Open').onclick=()=>{window.ggView('teams');const grid=document.querySelector('#ggWorkspace .gg-team-grid');grid?.querySelectorAll(':scope > *').forEach(c=>{const t=c.textContent||'';c.hidden=!t.includes(name)})}}
+ else if(i===3||i===4){body.innerHTML='<h3>Calendario de '+name+'</h3><p>Consulta horarios y actividades del deporte seleccionado.</p><button class="gg-v71-back" id="ggV72Open">Abrir calendario</button>';document.getElementById('ggV72Open').onclick=()=>window.ggView('calendar')}
+ else if(i===5){body.innerHTML='<h3>Comunidad de '+name+'</h3><p>Publicaciones y convocatorias relacionadas con '+name+'.</p><button class="gg-v71-back" id="ggV72Open">Abrir Comunidad</button>';document.getElementById('ggV72Open').onclick=()=>window.ggOpenCommunity?.('posts')}
+ else body.innerHTML='<h3>'+title+'</h3><p>Área de '+name+'. Esta sección está pendiente de conectar con los datos y permisos reales del club.</p>';
+}
+const observer=new MutationObserver(()=>{if(!dash.classList.contains('gg-v71'))return;paintSports();if(getSport()&&main.querySelector('[data-module]'))showSport()});
+observer.observe(main,{childList:true,subtree:false});
+const originalGo=go;
+go=function(id){originalGo(id);if(id==='dashboard'){currentSport=(data.sports||[]).length===1?data.sports[0]:null;currentModule=null;setTimeout(()=>{paintSports();if(currentSport)showSport()},0)}};
+if(welcome){
+ const btn=document.createElement('button');btn.className='gg-demo-shortcut';btn.type='button';btn.textContent='Acceso rápido · Basket Club Ámbar (1 deporte)';
+ btn.onclick=()=>{data={club:'Basket Club Ámbar',sports:['Baloncesto'],clubPalette:['#402456','#e6a54a'],roleColors:{coord:'#402456'},facilities:[{name:'Pabellón Ámbar',sports:['Baloncesto'],spaces:[]}]};document.getElementById('clubSmall').textContent=data.club;go('dashboard')};
+ welcome.append(btn);
+}
+paintSports();
+})();
+</script>
