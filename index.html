@@ -1646,3 +1646,57 @@ if(dash.classList.contains('gg-subscreen')){const back=document.createElement('b
 const nav=dash.querySelector('.coord-nav');nav.querySelectorAll('button')[4].onclick=()=>window.ggView('club');
 })();
 </script>
+
+<style id="gg-navigation-v2-stability">
+/* Shared, accessible return control across mobile and desktop. */
+#dashboard.gg-subscreen #ggWorkspace>.gg-subscreen-back{display:inline-flex!important;position:relative;z-index:2}
+#dashboard.gg-subscreen #ggWorkspace{min-width:0}
+#dashboard .gg-community-tabs button:focus-visible,
+#dashboard .gg-subscreen-back:focus-visible{outline:3px solid var(--club-secondary,#ffc107);outline-offset:3px}
+@media(max-width:440px){#dashboard .gg-community-tabs button{overflow-wrap:anywhere;min-height:44px}}
+</style>
+<script id="gg-navigation-v2-stability-script">
+(function(){
+  const dash=document.getElementById('dashboard');
+  const workspace=document.getElementById('ggWorkspace');
+  if(!dash||!workspace||typeof window.ggView!=='function')return;
+  function ensureBack(){
+    const buttons=Array.from(workspace.querySelectorAll(':scope > .gg-subscreen-back'));
+    if(!dash.classList.contains('gg-subscreen')){buttons.forEach(button=>button.remove());return;}
+    let back=buttons.shift();
+    buttons.forEach(button=>button.remove());
+    if(!back){back=document.createElement('button');back.className='gg-subscreen-back';}
+    back.type='button';
+    back.textContent='← Volver al inicio';
+    back.setAttribute('aria-label','Volver al inicio');
+    back.onclick=()=>window.ggView('home');
+    if(workspace.firstElementChild!==back)workspace.prepend(back);
+  }
+  const previousView=window.ggView;
+  window.ggView=function(view){
+    const result=previousView.apply(this,arguments);
+    dash.classList.toggle('gg-subscreen',view!=='home');
+    ensureBack();
+    return result;
+  };
+  if(typeof window.ggRenderCommunity==='function'){
+    const previousCommunity=window.ggRenderCommunity;
+    window.ggRenderCommunity=function(tab){
+      const result=previousCommunity.apply(this,arguments);
+      const tabs=workspace.querySelector('.gg-community-tabs');
+      if(tabs){
+        tabs.setAttribute('role','tablist');
+        tabs.setAttribute('aria-label','Secciones de Comunidad');
+        tabs.querySelectorAll('button').forEach(button=>{
+          button.type='button';
+          button.setAttribute('role','tab');
+          button.setAttribute('aria-selected',String(button.classList.contains('active')));
+        });
+      }
+      ensureBack();
+      return result;
+    };
+  }
+  ensureBack();
+})();
+</script>
