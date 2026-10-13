@@ -1914,7 +1914,7 @@ dash.append(main,bottom);
 let sport=null,section='home';
 const sports=()=>data.sports||[];
 const shield='<svg class="gg-v71-logo" viewBox="0 0 100 116" xmlns="http://www.w3.org/2000/svg"><path d="M50 3 94 22 90 80Q74 103 50 112 26 103 10 80L6 22Z" fill="#ffca26" stroke="white" stroke-width="4"/><path d="M50 11 86 27 83 77Q67 97 50 104 33 97 17 77L14 27Z" fill="#071b37"/><path d="M17 62 37 41 49 52 67 29 85 54V78Q65 99 50 104 30 96 17 78Z" fill="#1b65a6"/><text x="50" y="62" font-size="22" font-weight="900" fill="white" text-anchor="middle">EN</text><path d="M25 80 Q50 67 75 80" fill="none" stroke="#ffca26" stroke-width="5"/></svg>';
-function header(){return '<div class="gg-v71-header">'+shield+'<div><small>CLUB DEPORTIVO</small><h2>'+(data.club||'Ebro Norte')+'</h2><small>COORDINACIÓN</small></div><button class="gg-v71-gear" id="ggV71Settings" aria-label="Gestión del club">⚙</button></div>'}
+function header(){return '<div class="gg-v71-header">'+shield+'<div><small>CLUB DEPORTIVO</small><h2>'+(data.club||'Ebro Norte')+'</h2><small>COORDINACIÓN</small></div></div>'}
 function draw(){
  dash.classList.add('gg-v71');
  if(sports().length===1&&!sport)sport=sports()[0];
@@ -1931,15 +1931,17 @@ function draw(){
  html+='<div class="gg-v71-heading"><h3>'+({people:'Personas del club',calendar:'Calendario combinado',community:'Comunidad'}[section]||section)+'</h3></div>';
  if(section==='people')html+='<div class="gg-v71-card"><b>Personas de todos los deportes</b><p>Jugadores, entrenadores, familias y coordinadores.</p><button class="gg-v71-back" id="ggV71People">Ver gestión de personas</button></div>';
  if(section==='calendar')html+='<div class="gg-v71-card"><b>Agenda conjunta</b><p>Actividades de todos los deportes. Puedes consultar el calendario completo y sus filtros.</p><button class="gg-v71-back" id="ggV71Calendar">Abrir calendario</button></div>';
+ if(section==='settings')html+='<div class="gg-v71-card"><h3>Gestión general del club</h3><p>Identidad visual, instalaciones compartidas, pagos y cuotas, permisos y redes sociales.</p><button class="gg-v71-back" id="ggV71Manage">Abrir ajustes del club</button></div>';
  if(section==='community')html+='<div class="gg-v71-card"><b>Comunidad del club</b><p>Publicaciones, red de clubes y redes sociales.</p><button class="gg-v71-back" id="ggV71Community">Abrir Comunidad</button></div>';
  }
  main.innerHTML=html;
- bottom.innerHTML=[['home','⌂','Inicio'],['people','♧','Personas'],['calendar','▦','Calendario'],['community','▤','Comunidad']].map(([id,icon,label])=>'<button data-section="'+id+'" class="'+(section===id?'active':'')+'"><span>'+icon+'</span>'+label+'</button>').join('');
+ bottom.innerHTML=[['home','house','Inicio'],['people','users','Personas'],['calendar','calendar','Calendario'],['community','message','Comunidad'],['settings','settings','Club']].map(([id,icon,label])=>'<button data-section="'+id+'" class="'+(section===id?'active':'')+'"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+({house:'<path d="m3 10 9-7 9 7v11H3z"/><path d="M9 21v-8h6v8"/>',users:'<circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3"/><path d="M17 6a3 3 0 0 1 0 6m1 3c2 1 3 3 3 6"/>',calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v5m10-5v5M3 11h18"/>',message:'<path d="M4 4h16v13H9l-5 4z"/><path d="M8 9h8m-8 4h6"/>',settings:'<circle cx="12" cy="12" r="3"/><path d="M10 2h4l1 3 3 1 3-1 2 4-3 2v3l3 2-2 4-3-1-3 1-1 3h-4l-1-3-3-1-3 1-2-4 3-2v-3L1 9l2-4 3 1 3-1z"/>'}[icon])+'</svg>'+label+'</button>').join('');
  bottom.querySelectorAll('[data-section]').forEach(b=>b.onclick=()=>{section=b.dataset.section;if(section==='home'&&sports().length>1)sport=null;draw()});
  main.querySelectorAll('[data-sport]').forEach(b=>b.onclick=()=>{sport=b.dataset.sport;section='home';draw()});
  const switcher=document.getElementById('ggV71Switch');if(switcher)switcher.onclick=()=>{sport=null;draw()};
  const settings=document.getElementById('ggV71Settings');if(settings)settings.onclick=()=>nav.querySelector('.coord-settings-btn')?.click();
  main.querySelectorAll('[data-module]').forEach(b=>b.onclick=()=>{const i=Number(b.dataset.module);if(i===0||i===1||i===2)window.ggView('teams');else if(i===3||i===4)window.ggView('calendar');else window.ggOpenCommunity?.('posts')});
+ const manage=document.getElementById('ggV71Manage');if(manage)manage.onclick=()=>nav.querySelector('.coord-settings-btn')?.click();
  const people=document.getElementById('ggV71People');if(people)people.onclick=()=>window.ggView('teams');
  const calendar=document.getElementById('ggV71Calendar');if(calendar)calendar.onclick=()=>window.ggView('calendar');
  const community=document.getElementById('ggV71Community');if(community)community.onclick=()=>window.ggOpenCommunity?.('posts');
@@ -2055,3 +2057,19 @@ document.addEventListener('click',e=>{if(e.target.closest('.gg-demo-shortcut'))s
 refresh();
 })();
 </script>
+
+<style id="gg-v74-single-header">
+#dashboard.gg-v71 .top{display:none!important}
+#dashboard.gg-v71 #dashboardSportSelector,#dashboard.gg-v71 #ggSportContext{display:none!important}
+#dashboard.gg-v71 #ggV71Main{padding-top:8px}
+#dashboard.gg-v71 .gg-v71-header{min-height:180px;background:linear-gradient(118deg,#081c3b 0%,#174b98 66%,#e4bd35 100%)!important;border-radius:23px;gap:18px}
+#dashboard.gg-v71 .gg-v71-header:before{background:radial-gradient(ellipse at 84% 45%,#ffefbb66,transparent 43%),repeating-linear-gradient(135deg,transparent 0 44px,#ffffff12 47px 84px,transparent 88px 148px)!important;opacity:1}
+#dashboard.gg-v71 .gg-v71-header .gg-v71-logo{width:100px;height:120px;min-width:100px}
+#dashboard.gg-v71 .gg-v71-header h2{font-size:clamp(21px,5vw,30px)}
+#dashboard.gg-v71 .gg-v71-bottom{grid-template-columns:repeat(5,minmax(0,1fr))}
+#dashboard.gg-v71 .gg-v71-bottom button{font-size:10px;gap:5px}
+#dashboard.gg-v71 .gg-v71-bottom button svg{width:23px;height:23px}
+#dashboard.gg-v71.gg-mita-demo .gg-v71-header{background:linear-gradient(125deg,#22345d,#4268f5 72%,#b9ccff)!important}
+#dashboard.gg-v71 .gg-v71-sport .gg-v71-symbol svg{stroke:white!important}
+#dashboard.gg-v71 .gg-v71-module{min-height:118px}
+</style>
