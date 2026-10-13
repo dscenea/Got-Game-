@@ -1549,6 +1549,20 @@ function sync(){const grid=document.getElementById('wzSports');if(!grid)return;f
 let queued=false;new MutationObserver(()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;sync()})}).observe(document.getElementById('wzSports')||document.body,{childList:true,subtree:true});sync();
 })();
 </script>
+
+<style id="gg-logrobasket-brand-correction-v87">
+/* Club-specific palette: never inherit Ebro Norte blue in Logrobasket. */
+#dashboard.gg-logrobasket-demo{--club-accent:#a20f16;--club-primary:#a20f16;--club-secondary:#fff}
+#dashboard.gg-logrobasket-demo .gg-v71-page-back,
+#dashboard.gg-logrobasket-demo .gg-v77-feed button,
+#dashboard.gg-logrobasket-demo .gg-v71-card a{color:#981018!important}
+#dashboard.gg-logrobasket-demo .gg-v71-card button,
+#dashboard.gg-logrobasket-demo .gg-v71-card .gg-v72-action,
+#dashboard.gg-logrobasket-demo .gg-v71-card [data-v72-action]{background:#941018!important;color:white!important;border-color:#941018!important}
+#dashboard.gg-logrobasket-demo .gg-v71-sport-detail{background:#941018!important}
+#dashboard.gg-logrobasket-demo .gg-v71-module svg{stroke:#941018!important}
+#dashboard.gg-logrobasket-demo .gg-v71-page-back{border-color:#e6c6c9!important}
+</style>
 </body></html><style>
 /* v32 — el SVG del balón ocupa toda la circunferencia, sin círculo exterior duplicado */
 .basket-ball{
@@ -2039,7 +2053,7 @@ function showSport(){
  const extra=document.createElement('div');extra.id='ggV77Extras';
  const multi=(data.sports||[]).length>1;
  const counts=name==='Baloncesto'?{teams:4,coaches:7,players:82}:{teams:5,coaches:7,players:84};
- extra.innerHTML='<div class="gg-v77-stats"><div><strong>'+counts.teams+'</strong><span>Equipos</span></div><div><strong>'+counts.coaches+'</strong><span>Entrenadores</span></div><div><strong>'+counts.players+'</strong><span>Jugadores</span></div></div><h3>Tablón de '+name+'</h3><div class="gg-v77-feed"><article><small>PRÓXIMOS EVENTOS · DEMO</small><b>Planificación semanal</b><p>Consulta los próximos entrenamientos y partidos del deporte.</p><button data-v77-action="calendar">Ver calendario →</button></article><article><small>COORDINACIÓN · DEMO</small><b>Revisión de asistencia</b><p>Comprueba las confirmaciones y las ausencias comunicadas por las familias.</p><button data-v77-action="teams">Ver equipos →</button></article><article><small>COMUNIDAD · DEMO</small><b>Noticias y convocatorias</b><p>Publica novedades y encuentra clubes para organizar amistosos o torneos.</p><button data-v77-action="community">Abrir comunidad →</button></article></div>';
+ extra.innerHTML='<div class="gg-v77-stats"><div><strong>'+counts.teams+'</strong><span>Equipos</span></div><div><strong>'+counts.coaches+'</strong><span>Entrenadores</span></div><div><strong>'+counts.players+'</strong><span>Jugadores</span></div></div><h3>Tablón de '+name+'</h3><div class="gg-v77-feed"><article><small>PRÓXIMOS EVENTOS · DEMO</small><b>Planificación semanal</b><p>Consulta los próximos entrenamientos y partidos del club.</p><button data-v77-action="calendar">Ver calendario →</button></article><article><small>COORDINACIÓN · DEMO</small><b>Revisión de asistencia</b><p>Comprueba las confirmaciones y las ausencias comunicadas por las familias.</p><button data-v77-action="teams">Ver equipos →</button></article><article><small>COMUNIDAD · DEMO</small><b>Noticias y convocatorias</b><p>Publica novedades y encuentra clubes para organizar amistosos o torneos.</p><button data-v77-action="community">Abrir comunidad →</button></article></div>';
  g.insertAdjacentElement('afterend',extra);
  extra.querySelectorAll('[data-v77-action]').forEach(b=>b.onclick=()=>{const k=b.dataset.v77Action;if(k==='community')window.ggOpenCommunity?.('posts');else window.ggView?.(k)});
 
