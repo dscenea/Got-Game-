@@ -2231,7 +2231,11 @@ function open(key){
  if(key==='home'){reset();active('home');return}
  if(key==='settings'){
  reset();active('settings');
- const btn=dash.querySelector('.coord-settings-btn');if(btn)btn.click();else{workspace.hidden=false;dash.classList.add('gg-v83-workspace');workspace.innerHTML='<h1>Gestión del club</h1><p>Configuración, instalaciones, permisos y cuotas.</p>';backButton()}
+ dash.classList.add('gg-v83-workspace');workspace.hidden=false;
+ workspace.innerHTML='<div class="gg-v84-club-head"><span>GOT GAME! / CLUB</span><h1>Gestiona tu club</h1><p>Identidad, instalaciones, organización y configuración.</p></div><div class="gg-v84-settings-grid">'+[['logo','Escudo y colores','Personaliza la identidad visual'],['sports','Deportes','Configura las disciplinas'],['facilities','Instalaciones','Gestiona pistas y espacios'],['modules','Módulos del club','Activa las funciones disponibles'],['language','Idioma','Personaliza el idioma'],['payments','Pagos y cuotas','Configura los cobros del club']].map(([id,title,desc])=>'<button type="button" data-club-setting="'+id+'"><strong>'+title+'</strong><small>'+desc+'</small><span aria-hidden="true">→</span></button>').join('')+'</div>';
+ backButton();
+ workspace.querySelectorAll('[data-club-setting]').forEach(b=>b.onclick=()=>{const id=b.dataset.clubSetting;const btn=[...document.querySelectorAll('#clubSettingsMenu button')].find(x=>x.getAttribute('onclick')?.includes("'"+id+"'"));if(btn)btn.click();else{const fallback=document.querySelector('.coord-settings-btn');fallback?.click();}});
+ 
  window.scrollTo(0,0);return
  }
  dash.classList.add('gg-v83-workspace');
@@ -2252,4 +2256,23 @@ bottom.addEventListener('click',e=>{
  e.preventDefault();e.stopImmediatePropagation();open(button.dataset.section);
 },true);
 })();
-</script>
+</script><style id="gg-v84-brand-and-navigation">
+:root{--gg-brand-black:#0b0b0b;--gg-brand-yellow:#ffc400;--gg-brand-cream:#f7f1e5}
+#dashboard.gg-v71 .gg-v71-bottom{overflow:hidden;border-radius:25px 25px 0 0!important;isolation:isolate}
+#dashboard.gg-v71 .gg-v71-bottom button{border-radius:16px!important;margin:5px 2px!important;transition:background-color .28s ease,color .28s ease,transform .28s cubic-bezier(.2,.8,.2,1)!important;min-width:0}
+#dashboard.gg-v71 .gg-v71-bottom button.active{border-radius:16px!important;transform:translateY(-2px)}
+#dashboard.gg-v71 .gg-v71-bottom button:active{transform:scale(.96)}
+#dashboard.gg-v71 .gg-v71-module,#dashboard.gg-v71 .gg-v71-stat{transition:transform .2s ease,box-shadow .2s ease}
+#dashboard.gg-v71 .gg-v71-module:active{transform:scale(.97)}
+#dashboard.gg-v71.gg-v83-workspace #ggWorkspace{background:linear-gradient(180deg,var(--gg-brand-cream),#f1f4fa 380px);border-radius:20px;padding:18px 16px 140px!important}
+.gg-v84-club-head{padding:25px 23px;border-radius:22px;background:var(--gg-brand-black);color:white;margin-bottom:20px;border-bottom:5px solid var(--gg-brand-yellow)}
+.gg-v84-club-head span{font-size:12px;letter-spacing:3px;color:var(--gg-brand-yellow);font-weight:900}
+.gg-v84-club-head h1{color:white!important;margin:12px 0;font-size:clamp(26px,5vw,36px)}
+.gg-v84-club-head p{color:#e6dfd0;margin:0}
+.gg-v84-settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:13px}
+.gg-v84-settings-grid button{position:relative;display:flex;flex-direction:column;gap:8px;text-align:left;background:white;border:1px solid #e3d9c8;border-radius:18px;padding:22px 45px 22px 20px;min-height:112px;color:#111}
+.gg-v84-settings-grid strong{font-size:17px}.gg-v84-settings-grid small{color:#68645d;line-height:1.4}
+.gg-v84-settings-grid button>span{position:absolute;right:18px;top:23px;color:#b68a00;font-weight:900}
+.gg-v84-settings-grid button:active{background:#fff5d4}
+@media(prefers-reduced-motion:reduce){#dashboard.gg-v71 .gg-v71-bottom button{transition:none!important}}
+</style>
