@@ -1514,28 +1514,7 @@ const ggMobileExampleClubs=[{name:'Club Deportivo Ebro',city:'Logroño',sport:'B
 #dashboard .coord-nav>button.coord-settings-btn svg{width:21px!important;height:21px!important;flex:none!important}
 @media(max-width:350px){#dashboard .coord-nav>button{font-size:9px!important}}
 </style>
-<style id="gg-unified-navigation-v62">
-#dashboard.gg-subscreen .coord-nav{display:grid!important}
-#dashboard.gg-subscreen .top{display:flex!important}
-#dashboard.gg-subscreen #ggWorkspace{min-height:0;padding-top:0!important}
-#dashboard .gg-subscreen-back{display:none!important}
-</style>
-<script id="gg-unified-navigation-script-v62">
-(function(){
-const dash=document.getElementById('dashboard');
-if(!dash)return;
-const nav=dash.querySelector('.coord-nav');
-if(!nav)return;
-const buttons=Array.from(nav.querySelectorAll(':scope > button'));
-const previousView=window.ggView;
-window.ggView=function(view){
- previousView(view);
- if(view==='club'&&typeof window.ggRenderCommunity==='function')window.ggRenderCommunity('posts');
- buttons.forEach((button,i)=>{if(!button.classList.contains('coord-settings-btn'))button.classList.toggle('active',i===(view==='home'?0:view==='teams'?1:view==='calendar'?2:view==='messages'?3:view==='club'?4:-1));});
-};
-if(buttons[4])buttons[4].onclick=function(){window.ggView('club')};
-})();
-</script>
+
 </body></html><style>
 /* v32 — el SVG del balón ocupa toda la circunferencia, sin círculo exterior duplicado */
 .basket-ball{
@@ -1667,5 +1646,30 @@ const anchor=area.querySelector('.gg-eyebrow');if(anchor)anchor.after(tabs);else
 if(dash.classList.contains('gg-subscreen')){const back=document.createElement('button');back.className='gg-subscreen-back';back.textContent='← Volver al inicio';back.onclick=()=>window.ggView('home');area.prepend(back)};
 };
 const nav=dash.querySelector('.coord-nav');nav.querySelectorAll('button')[4].onclick=()=>window.ggView('club');
+})();
+</script>
+
+<style id="gg-unified-navigation-v63">
+#dashboard.gg-subscreen .coord-nav{display:grid!important;visibility:visible!important}
+#dashboard.gg-subscreen .top{display:flex!important;visibility:visible!important}
+#dashboard.gg-subscreen #ggWorkspace{min-height:0!important;padding-top:0!important}
+#dashboard .gg-subscreen-back{display:none!important}
+</style>
+<script id="gg-unified-navigation-script-v63">
+(function(){
+const dash=document.getElementById('dashboard');
+if(!dash)return;
+const nav=dash.querySelector('.coord-nav');
+if(!nav)return;
+const buttons=Array.from(nav.querySelectorAll(':scope > button'));
+const previousView=window.ggView;
+window.ggView=function(view){
+ previousView(view);
+ if(view==='club'&&typeof window.ggRenderCommunity==='function')window.ggRenderCommunity('posts');
+ buttons.forEach((button,i)=>{
+  if(!button.classList.contains('coord-settings-btn'))button.classList.toggle('active',i===(view==='home'?0:view==='teams'?1:view==='calendar'?2:view==='messages'?3:view==='club'?4:-1));
+ });
+};
+if(buttons[4])buttons[4].onclick=function(event){event.preventDefault();window.ggView('club')};
 })();
 </script>
