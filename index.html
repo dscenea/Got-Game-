@@ -1805,3 +1805,22 @@ const observer=new MutationObserver(()=>{if(selector.classList.contains('gg-home
 observer.observe(selector,{attributes:true,attributeFilter:['class']});
 })();
 </script>
+
+<style id="gg-sport-position-v68">
+#dashboard>.coord-nav+#dashboardSportSelector{margin:16px 0 22px!important;display:block!important}
+#dashboard>.coord-nav+#dashboardSportSelector[hidden]{display:none!important}
+#dashboard>.coord-nav+#dashboardSportSelector .sport-selector-label{margin-bottom:10px}
+</style>
+<script id="gg-sport-position-v68-script">
+(function(){
+function move(){
+ const dash=document.getElementById('dashboard');
+ const nav=dash?.querySelector('.coord-nav');
+ const selector=document.getElementById('dashboardSportSelector');
+ if(!nav||!selector)return;
+ if(selector.previousElementSibling!==nav)nav.insertAdjacentElement('afterend',selector);
+ selector.classList.remove('gg-home-hidden');
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',move,{once:true});else move();
+})();
+</script>
