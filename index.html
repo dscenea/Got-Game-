@@ -1784,8 +1784,8 @@ profiles();teams();
 (function(){
 const paths={
 parent:'<circle cx="24" cy="22" r="9"/><circle cx="76" cy="22" r="9"/><path d="M5 78V65c0-16 7-27 19-27 10 0 16 6 19 16M95 78V65c0-16-7-27-19-27-10 0-16 6-19 16"/><circle cx="50" cy="57" r="7"/><path d="M36 91V79c0-11 5-16 14-16s14 5 14 16v12"/>',
-player:'<circle cx="56" cy="16" r="8"/><path d="M47 31 36 39 26 56M47 31l16 8 14 14M47 32l-4 24 17 10M43 56 31 76 20 90M60 66 72 76l-8 15"/><circle cx="86" cy="83" r="9"/>',
-coach:'<path d="M8 33c0-13 10-22 23-22 12 0 21 9 22 21L8 36zM52 32l15 2-5 5-15 1"/><path d="M11 55h18c4 0 6 3 6 7v3H11a5 5 0 0 1 0-10zM35 60h9"/><circle cx="31" cy="61" r="2"/><path d="M49 54h39v34H49zM55 80l9-11 8 5 10-13M56 60l6 6m0-6-6 6M77 80l7 7m0-7-7 7"/>',
+player:'<circle cx="57" cy="16" r="8"/><path d="M47 32c-6 1-11 6-14 12L23 59c-3 5 4 9 7 4l12-14 12 2 14 11c5 4 10-2 6-6L61 39c-4-5-8-8-14-7zM48 51l-5 16-17 20c-4 5 2 10 7 6l22-23 13 8-9 13c-3 5 4 9 8 4l14-19-23-19"/><circle cx="86" cy="85" r="9"/>',
+coach:'<path d="M10 34c0-14 10-23 23-23 14 0 23 10 24 23l-47 4zM56 34l16 2-4 6-18 1"/><path d="M17 59h16c6 0 9 3 9 9H17a5 5 0 0 1 0-9zM42 64h7"/><circle cx="36" cy="64" r="2"/><path d="M54 51h35v36H54zM61 78l9-12 7 6 6-10M61 58l6 6m0-6-6 6M77 78l6 6m0-6-6 6"/>',
 coord:'<rect x="13" y="18" width="58" height="70" rx="6"/><path d="M33 18v-8h19v8M25 39l6 6 8-10m8 5h13M25 59l6 6 8-10m8 5h13M25 78l6 6 8-10m8 5h10"/><circle cx="77" cy="77" r="15"/><path d="M77 68v10l7 5"/>'
 };
 function apply(){document.querySelectorAll('#roles .profile-card').forEach(card=>{const role=['parent','player','coach','coord'].find(x=>card.classList.contains(x));if(!role)return;const art=card.querySelector('.profile-art');if(!art||art.querySelector('.gg-v106-outline'))return;art.insertAdjacentHTML('beforeend','<svg class="gg-v106-outline" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="4.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+paths[role]+'</svg>')})}
@@ -2296,7 +2296,7 @@ function showModule(i){
  main.innerHTML='<button type="button" class="gg-v71-page-back" id="ggV72Back">‹ Volver al panel</button><div class="gg-v71-sport-detail">'+(i===0?teamArt:icon(name))+'<h3>'+title+'</h3></div><div class="gg-v71-card" id="ggV72ModuleContent"></div>';
  main.querySelector('#ggV72Back').onclick=restore;
  const body=main.querySelector('#ggV72ModuleContent');
- const links={0:[['Ver plantillas y equipos','teams'],['Consultar horarios','calendar']],2:[['Ver equipos y entrenadores','teams']],3:[['Consultar calendario de instalaciones','calendar']],4:[['Abrir calendario','calendar']],5:[['Publicaciones','posts'],['Red de clubes','clubs'],['Redes sociales','social']]};
+ const links={0:[['Ver plantillas y equipos','teams'],['Consultar horarios','calendar']],1:[['Ver jugadores y familias','people'],['Ver equipos','teams']],2:[['Ver equipos y entrenadores','teams'],['Directorio de entrenadores','people']],3:[['Consultar calendario de instalaciones','calendar']],4:[['Abrir calendario','calendar']],5:[['Publicaciones','posts'],['Red de clubes','clubs'],['Redes sociales','social']]};
  const description={0:'Plantillas, asistencia y fichas de los equipos.',2:'Personal técnico y asignaciones de los equipos.',3:'Instalaciones, pistas y disponibilidad.',4:'Entrenamientos, partidos y actividades.',5:'Publicaciones, colaboración entre clubes y redes sociales.'};
  body.innerHTML='<h3>'+title+' · '+name+'</h3><p>'+description[i]+'</p><div class="gg-v82-actions">'+(links[i]||[]).map(([label,key])=>'<button type="button" data-v82-open="'+key+'">'+label+' →</button>').join('')+'</div>';
  body.querySelectorAll('[data-v82-open]').forEach(btn=>btn.onclick=()=>{
@@ -2308,7 +2308,7 @@ function showModule(i){
   back.onclick=()=>{ws.hidden=true;ws.style.removeProperty('display');main.style.removeProperty('display');restore()};
   window.scrollTo(0,0);return;
  }
- if(['posts','clubs','social'].includes(key)){window.ggOpenCommunity?.(key);return}
+ if(key==='people'){restore();document.querySelector('#ggV71Bottom [data-section="people"]')?.click();return}if(['posts','clubs','social'].includes(key)){window.ggOpenCommunity?.(key);return}
  });window.scrollTo(0,0);
 }
 
@@ -2695,3 +2695,26 @@ let scheduled=false;new MutationObserver(()=>{if(scheduled)return;scheduled=true
 #dashboard .gg-v71-symbol .gg-v92-symbol,#dashboard .gg-team-symbol .gg-v92-symbol,.wz-sporticon .gg-v92-symbol{display:grid;place-items:center;width:100%;height:100%}
 </style>
 <style id="gg-v112-clean-icon-pass">#roles button.profile-card .profile-art svg.gg-v106-outline{stroke-width:3!important;stroke-linecap:round!important;stroke-linejoin:round!important;max-width:143px!important;max-height:143px!important}#roles button.profile-card .profile-art{overflow:visible!important}</style>
+<script id="gg-v113-demo-navigation">
+(function(){
+function main(){return document.getElementById('ggV71Main')}
+function ws(){return document.getElementById('ggWorkspace')}
+function returnToPanel(e){
+ const w=ws(),m=main(),d=document.getElementById('dashboard');
+ if(!w||!m||!d||w.hidden)return false;
+ e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+ w.hidden=true;w.style.removeProperty('display');m.style.removeProperty('display');
+ d.classList.remove('gg-v83-workspace');
+ document.querySelector('#ggV71Bottom [data-section="home"]')?.click();
+ window.scrollTo(0,0);return true;
+}
+document.addEventListener('click',function(e){
+ const b=e.target.closest?.('button');if(!b)return;
+ if(b.id==='ggV97Back'||(b.classList.contains('gg-v100-back')&&/Volver al panel/.test(b.textContent)))returnToPanel(e);
+},true);
+})();
+</script>
+<style id="gg-v113-demo-navigation-css">
+#ggWorkspace:not([hidden]) #ggV97Back~.gg-v100-back{display:none!important}
+#roles button.profile-card .profile-art svg.gg-v106-outline{stroke-width:3.05!important}
+</style>
