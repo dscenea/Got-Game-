@@ -1783,10 +1783,10 @@ profiles();teams();
 </style><script id="gg-v106-real-profile-icons">
 (function(){
 const paths={
-parent:'<circle cx="29" cy="24" r="10"/><circle cx="70" cy="28" r="9"/><circle cx="49" cy="57" r="8"/><path d="M8 83V67c0-17 9-27 21-27 10 0 17 5 20 14M91 83V69c0-16-8-26-21-26-9 0-15 4-19 12M36 88v-8c0-13 5-18 13-18s14 5 14 18v8"/>',
-player:'<circle cx="56" cy="18" r="8"/><path d="M48 32 37 40 29 59c-3 7 5 10 9 4l9-13 14-3 14 13c6 5 12-2 7-7L66 38c-5-5-12-8-18-6zM50 48 43 66 26 87c-5 7 3 11 8 6l23-23 12 8-8 14c-4 7 5 10 9 4l14-20-25-18"/><circle cx="84" cy="85" r="10"/>',
-coach:'<path d="M16 37c-3-18 8-29 24-29 16 0 25 12 26 27l-50 8zM65 34l17 2-4 6-19 2"/><path d="M16 68c0-12 8-19 20-19M18 80l-7 9M62 69l11 19"/><path d="M13 59h21v13H13a10 10 0 0 1 0-13zM34 62h13M52 64l11-12 9 9 14-17M62 47l1 5-6 1M81 54l8 8m0-8-8 8M53 82l8 8m0-8-8 8"/><circle cx="35" cy="66" r="3"/>',
-coord:'<rect x="15" y="18" width="60" height="68" rx="5"/><path d="M34 18v-7h22v7M27 40l5 5 8-9m9 5h15M27 59l5 5 8-9m9 5h15M27 77l5 5 8-9m9 5h8"/><circle cx="76" cy="77" r="16"/><path d="M76 67v11l8 6"/>'
+parent:'<circle cx="28" cy="25" r="10"/><circle cx="72" cy="25" r="10"/><circle cx="50" cy="57" r="8"/><path d="M8 86V69c0-17 8-28 20-28 10 0 17 6 21 15M92 86V69c0-17-8-28-20-28-10 0-17 6-21 15M35 88V80c0-11 6-17 15-17s15 6 15 17v8"/>',
+player:'<circle cx="55" cy="17" r="8"/><path d="M46 31c-5 1-9 4-12 9l-10 16c-3 5 3 9 7 5l12-13 11 1 14 12c5 4 10-2 6-6L61 38c-4-5-9-8-15-7zM49 50l-6 17-17 20c-4 5 2 10 7 6l21-22 13 8-8 12c-3 5 4 9 8 4l14-20-24-18"/><circle cx="84" cy="84" r="9"/>',
+coach:'<path d="M12 38c-2-17 9-28 25-28 14 0 24 10 25 24l-50 8zM62 34l18 2-4 6-21 2"/><path d="M12 70h26a8 8 0 0 0 8-8v-2H19a10 10 0 0 0-7 10zM17 70l-6 7M48 60h10"/><path d="M54 75l10-12 8 7 14-17M54 87l-7-7M84 72l7 7m0-7-7 7M62 51l6 6m0-6-6 6"/><circle cx="39" cy="67" r="3"/>',
+coord:'<rect x="17" y="20" width="54" height="66" rx="6"/><path d="M35 20v-8h19v8M28 40l5 5 7-9m8 5h13M28 59l5 5 7-9m8 5h13M28 77l5 5 7-9m8 5h9"/><circle cx="76" cy="77" r="15"/><path d="M76 68v10l7 5"/>'
 };
 function apply(){document.querySelectorAll('#roles .profile-card').forEach(card=>{const role=['parent','player','coach','coord'].find(x=>card.classList.contains(x));if(!role)return;const art=card.querySelector('.profile-art');if(!art||art.querySelector('.gg-v106-outline'))return;art.insertAdjacentHTML('beforeend','<svg class="gg-v106-outline" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="4.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+paths[role]+'</svg>')})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply);else apply();
@@ -2612,12 +2612,12 @@ const paths={
 
 'Baloncesto':'<circle cx="50" cy="50" r="35"/><path d="M50 15v70M15 50h70M27 24Q61 48 27 76M73 24Q39 48 73 76"/>',
 'Fútbol':'<circle cx="50" cy="50" r="35"/><path d="m50 29 17 13-6 20H39l-6-20zM50 29l-10-13M50 29l12-13M33 42 17 37M67 42l16-5M39 62 28 77M61 62l11 15M28 77l21 8 23-8"/>',
-'Voleibol':'<circle cx="50" cy="50" r="35"/><path d="M17 37c22-17 50-10 65 12M15 52c23-10 43-4 56 18M39 82c-9-23-1-46 20-64M55 83c-3-21 5-35 26-43M25 25c17 0 30 6 42 20"/>',
-'Balonmano':'<circle cx="50" cy="50" r="35"/><path d="M33 18 49 16 65 21 80 38 83 56 69 77 49 84 30 75 17 55 21 35zM33 18l-7 22 19 11 19-12-5-18M26 40l-9 15M64 39l19 17M45 51l4 33M45 51l24 26M45 51 30 75"/>',
+'Voleibol':'<circle cx="50" cy="50" r="35"/><path d="M18 38c18-15 43-14 60 2M16 53c21-10 42-4 55 14M36 82c-7-24 1-45 23-65M55 84c-4-20 5-34 27-44"/>',
+'Balonmano':'<circle cx="50" cy="50" r="35"/><path d="M50 29 67 41 61 61H39L33 41zM50 29 41 17M50 29l9-12M33 41 18 36M67 41l15-5M39 61 28 76M61 61l11 15M28 76l22 9 22-9"/>',
 'Tenis':'<circle cx="50" cy="50" r="35"/><path d="M22 30Q51 50 22 70M78 30Q49 50 78 70"/>',
-'Pádel':'<ellipse cx="44" cy="38" rx="25" ry="29"/><path d="M62 61 84 85M29 27h30M27 39h34M29 51h30M36 12v53M49 12v53"/><circle cx="31" cy="27" r="1.3"/><circle cx="44" cy="27" r="1.3"/><circle cx="56" cy="27" r="1.3"/><circle cx="31" cy="39" r="1.3"/><circle cx="44" cy="39" r="1.3"/><circle cx="56" cy="39" r="1.3"/>',
+'Pádel':'<ellipse cx="43" cy="39" rx="24" ry="29"/><path d="M59 62 84 86"/><g fill="white" stroke="none"><circle cx="35" cy="23" r="2"/><circle cx="45" cy="23" r="2"/><circle cx="55" cy="26" r="2"/><circle cx="29" cy="34" r="2"/><circle cx="40" cy="34" r="2"/><circle cx="51" cy="35" r="2"/><circle cx="59" cy="39" r="2"/><circle cx="29" cy="45" r="2"/><circle cx="40" cy="45" r="2"/><circle cx="51" cy="46" r="2"/><circle cx="35" cy="56" r="2"/><circle cx="46" cy="56" r="2"/></g>',
 'Rugby':'<path d="M18 65Q27 24 81 19Q73 70 18 81Q23 71 18 65ZM27 72l45-44M41 54l13 13M51 43l13 13"/>',
-'Atletismo':'<path d="M18 77 39 62 52 71 77 48 88 49M49 20a8 8 0 1 0 16 0 8 8 0 1 0-16 0M51 34l-12 13-17 3M51 34l15 15 15-3M40 47l15 16-17 24M55 63l20 10-4 15"/>',
+'Atletismo':'<path d="M18 82 35 64 48 71 70 47M54 18a8 8 0 1 0 16 0 8 8 0 1 0-16 0M52 32 43 44l-17 6M52 32l14 13 13-1M43 44l11 16-18 24M54 60l20 10-7 17"/>',
 'Natación':'<circle cx="73" cy="28" r="8"/><path d="m26 53 25-17 16 8 11 14M26 53l-12 10M50 37l-7 20M13 71q11 9 22 0t22 0t22 0t12 0M13 83q11 9 22 0t22 0t22 0t12 0"/>',
 'Ciclismo':'<circle cx="24" cy="70" r="16"/><circle cx="77" cy="70" r="16"/><circle cx="59" cy="20" r="7"/><path d="m24 70 18-29 16 29H24l20-29 11-7M59 31l-13 18 16 12"/>',
 'Hockey':'<path d="M25 15 57 69h27M57 69l-9 13H18"/><circle cx="80" cy="83" r="6"/>',
@@ -2683,4 +2683,9 @@ let scheduled=false;new MutationObserver(()=>{if(scheduled)return;scheduled=true
 #roles button.profile-card .profile-art{z-index:2!important}
 #roles button.profile-card strong{z-index:3!important}
 .gg-v92-symbol svg{stroke-width:3.8!important;stroke-linejoin:round!important;stroke-linecap:round!important}
+</style>
+<style id="gg-v110-icon-refinement">
+#roles button.profile-card .profile-art svg.gg-v106-outline{width:75%!important;height:75%!important;max-width:135px!important;max-height:135px!important;stroke-width:3.15!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+.gg-v92-symbol svg{stroke-linecap:round!important;stroke-linejoin:round!important}
+@media(min-width:850px){#roles button.profile-card .profile-art svg.gg-v106-outline{max-width:165px!important;max-height:165px!important}}
 </style>
