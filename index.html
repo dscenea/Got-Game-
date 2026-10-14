@@ -2507,4 +2507,26 @@ function sync(){
  document.querySelectorAll('img.gg-sport-art').forEach(img=>{const container=img.parentElement;if(!container||container.dataset.ggUnifiedIcon)return;const label=container.closest('button,label,article,[data-sport]')?.textContent||'';const sport=sports.find(n=>label.toLocaleLowerCase('es').includes(n.toLocaleLowerCase('es')));if(!sport)return;container.dataset.ggUnifiedIcon=sport;container.innerHTML='<span class="gg-v92-symbol">'+svg(sport)+'</span>';const pair=backgrounds[sports.indexOf(sport)%backgrounds.length];container.style.background='linear-gradient(135deg,'+pair[0]+','+pair[1]+')';});
 }
 let scheduled=false;new MutationObserver(()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;sync()})}).observe(document.body,{subtree:true,childList:true});sync();
-})();</script><style id="gg-logrobasket-finish">#dashboard.gg-logrobasket-demo{--club-accent:#a20f16;--club-primary:#a20f16;--club-secondary:#ffffff}#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-header{background:linear-gradient(120deg,#790c14 0%,#ae1720 65%,#e2e2e2 100%)!important;color:#fff}#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-header:before{opacity:.14}#dashboard.gg-logrobasket-demo .gg-v71-logo{width:100px;height:100px;object-fit:contain;border-radius:16px;background:#fff;padding:5px}#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-bottom{background:#171717!important}#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-bottom button.active{color:#fff!important}#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-bottom button.active:before{background:#a20f16!important}#dashboard.gg-logrobasket-demo .gg-v71-module svg{stroke:#a20f16!important}#dashboard.gg-logrobasket-demo .gg-v77-stats strong{color:#a20f16!important}#dashboard.gg-logrobasket-demo #ggV71Switch,#dashboard.gg-logrobasket-demo #ggV72Switch{display:none!important}</style>
+})();</script><style id="gg-logrobasket-finish">#dashboard.gg-logrobasket-demo{--club-accent:#a20f16;--club-primary:#a20f16;--club-secondary:#ffffff}#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-header{background:linear-gradient(120deg,#790c14 0%,#ae1720 65%,#e2e2e2 100%)!important;color:#fff}#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-header:before{opacity:.14}#dashboard.gg-logrobasket-demo .gg-v71-logo{width:100px;height:100px;object-fit:contain;border-radius:16px;background:#fff;padding:5px}#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-bottom{background:#171717!important}#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-bottom button.active{color:#fff!important}#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-bottom button.active:before{background:#a20f16!important}#dashboard.gg-logrobasket-demo .gg-v71-module svg{stroke:#a20f16!important}#dashboard.gg-logrobasket-demo .gg-v77-stats strong{color:#a20f16!important}#dashboard.gg-logrobasket-demo #ggV71Switch,#dashboard.gg-logrobasket-demo #ggV72Switch{display:none!important}</style><style id="gg-v101-desktop-teams">
+@media(min-width:900px){
+ #ggWorkspace{width:min(100%,1200px)!important;max-width:1200px!important;margin:0 auto!important;padding:32px 44px 100px!important;box-sizing:border-box}
+ #ggWorkspace .gg-team-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:22px!important}
+ #ggWorkspace .gg-team-card{min-height:190px!important;padding:24px!important;transition:transform .18s,border-color .18s,box-shadow .18s}
+ #ggWorkspace .gg-team-card:hover{box-shadow:0 12px 28px rgba(0,0,0,.09)}
+ #ggWorkspace .gg-team-symbol{width:64px;height:64px;border-radius:16px}
+ #ggWorkspace .gg-team-symbol svg{width:42px;height:42px}
+ #ggWorkspace .gg-v100-back{margin-bottom:24px}
+ #ggWorkspace .gg-v100-back:hover{text-decoration:underline}
+ #ggWorkspace .gg-toolbar{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+ #ggWorkspace .gg-roster-actions{justify-content:flex-start}
+ #ggWorkspace .gg-table-scroll{width:100%;overflow-x:auto}
+ #ggWorkspace .gg-roster{width:100%;min-width:680px;font-size:15px}
+ #ggWorkspace .gg-roster th{font-size:12px}
+ #ggWorkspace .gg-roster td{padding:16px}
+ #ggWorkspace .gg-v100-schedule{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+ #ggWorkspace .gg-v100-event{padding:18px}
+ #ggWorkspace .gg-v100-event strong,#ggWorkspace .gg-v100-event span{font-size:15px}
+}
+@media(min-width:1250px){#ggWorkspace .gg-team-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+@media(min-width:900px) and (max-width:1100px){#ggWorkspace .gg-team-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+</style>
