@@ -2718,3 +2718,32 @@ document.addEventListener('click',function(e){
 #ggWorkspace:not([hidden]) #ggV97Back~.gg-v100-back{display:none!important}
 #roles button.profile-card .profile-art svg.gg-v106-outline{stroke-width:3.05!important}
 </style>
+<script id="gg-v114-safe-demo-teams">
+(function(){
+function safeTeams(e){
+ const dash=document.getElementById('dashboard'),main=document.getElementById('ggV71Main'),ws=document.getElementById('ggWorkspace');
+ if(!dash||!main||!ws||!dash.classList.contains('gg-v71'))return;
+ const button=e.target.closest('button');if(!button)return;
+ const module=button.closest('.gg-v71-module-grid');
+ const isTeamsModule=module&&[...module.querySelectorAll('.gg-v71-module')].indexOf(button)===0;
+ const isTeamsLink=button.matches('[data-v77-action="teams"]')||button.matches('[data-v72-key="teams"]');
+ if(!isTeamsModule&&!isTeamsLink)return;
+ e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+ const title=main.querySelector('.gg-v71-heading h3')?.textContent||'';
+ const sport=/Fútbol/i.test(title)?'Fútbol':'Baloncesto';
+ const oldMainDisplay=main.style.display;
+ const oldWsDisplay=ws.style.display;
+ const back=()=>{ws.hidden=true;ws.style.removeProperty('display');main.style.display=oldMainDisplay;dash.classList.remove('gg-v83-workspace');window.scrollTo(0,0)};
+ ws.replaceChildren();
+ const wrap=document.createElement('div');wrap.className='gg-v114-teams';
+ const backBtn=document.createElement('button');backBtn.type='button';backBtn.className='gg-v100-back';backBtn.textContent='‹ Volver al panel';backBtn.addEventListener('click',back);wrap.append(backBtn);
+ const eyebrow=document.createElement('div');eyebrow.className='gg-eyebrow';eyebrow.textContent='ÁREA DEPORTIVA · '+sport;wrap.append(eyebrow);
+ const h=document.createElement('h1');h.textContent='Equipos';wrap.append(h);
+ const note=document.createElement('p');note.className='gg-muted';note.textContent='Plantillas y asistencia de '+sport+'.';wrap.append(note);
+ const grid=document.createElement('div');grid.className='gg-team-grid';
+ ['Alevín A','Infantil'].forEach(name=>{const team=document.createElement('button');team.type='button';team.className='gg-team-card';const icon=document.createElement('span');icon.className='gg-team-symbol';icon.textContent=sport==='Baloncesto'?'◯':'⚽';const label=document.createElement('b');label.textContent=name;const small=document.createElement('small');small.textContent=sport+' · Abrir plantilla';team.append(icon,label,small);team.addEventListener('click',()=>{if(typeof window.ggTeam==='function')window.ggTeam(sport+' · '+name)});grid.append(team)});
+ wrap.append(grid);ws.append(wrap);main.style.display='none';ws.hidden=false;ws.style.setProperty('display','block','important');dash.classList.add('gg-v83-workspace');window.scrollTo(0,0);
+}
+document.addEventListener('click',safeTeams,true);
+})();
+</script>
