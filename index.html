@@ -1755,6 +1755,28 @@ const observer=new MutationObserver(()=>{profiles();teams()});
 observer.observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden']});
 profiles();teams();
 })();
+</script><style id="gg-v106-real-profile-screen">
+#roles .profile-card.parent{--gg-profile-a:#142e49;--gg-profile-b:#f9ad22}
+#roles .profile-card.coach{--gg-profile-a:#07574b;--gg-profile-b:#a5d735}
+#roles .profile-card.player{--gg-profile-a:#0756b2;--gg-profile-b:#44d9cc}
+#roles .profile-card.coord{--gg-profile-a:#5221a1;--gg-profile-b:#dc65ac}
+#roles .profile-card{background:radial-gradient(circle at 95% 0%,#ffffff32 0 23%,transparent 24%),radial-gradient(circle at 0% 110%,#ffffff20 0 30%,transparent 31%),linear-gradient(135deg,var(--gg-profile-a),var(--gg-profile-b))!important;overflow:hidden!important}
+#roles .profile-card .profile-art{position:relative!important;overflow:hidden!important;background:transparent!important}
+#roles .profile-card .profile-art img{display:none!important}
+#roles .profile-card .profile-art svg.gg-v106-outline{display:block!important;position:relative!important;z-index:5!important;width:95%!important;height:95%!important;max-width:210px!important;max-height:210px!important;stroke:#fff!important;filter:drop-shadow(0 3px 5px #0002)!important}
+#roles .profile-card strong{color:#fff!important;text-shadow:0 2px 7px #0005}
+@media(min-width:800px){#roles .profile-card .profile-art svg.gg-v106-outline{max-width:230px!important;max-height:230px!important}}
+</style><script id="gg-v106-real-profile-icons">
+(function(){
+const paths={
+parent:'<circle cx="28" cy="26" r="11"/><circle cx="72" cy="26" r="11"/><circle cx="50" cy="56" r="9"/><path d="M7 82V68q0-22 21-22t21 22M51 68q0-22 21-22t21 22v14M33 91V82q0-17 17-17t17 17v9"/>',
+player:'<circle cx="48" cy="18" r="9"/><path d="m41 37-15 10-10 21m26-30 20 6 15 16M42 38l-5 23-17 24m18-24 23 12-9 16"/><circle cx="78" cy="80" r="10"/>',
+coach:'<path d="M15 35q0-24 26-24 23 0 27 25l-53 6zM62 33h21M20 78l14-20 21 3M27 80l-5 11M56 61l12 29"/><path d="M60 47h28v-20H68M72 35h8m-8 7h8M63 70l12-11 11 9"/>',
+coord:'<rect x="17" y="18" width="55" height="70" rx="6"/><path d="M34 18v-7h21v7M28 40l5 5 8-10m7 5h14M28 59l5 5 8-10m7 5h14"/><circle cx="75" cy="77" r="16"/><path d="M75 67v11l7 5"/>'
+};
+function apply(){document.querySelectorAll('#roles .profile-card').forEach(card=>{const role=['parent','player','coach','coord'].find(x=>card.classList.contains(x));if(!role)return;const art=card.querySelector('.profile-art');if(!art||art.querySelector('.gg-v106-outline'))return;art.insertAdjacentHTML('beforeend','<svg class="gg-v106-outline" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="4.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+paths[role]+'</svg>')})}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply);else apply();
+})();
 </script></body></html><style>
 /* v32 — el SVG del balón ocupa toda la circunferencia, sin círculo exterior duplicado */
 .basket-ball{
