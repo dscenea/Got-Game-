@@ -1766,7 +1766,7 @@ function teams(){
 }
 document.addEventListener('DOMContentLoaded',profiles);
 const observer=new MutationObserver(()=>{profiles();teams()});
-observer.observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden']});
+observer.observe(document.getElementById('welcome')||document.body,{childList:true,subtree:false});
 profiles();teams();
 })();
 </script><style id="gg-v106-real-profile-screen">
@@ -2313,7 +2313,7 @@ function showModule(i){
 }
 
 const observer=new MutationObserver(()=>{if(!dash.classList.contains('gg-v71'))return;paintSports();if(getSport()&&main.querySelector('[data-module]'))showSport()});
-observer.observe(main,{childList:true,subtree:false});
+// Disabled: painting the demo inside a mutation callback could recursively repaint and freeze Safari.
 const originalGo=go;
 go=function(id){originalGo(id);if(id==='dashboard'){currentSport=(data.sports||[]).length===1?data.sports[0]:null;currentModule=null;setTimeout(()=>{paintSports();if(currentSport)showSport()},0)}};
 if(welcome){
