@@ -2627,8 +2627,8 @@ const paths={
 'Ajedrez':'<path d="M24 83h52M31 74h38l-7-32-12-8-16 9 11 9-16 9zM50 34l-9-13 10-9 14 11-3 19"/>',
 'CrossFit':'<path d="M15 33v34M23 24v52M31 40v20M31 50h38M69 40v20M77 24v52M85 33v34"/>',
 'Instalaciones':'<rect x="14" y="22" width="72" height="56" rx="6"/><path d="M50 22v56M14 50h72M25 40v20M75 40v20"/><circle cx="50" cy="50" r="8"/>'};
-const backgrounds=[['#102e51','#ffae27'],['#064a79','#26d7a1'],['#3523b0','#e62ba9'],['#60152c','#ff5652'],['#095a45','#c7e931'],['#07558d','#1fd1d6'],['#e53b23','#ffba25'],['#ed3d25','#ffbd2b'],['#123db2','#2bd1e9']];
-function svg(name){const path=paths[name]||paths['Baloncesto'];return '<svg data-gg-sport-version="111" viewBox="0 0 100 100" aria-hidden="true" fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">'+path+'</svg>'}
+const backgrounds=[['#102e51','#ffae27'],['#064a79','#26d7a1'],['#3523b0','#e62ba9'],['#60152c','#ff5652'],['#095a45','#c7e931'],['#07558d','#1fd1d6'],['#e53b23','#ffba25'],['#1341c7','#20d6ed'],['#123db2','#2bd1e9']];
+function svg(name){const path=paths[name]||paths['Baloncesto'];return '<svg data-gg-sport-version="111" viewBox="0 0 100 100" aria-hidden="true" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">'+path+'</svg>'}
 function sync(){
  document.querySelectorAll('.gg-v71-sport,.gg-v71-sport-card,.sport-selector-button,.wz-choice,.sport-card,.gg-team-card,[data-sport],.wz-sport-card,.wz-sport-choice').forEach(card=>{const label=(card.dataset.sport||card.textContent||'').trim();const sport=sports.find(n=>label.toLocaleLowerCase('es').includes(n.toLocaleLowerCase('es')));if(!sport)return;const target=card.querySelector('.gg-v71-symbol,.sport-selector-icon,.wz-sporticon,.sport-mark,.gg-team-symbol,.gg-sport-icon,.wz-choice-icon,.gg-sport-art')||card.querySelector('img.gg-sport-art')?.parentElement;if(!target)return;if(target.dataset.ggUnifiedIcon===sport&&target.querySelector('svg[data-gg-sport-version="111"]'))return;target.dataset.ggUnifiedIcon=sport;target.innerHTML='<span class="gg-v92-symbol">'+svg(sport)+'</span>';const i=sports.indexOf(sport),pair=backgrounds[i%backgrounds.length];card.style.setProperty('--gg-sport-start',pair[0]);card.style.setProperty('--gg-sport-end',pair[1]);});
  document.querySelectorAll('img.gg-sport-art').forEach(img=>{const container=img.parentElement;if(!container)return;const label=container.closest('button,label,article,[data-sport]')?.textContent||'';const sport=sports.find(n=>label.toLocaleLowerCase('es').includes(n.toLocaleLowerCase('es')));if(!sport)return;container.dataset.ggUnifiedIcon=sport;container.innerHTML='<span class="gg-v92-symbol">'+svg(sport)+'</span>';const pair=backgrounds[sports.indexOf(sport)%backgrounds.length];container.style.background='linear-gradient(135deg,'+pair[0]+','+pair[1]+')';});
@@ -2758,4 +2758,17 @@ document.addEventListener('click',safeTeams,true);
 #roles .profile-card .profile-art svg.gg-v106-outline{stroke-width:3.2!important;stroke-linecap:round!important;stroke-linejoin:round!important}
 #roles .profile-card .profile-art{isolation:isolate}
 #roles .profile-card .profile-art svg.gg-v106-outline{filter:drop-shadow(0 1px 1px rgba(0,0,0,.08))}
+</style>
+<style id="gg-v117-visual-cards">
+/* Visual-only integration. Preserve existing card markup and click handlers. */
+.gg-v71-symbol,.sport-selector-icon,.wz-sporticon,.sport-mark,.gg-team-symbol,.gg-sport-icon,.wz-choice-icon,.gg-v93-art{position:relative;isolation:isolate;overflow:hidden}
+.gg-v71-symbol::before,.sport-selector-icon::before,.wz-sporticon::before,.sport-mark::before,.gg-sport-icon::before,.wz-choice-icon::before{content:"";position:absolute;inset:-55% 22% 46% -35%;border-radius:50%;background:#ffffff18;pointer-events:none;z-index:0}
+.gg-v71-symbol::after,.sport-selector-icon::after,.wz-sporticon::after,.sport-mark::after,.gg-sport-icon::after,.wz-choice-icon::after{content:"";position:absolute;inset:55% -40% -45% 26%;border-radius:50%;background:#0000000b;pointer-events:none;z-index:0}
+.gg-v92-symbol{position:relative;z-index:1;background:none!important}
+.gg-v92-symbol svg{stroke-width:4!important;stroke-linecap:round!important;stroke-linejoin:round!important;filter:drop-shadow(0 1px 1px #00000014)}
+#roles .profile-card .profile-art svg.gg-v106-outline{stroke-width:3.3!important;filter:drop-shadow(0 2px 2px #0000001b)}
+#roles .profile-card{transition:transform .18s ease,box-shadow .18s ease}
+#roles .profile-card:active{transform:scale(.985)}
+#ggWorkspace .gg-v114-teams .gg-team-symbol{background:linear-gradient(135deg,#102e51,#ffba32)!important}
+#ggWorkspace .gg-v114-teams .gg-team-symbol svg{stroke-width:4!important}
 </style>
