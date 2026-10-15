@@ -2019,7 +2019,7 @@ function renderFilteredTeams(){
  note.textContent=selected==='all'?'Mostrando los equipos de todos los deportes.':'Mostrando únicamente los equipos de '+selected+'.';
 }
 const previous=window.ggView;
-window.ggView=function(view){current=view;previous(view);draw();if(view==='teams')renderFilteredTeams();if(view==='calendar'&&selected!=='all'){const select=workspace.querySelector('select[onchange*="ggSetWeekFilter"]');if(select){const options=[...select.options].filter(o=>o.value.startsWith(selected+' ·'));if(options.length){const hint=document.createElement('p');hint.className='gg-context-note';hint.textContent='Deporte seleccionado: '+selected+'. Elige un equipo para filtrar sus actividades.';select.closest('.gg-filter-bar')?.before(hint)}}}};
+window.ggView=function(view){if(view==='teams'&&dash.classList.contains('gg-v83-workspace')){const title=document.querySelector('#ggV71Main .gg-v71-heading h3')?.textContent||'';const active=sports().find(s=>title.includes(s));if(active)selected=active;}current=view;previous(view);draw();if(view==='teams')renderFilteredTeams();if(view==='calendar'&&selected!=='all'){const select=workspace.querySelector('select[onchange*="ggSetWeekFilter"]');if(select){const options=[...select.options].filter(o=>o.value.startsWith(selected+' ·'));if(options.length){const hint=document.createElement('p');hint.className='gg-context-note';hint.textContent='Deporte seleccionado: '+selected+'. Elige un equipo para filtrar sus actividades.';select.closest('.gg-filter-bar')?.before(hint)}}}};
 const buttons=[...nav.querySelectorAll(':scope > button')];buttons.forEach((b,i)=>{if(i<5)b.addEventListener('click',()=>{current=['home','teams','calendar','messages','club'][i];draw();if(current==='teams')setTimeout(renderFilteredTeams,0)},true)});
 window.ggCurrentSport=()=>selected;
 draw();
@@ -2335,7 +2335,7 @@ refresh();
 </style>
 
 <style id="gg-v75-navigation">
-#dashboard.gg-v71 > :not(#ggV71Main):not(.gg-v71-bottom){display:none!important}
+#dashboard.gg-v71 > :not(#ggV71Main):not(.gg-v71-bottom):not(#clubSettingsEditor){display:none!important}
 #dashboard.gg-v71 #ggV71Main{display:block!important;min-height:calc(100dvh - 140px);padding-top:18px!important;padding-bottom:125px!important}
 #dashboard.gg-v71 .gg-v71-page-back{display:inline-flex;align-items:center;border:1px solid #ccd5e3;background:#fff;color:#123f81;border-radius:13px;padding:13px 16px;margin:0 0 22px;font-size:15px;font-weight:800}
 #dashboard.gg-v71 .gg-v71-header{margin-bottom:14px}

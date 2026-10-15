@@ -19,3 +19,8 @@
 @media(min-width:1024px) and (hover:none), (min-width:1024px) and (pointer:coarse){
  #dashboard.gg-v71 .gg-sidebar-brand{display:none!important}
 }
+/* The existing settings wizard uses the phone layout until it has a desktop view. */
+#dashboard.gg-v71.settings-open #clubSettingsEditor:not([hidden]){display:block!important;width:100%;max-width:430px;margin:0 auto;box-sizing:border-box}
+@media(min-width:1024px){
+ #dashboard.gg-v71.settings-open{width:430px!important;max-width:100%!important;margin:0 auto!important;padding:22px!important;min-height:100dvh!important}
+}
