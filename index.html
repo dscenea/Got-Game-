@@ -2962,7 +2962,7 @@ function openLogo(){
    const file=e.target.files?.[0];if(!file)return;
    if(!/^image\/(png|jpeg|webp|svg\+xml)$/.test(file.type)){dialog.querySelector('#ggV121LogoMessage').textContent='Selecciona una imagen válida.';return}
    if(file.size>1500000){dialog.querySelector('#ggV121LogoMessage').textContent='El archivo debe ocupar menos de 1,5 MB.';return}
-   const reader=new FileReader();reader.onload=()=>{try{localStorage.setItem('gg-v121-club-logo',reader.result);applyLogo();dialog.close()}catch(err){dialog.querySelector('#ggV121LogoMessage').textContent='No hay espacio para guardar esta imagen.'}};reader.readAsDataURL(file);
+   const reader=new FileReader();reader.onload=async()=>{try{const processed=await window.ggRemoveLogoWhiteBackground(reader.result);localStorage.setItem('gg-v121-club-logo',processed);applyLogo();dialog.close()}catch(err){dialog.querySelector('#ggV121LogoMessage').textContent='No se pudo procesar o guardar la imagen.'}};reader.readAsDataURL(file);
   };
   dialog.querySelector('#ggV121LogoSave').onclick=()=>{
    const value=dialog.querySelector('#ggV121LogoUrl').value.trim();
@@ -3058,5 +3058,64 @@ function sync(){
 let scheduled=false;const obs=new MutationObserver(()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;sync()})});
 function start(){sync();obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['src']})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
+</script>
+<style id="gg-v124-logo-transparency">
+/* The club logo is artwork, not a white framed thumbnail. */
+#dashboard.gg-v71 .gg-v71-header .gg-v71-logo,
+#dashboard.gg-v71.gg-logrobasket-demo .gg-v71-header .gg-v71-logo,
+#dashboard.gg-v71 .gg-v71-header .gg-v71-logo img,
+#dashboard.gg-v71 .gg-v71-header img.gg-v71-logo{
+ background:transparent!important;background-color:transparent!important;
+ border:0!important;box-shadow:none!important;padding:0!important;
+ border-radius:0!important;object-fit:contain!important;
+ filter:drop-shadow(0 4px 5px rgba(0,0,0,.28))!important;
+}
+#dashboard.gg-v71 .gg-v71-header .gg-v71-logo{overflow:visible!important}
+</style>
+<script id="gg-v124-logo-transparency">
+(function(){
+'use strict';
+// Remove only near-white areas connected to the OUTSIDE of the image.
+// Internal white details of a crest remain intact.
+window.ggRemoveLogoWhiteBackground=async function(src){
+ const img=new Image();img.crossOrigin='anonymous';
+ await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=src});
+ const max=640,scale=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));
+ const w=Math.max(1,Math.round(img.naturalWidth*scale)),h=Math.max(1,Math.round(img.naturalHeight*scale));
+ const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+ const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0,w,h);
+ const data=ctx.getImageData(0,0,w,h),p=data.data,seen=new Uint8Array(w*h),stack=[];
+ const nearWhite=(idx)=>{const k=idx*4;return p[k]>235&&p[k+1]>235&&p[k+2]>235&&Math.max(p[k],p[k+1],p[k+2])-Math.min(p[k],p[k+1],p[k+2])<18};
+ const add=(idx)=>{if(!seen[idx]&&nearWhite(idx)){seen[idx]=1;stack.push(idx)}};
+ for(let x=0;x<w;x++){add(x);add((h-1)*w+x)}
+ for(let y=0;y<h;y++){add(y*w);add(y*w+w-1)}
+ let removed=0;
+ while(stack.length){const n=stack.pop(),x=n%w,y=(n/w)|0,k=n*4;p[k+3]=0;removed++;
+ if(x>0)add(n-1);if(x<w-1)add(n+1);if(y>0)add(n-w);if(y<h-1)add(n+w);
+ }
+ // A few white border pixels may be anti-aliased; soften adjacent edge pixels.
+ if(removed>0){for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){
+  const n=y*w+x,k=n*4;
+  if(seen[n]||p[k+3]===0)continue;
+  const light=Math.min(p[k],p[k+1],p[k+2]);
+  if(light<208)continue;
+  if(seen[n-1]||seen[n+1]||seen[n-w]||seen[n+w]){
+   p[k+3]=Math.round(p[k+3]*Math.max(0,Math.min(1,(235-light)/27)));
+  }
+ }}
+ ctx.putImageData(data,0,0);return canvas.toDataURL('image/png');
+};
+async function refreshStored(){
+ const key='gg-v121-club-logo',original=localStorage.getItem(key);
+ if(!original||!original.startsWith('data:image/')||sessionStorage.getItem('gg-v124-processed')===original.slice(0,90))return;
+ try{
+  const clean=await window.ggRemoveLogoWhiteBackground(original);
+  if(clean!==original){localStorage.setItem(key,clean);sessionStorage.setItem('gg-v124-processed',clean.slice(0,90));
+   document.querySelectorAll('#dashboard .gg-v71-header img').forEach(img=>{img.src=clean});
+  }
+ }catch(e){console.warn('No se pudo limpiar el logo existente',e)}
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',refreshStored);else refreshStored();
 })();
 </script>
