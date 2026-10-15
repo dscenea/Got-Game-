@@ -1292,7 +1292,7 @@ function openClubSetting(section){
  else{form.replaceChildren(wizardElement);renderWizard();}
  applySettingsPane();applyLanguage();document.getElementById('settingsTitle').focus();
 }
-function finishClubSetting(){settingsLogoGeneration++;wizardHome.after(wizardElement);document.querySelectorAll('.settings-pane').forEach(el=>el.classList.remove('settings-pane'));clubSettingsSection=null;editor.hidden=true;dash.classList.remove('settings-open');document.getElementById('settingsForm').replaceChildren();renderDashboardSports();wizardApplyBranding();applyLanguage();go('dashboard');dash.querySelector('.coord-settings-btn').focus();}
+function finishClubSetting(){settingsLogoGeneration++;wizardHome.after(wizardElement);document.querySelectorAll('.settings-pane').forEach(el=>el.classList.remove('settings-pane'));clubSettingsSection=null;editor.hidden=true;dash.classList.remove('settings-open','gg-v83-workspace');document.getElementById('ggV71Main')?.style.removeProperty('display');document.getElementById('settingsForm').replaceChildren();renderDashboardSports();wizardApplyBranding();applyLanguage();go('dashboard');dash.querySelector('.coord-settings-btn').focus();}
 function cancelClubSetting(){finishClubSetting();}
 function saveClubSetting(){
  const key=clubSettingsSection;
