@@ -3119,3 +3119,18 @@ async function refreshStored(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',refreshStored);else refreshStored();
 })();
 </script>
+<style id="gg-v124-profile-background-continuity">
+/* Continue the illustrated tile's multi-tone backdrop across the whole role card. */
+#roles .profile-card{isolation:isolate!important;background-image:none!important}
+#roles .profile-card.parent{background:radial-gradient(ellipse at 89% 10%,#ffd15a 0%,transparent 38%),radial-gradient(ellipse at 5% 85%,#ed9b1d 0%,transparent 47%),linear-gradient(122deg,#132b45 0%,#77522c 38%,#e1a22e 74%,#ffc33c 100%)!important}
+#roles .profile-card.player{background:radial-gradient(ellipse at 88% 8%,#0fe5e3 0%,transparent 40%),radial-gradient(ellipse at 0% 88%,#034aa9 0%,transparent 43%),linear-gradient(120deg,#07378e 0%,#0879cf 52%,#34e2d0 100%)!important}
+#roles .profile-card.coach{background:radial-gradient(ellipse at 88% 6%,#c2f34b 0%,transparent 42%),radial-gradient(ellipse at 4% 84%,#036b5d 0%,transparent 48%),linear-gradient(118deg,#014f4b 0%,#208f62 47%,#a9e440 100%)!important}
+#roles .profile-card.coord{background:radial-gradient(ellipse at 92% 6%,#ff62a9 0%,transparent 40%),radial-gradient(ellipse at 5% 85%,#7924cc 0%,transparent 48%),linear-gradient(120deg,#3417a8 0%,#7f29ce 46%,#ef64ad 100%)!important}
+#roles .profile-card::before{background-image:none!important;opacity:1!important;inset:0!important;z-index:0!important;pointer-events:none!important;border-radius:inherit!important}
+#roles .profile-card.parent::before{background:linear-gradient(158deg,transparent 0 26%,#112b4938 26% 49%,transparent 49% 100%)!important}
+#roles .profile-card.player::before{background:linear-gradient(155deg,transparent 0 30%,#002a903b 30% 51%,transparent 51% 100%)!important}
+#roles .profile-card.coach::before{background:linear-gradient(155deg,transparent 0 27%,#004a4540 27% 50%,transparent 50% 100%)!important}
+#roles .profile-card.coord::before{background:linear-gradient(154deg,transparent 0 26%,#36118c4a 26% 50%,transparent 50% 100%)!important}
+#roles .profile-card .profile-art{z-index:1!important}
+#roles .profile-card strong{z-index:2!important}
+</style>
