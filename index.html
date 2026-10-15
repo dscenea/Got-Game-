@@ -2824,3 +2824,40 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 #roles .profile-card strong i{width:33px!important;height:33px!important;font-size:20px!important;margin:8px 0 0 auto!important}
 @media(max-width:430px){#roles .grid{gap:12px!important;margin-top:19px!important}#roles .profile-card{grid-template-columns:minmax(105px,38%) minmax(0,62%)!important;min-height:120px!important;border-radius:17px!important}#roles .profile-card .profile-art{min-height:120px!important;padding:7px!important}#roles .profile-card .profile-art svg.gg-v118-art{max-height:116px!important}#roles .profile-card strong{font-size:15px!important;padding:11px 12px!important;margin-right:9px!important}#roles .profile-card strong i{width:29px!important;height:29px!important;font-size:18px!important;margin-top:6px!important}}
 </style>
+<style id="gg-v120-sport-card-layout">
+/* Original 169x195 sport illustrations: no duplicate gradient, no padding or white frame. */
+#ggWorkspace .gg-v71-sport .gg-v71-symbol,#dashboard .gg-v71-sport .gg-v71-symbol,
+.gg-v71-sport-card .gg-v71-symbol,.sport-selector-button .sport-selector-icon,
+.wz-choice .wz-sporticon{display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;background:transparent!important;border:0!important;border-radius:12px!important;padding:0!important;box-shadow:none!important;min-width:0!important;isolation:isolate}
+#ggWorkspace .gg-v71-sport .gg-v71-symbol,#dashboard .gg-v71-sport .gg-v71-symbol{width:92px!important;height:106px!important;min-width:0!important;min-height:0!important;max-width:100%!important;align-self:flex-start!important}
+.sport-selector-button .sport-selector-icon{width:48px!important;height:56px!important;flex:none!important}
+.wz-choice .wz-sporticon{width:62px!important;height:72px!important}
+.gg-v71-sport-card .gg-v71-symbol{width:70px!important;height:81px!important}
+.gg-v71-symbol:has(.gg-v118-art)::before,.gg-v71-symbol:has(.gg-v118-art)::after,.sport-selector-icon:has(.gg-v118-art)::before,.sport-selector-icon:has(.gg-v118-art)::after,.wz-sporticon:has(.gg-v118-art)::before,.wz-sporticon:has(.gg-v118-art)::after{display:none!important}
+.gg-v71-symbol .gg-v92-symbol:has(.gg-v118-art),.sport-selector-icon .gg-v92-symbol:has(.gg-v118-art),.wz-sporticon .gg-v92-symbol:has(.gg-v118-art){display:block!important;width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;max-width:none!important;max-height:none!important;padding:0!important;margin:0!important;background:none!important;border:0!important;box-shadow:none!important}
+.gg-v71-symbol svg.gg-v118-art,.sport-selector-icon svg.gg-v118-art,.wz-sporticon svg.gg-v118-art,.gg-v71-sport-card svg.gg-v118-art{display:block!important;position:static!important;width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;max-width:none!important;max-height:none!important;padding:0!important;margin:0!important;aspect-ratio:169 / 195!important;stroke:none!important;fill:none!important;filter:none!important;transform:none!important}
+#ggWorkspace .gg-v71-sport .gg-v71-symbol{margin-bottom:8px!important}
+@media(max-width:520px){#ggWorkspace .gg-v71-sport .gg-v71-symbol,#dashboard .gg-v71-sport .gg-v71-symbol{width:64px!important;height:74px!important}.sport-selector-button .sport-selector-icon{width:40px!important;height:46px!important}.wz-choice .wz-sporticon{width:50px!important;height:58px!important}}
+</style>
+<script id="gg-v120-sport-card-icons">
+(function(){
+const names={'Baloncesto':'baloncesto','Fútbol':'futbol','Voleibol':'voleibol','Balonmano':'balonmano','Tenis':'tenis','Pádel':'padel','Atletismo':'atletismo','Natación':'natacion'};
+const pattern=/(Baloncesto|Fútbol|Voleibol|Balonmano|Tenis|Pádel|Atletismo|Natación)/iu;
+function icon(name){return '<span class="gg-v92-symbol"><svg class="gg-v118-art" aria-hidden="true" viewBox="0 0 169 195" preserveAspectRatio="xMidYMid meet"><use href="assets/gg-original-icons.svg#sport-'+names[name]+'"></use></svg></span>'}
+function update(){
+ document.querySelectorAll('.gg-v71-sport,.gg-v71-sport-card,.sport-selector-button,.wz-choice,.sport-card,.wz-sport-card,.wz-sport-choice').forEach(card=>{
+  const label=card.dataset.sport||card.textContent||'';
+  const match=label.match(pattern);if(!match)return;
+  const name=Object.keys(names).find(x=>x.toLocaleLowerCase('es')===match[0].toLocaleLowerCase('es'));if(!name)return;
+  const target=card.querySelector('.gg-v71-symbol,.sport-selector-icon,.wz-sporticon,.sport-mark,.gg-sport-icon,.wz-choice-icon');
+  if(!target)return;
+  const use=target.querySelector('svg.gg-v118-art use');
+  if(use&&use.getAttribute('href')?.endsWith('#sport-'+names[name]))return;
+  target.innerHTML=icon(name);
+ });
+}
+let busy=false;const observer=new MutationObserver(()=>{if(busy)return;busy=true;requestAnimationFrame(()=>{busy=false;update()})});
+function start(){update();observer.observe(document.body,{subtree:true,childList:true});document.addEventListener('click',()=>requestAnimationFrame(update))}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
+</script>
