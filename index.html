@@ -2861,3 +2861,121 @@ function start(){update();observer.observe(document.body,{subtree:true,childList
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
 })();
 </script>
+<style id="gg-v121-render-and-logo">
+/* Actual PNG crops of approved original SVG, instead of external SVG <use>. */
+.gg-v121-tile{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important;position:static!important;max-width:100%!important;max-height:100%!important;filter:none!important;transform:none!important}
+#roles .profile-card .profile-art{background:transparent!important;overflow:hidden!important;min-width:0!important}
+#roles .profile-card .profile-art .gg-v118-art,#roles .profile-card .profile-art .gg-v106-outline{display:none!important}
+#roles .profile-card .profile-art img.gg-v121-tile{display:block!important;width:100%!important;height:100%!important;max-width:100%!important;object-fit:contain!important}
+#roles .profile-card strong{position:relative!important;z-index:1!important}
+#roles .profile-card .profile-art{position:relative!important;z-index:2!important}
+.gg-v71-symbol .gg-v121-tile,.wz-sporticon .gg-v121-tile,.sport-selector-icon .gg-v121-tile{width:100%!important;height:100%!important;object-fit:contain!important}
+.gg-v71-symbol:has(.gg-v121-tile),.wz-sporticon:has(.gg-v121-tile),.sport-selector-icon:has(.gg-v121-tile){background:none!important;box-shadow:none!important}
+.gg-v71-symbol:has(.gg-v121-tile) .gg-v92-symbol,.wz-sporticon:has(.gg-v121-tile) .gg-v92-symbol{padding:0!important;background:none!important}
+.gg-v121-logo-action{cursor:pointer!important;touch-action:manipulation;outline-offset:4px}
+.gg-v121-logo-action:focus-visible{outline:3px solid #ffc928}
+.gg-v121-logo-dialog{border:0;border-radius:22px;padding:22px;max-width:min(92vw,460px);width:100%;box-shadow:0 20px 80px #0005;font-family:inherit}
+.gg-v121-logo-dialog::backdrop{background:#071427a8}
+.gg-v121-logo-dialog h2{margin:0 0 8px;font-size:23px}
+.gg-v121-logo-dialog p{color:#62676d;line-height:1.4}
+.gg-v121-logo-dialog label{display:block;font-weight:750;margin:16px 0 8px}
+.gg-v121-logo-dialog input[type=url],.gg-v121-logo-dialog input[type=file]{display:block;width:100%;padding:12px;border:1px solid #bfc4ca;border-radius:10px;font-size:15px}
+.gg-v121-logo-dialog button{padding:12px 16px;border-radius:12px;border:0;background:#111b30;color:white;font-weight:800;margin:10px 8px 0 0;cursor:pointer}
+.gg-v121-logo-dialog button.gg-v121-close{background:#e9edf1;color:#142037}
+</style>
+<script id="gg-v121-render-and-logo">
+(function(){
+'use strict';
+const names={'Baloncesto':'baloncesto','Fútbol':'futbol','Voleibol':'voleibol','Balonmano':'balonmano','Tenis':'tenis','Pádel':'padel','Atletismo':'atletismo','Natación':'natacion'};
+const sportOrder=['baloncesto','futbol','voleibol','balonmano','tenis','padel','atletismo','natacion'];
+const roles=['parent','coach','player','coord'];
+const images={};
+let ready=false,scheduled=false;
+function crop(source,x,y,w,h){
+ const canvas=document.createElement('canvas');canvas.width=w*2;canvas.height=h*2;
+ const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+ ctx.drawImage(source,x,y,w,h,0,0,w*2,h*2);return canvas.toDataURL('image/png');
+}
+async function prepare(){
+ try{
+  const response=await fetch('assets/gg-original-icons.svg',{cache:'no-cache'});
+  if(!response.ok)throw Error('HTTP '+response.status);
+  let source=await response.text();
+  // Original master artwork is in defs. Render it inside the same SVG document.
+  if(!source.includes('id="gg-master-art"'))throw Error('Falta el arte original');
+  source=source.replace(/<\/svg>\s*$/, '<use href="#gg-master-art" xlink:href="#gg-master-art"/></svg>');
+  const blob=new Blob([source],{type:'image/svg+xml'});
+  const url=URL.createObjectURL(blob);
+  const img=new Image();
+  await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(Error('No se pudo rasterizar SVG'));img.src=url});
+  sportOrder.forEach((name,i)=>images['sport-'+name]=crop(img,40+i*184,126,169,195));
+  roles.forEach((name,i)=>images['role-'+name]=crop(img,40+i*368,512,352,292));
+  URL.revokeObjectURL(url);ready=true;sync();
+ }catch(e){console.warn('got GAME! iconos originales:',e)}
+}
+function imageMarkup(key){return '<img class="gg-v121-tile" src="'+images[key]+'" alt="" aria-hidden="true" decoding="async">'}
+function sync(){
+ if(ready){
+  document.querySelectorAll('.gg-v71-sport,.gg-v71-sport-card,.sport-selector-button,.wz-choice,.sport-card,.wz-sport-card,.wz-sport-choice').forEach(card=>{
+   const text=card.dataset.sport||card.textContent||'';
+   const name=Object.keys(names).find(s=>text.toLocaleLowerCase('es').includes(s.toLocaleLowerCase('es')));
+   if(!name)return;
+   const target=card.querySelector('.gg-v71-symbol,.sport-selector-icon,.wz-sporticon,.sport-mark,.gg-sport-icon,.wz-choice-icon');
+   if(!target||target.querySelector('.gg-v121-tile')?.dataset.icon==='sport-'+names[name])return;
+   target.innerHTML=imageMarkup('sport-'+names[name]);
+   target.firstElementChild.dataset.icon='sport-'+names[name];
+  });
+  roles.forEach(role=>{
+   document.querySelectorAll('#roles .profile-card.'+role+' .profile-art').forEach(target=>{
+    if(target.querySelector('.gg-v121-tile'))return;
+    target.replaceChildren();
+    target.insertAdjacentHTML('afterbegin',imageMarkup('role-'+role));
+   });
+  });
+ }
+ setupLogo();
+}
+function logoImage(){
+ const url=localStorage.getItem('gg-v121-club-logo');
+ return url||null;
+}
+function applyLogo(){
+ const url=logoImage();if(!url)return;
+ document.querySelectorAll('#dashboard .gg-v71-header .gg-v71-logo img,#dashboard .gg-v71-header img').forEach(img=>{if(img.src!==url)img.src=url});
+}
+function setupLogo(){
+ document.querySelectorAll('#dashboard .gg-v71-header .gg-v71-logo').forEach(logo=>{
+  if(logo.dataset.ggLogoReady)return;logo.dataset.ggLogoReady='1';
+  logo.classList.add('gg-v121-logo-action');logo.setAttribute('role','button');logo.setAttribute('tabindex','0');logo.setAttribute('aria-label','Cambiar logo del club');
+  logo.addEventListener('click',openLogo);logo.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openLogo()}});
+ });
+ applyLogo();
+}
+function openLogo(){
+ let dialog=document.getElementById('ggV121LogoDialog');
+ if(!dialog){
+  dialog=document.createElement('dialog');dialog.id='ggV121LogoDialog';dialog.className='gg-v121-logo-dialog';
+  dialog.innerHTML='<h2>Cambiar logo del club</h2><p>Elige una imagen desde tu dispositivo o pega una dirección directa de imagen.</p><label for="ggV121LogoFile">Desde un archivo</label><input id="ggV121LogoFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"><label for="ggV121LogoUrl">Desde Internet</label><input id="ggV121LogoUrl" type="url" placeholder="https://ejemplo.com/escudo.png"><button type="button" id="ggV121LogoSave">Usar dirección</button><button type="button" class="gg-v121-close" id="ggV121LogoClose">Cancelar</button><p id="ggV121LogoMessage" role="status"></p>';
+  document.body.appendChild(dialog);
+  dialog.querySelector('#ggV121LogoClose').onclick=()=>dialog.close();
+  dialog.querySelector('#ggV121LogoFile').onchange=e=>{
+   const file=e.target.files?.[0];if(!file)return;
+   if(!/^image\/(png|jpeg|webp|svg\+xml)$/.test(file.type)){dialog.querySelector('#ggV121LogoMessage').textContent='Selecciona una imagen válida.';return}
+   if(file.size>1500000){dialog.querySelector('#ggV121LogoMessage').textContent='El archivo debe ocupar menos de 1,5 MB.';return}
+   const reader=new FileReader();reader.onload=()=>{try{localStorage.setItem('gg-v121-club-logo',reader.result);applyLogo();dialog.close()}catch(err){dialog.querySelector('#ggV121LogoMessage').textContent='No hay espacio para guardar esta imagen.'}};reader.readAsDataURL(file);
+  };
+  dialog.querySelector('#ggV121LogoSave').onclick=()=>{
+   const value=dialog.querySelector('#ggV121LogoUrl').value.trim();
+   try{const u=new URL(value);if(u.protocol!=='https:')throw Error('https');localStorage.setItem('gg-v121-club-logo',u.href);applyLogo();dialog.close()}catch(err){dialog.querySelector('#ggV121LogoMessage').textContent='Introduce una dirección HTTPS válida de imagen.'}
+  };
+ }
+ dialog.showModal();
+}
+function start(){
+ prepare();sync();
+ const observer=new MutationObserver(()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;sync()})});
+ observer.observe(document.body,{childList:true,subtree:true});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
+</script>
