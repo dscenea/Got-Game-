@@ -68,7 +68,6 @@ input:focus,select:focus{border-color:var(--yellow);box-shadow:0 0 0 3px #ffc107
 #roles .card:nth-child(3){background:#fff}
 #roles .icon{height:66px}
 #roles .icon svg{width:62px;height:58px}
-#roles .card strong{font-size:14px;margin-top:7px}
 
 /* v5: identity-accurate launch screen */
 #roles{background:#F7F4EA;padding:calc(24px + env(safe-area-inset-top)) 22px 34px;overflow:hidden;isolation:isolate}
@@ -82,7 +81,6 @@ input:focus,select:focus{border-color:var(--yellow);box-shadow:0 0 0 3px #ffc107
 #roles .card:nth-child(3){background:#fff}
 #roles .icon{height:62px;margin-bottom:3px}
 #roles .icon svg{width:59px;height:55px}
-#roles .card strong{font-size:14px;line-height:1.15;margin-top:5px;color:#0B0B0B}
 #roles::before{
  content:"";position:absolute;z-index:0;right:-142px;top:260px;width:390px;height:390px;border:13px solid #ECE7DD;
  border-radius:50%;opacity:.48;transform:rotate(-17deg);
@@ -125,11 +123,9 @@ input:focus,select:focus{border-color:var(--yellow);box-shadow:0 0 0 3px #ffc107
 #roles .icon::before{content:"";position:absolute;width:82px;height:82px;background:#F7F4EA;transform:rotate(-7deg);clip-path:polygon(12% 0,100% 8%,91% 100%,0 88%);opacity:.92}
 #roles .icon:after{display:none}
 #roles .icon svg{width:100px;height:88px;filter:none;position:relative;z-index:2;overflow:visible}
-#roles .card strong{font-size:18px;line-height:1.04;margin:0;padding:22px 24px 20px;font-weight:950;max-width:none;position:relative;z-index:2;align-self:center;letter-spacing:-.35px;text-transform:none}
-#roles .card strong small{display:block;font-size:11px;line-height:1;margin-top:8px;letter-spacing:1.5px;text-transform:uppercase;font-weight:900;opacity:.7}
 #roles h1{font-size:30px;margin-top:0}
 #roles .muted{margin-bottom:8px}
-@media (max-width:360px){#roles .card{grid-template-columns:116px 1fr}#roles .icon{width:116px}#roles .card strong{font-size:16px;padding-left:18px}}
+@media (max-width:360px){#roles .card{grid-template-columns:116px 1fr}#roles .icon{width:116px}}
 
 /* v12 — ilustraciones transparentes integradas */
 .profile-card .profile-art{overflow:visible!important;}
@@ -200,13 +196,7 @@ input:focus,select:focus{border-color:var(--yellow);box-shadow:0 0 0 3px #ffc107
 #roles .card:first-child .icon.parent-custom img{
   width:150px;height:164px;max-width:none;object-fit:contain;object-position:center bottom;display:block;filter:none;transform:translateY(5px)
 }
-#roles .card:first-child strong{
-  align-self:center;margin:0 18px 0 0;padding:20px 17px 18px 21px;font-size:19px;line-height:1.03;
-  background:#F7F4EA;clip-path:polygon(4% 7%,96% 0,100% 91%,1% 100%);position:relative;z-index:3
-}
-#roles .card:first-child strong small{display:none}
-#roles .card:first-child strong::after{content:'→';display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:#FFC107;border:2px solid #0B0B0B;box-shadow:3px 3px 0 #0B0B0B;font-size:25px;line-height:1;margin-top:13px;margin-left:auto}
-@media(max-width:360px){#roles .card:first-child{grid-template-columns:45% 55%}#roles .card:first-child .icon.parent-custom img{width:132px;height:154px}#roles .card:first-child strong{font-size:17px;margin-right:12px;padding-left:17px}}
+@media(max-width:360px){#roles .card:first-child{grid-template-columns:45% 55%}#roles .card:first-child .icon.parent-custom img{width:132px;height:154px}}
 </style>
 <style>
 /* v11: tarjetas completas basadas en el mockup aprobado + SVG de Illustrator */
@@ -219,15 +209,10 @@ input:focus,select:focus{border-color:var(--yellow);box-shadow:0 0 0 3px #ffc107
 #roles .profile-art::after{content:"";position:absolute;width:185px;height:105px;left:-25px;bottom:-42px;border-radius:50%;background:rgba(11,11,11,.08);z-index:-1}
 #roles .profile-art img{display:block!important;width:162px!important;height:162px!important;max-width:none!important;object-fit:contain!important;object-position:center bottom!important;transform:translateY(5px)!important;filter:none!important}
 #roles .profile-card.player .profile-art img{width:170px!important;height:164px!important}#roles .profile-card.coach .profile-art img,#roles .profile-card.coord .profile-art img{width:166px!important;height:164px!important}
-#roles .profile-card strong{align-self:center!important;margin:0 16px 0 0!important;padding:19px 16px 15px 21px!important;background:#F7F4EA!important;clip-path:polygon(4% 7%,97% 0,100% 90%,1% 100%)!important;font-size:19px!important;line-height:1.05!important;color:#0B0B0B!important;position:relative!important;z-index:3!important;display:block!important}
-#roles .profile-card strong span{display:block}#roles .profile-card strong i{font-style:normal;display:grid;place-items:center;width:39px;height:39px;border-radius:50%;margin:12px 0 0 auto;border:2px solid #0B0B0B;box-shadow:3px 3px 0 #0B0B0B;font-size:24px;line-height:1}
-#roles .parent strong i{background:#FFC107}#roles .player strong i{background:#48AFC8}#roles .coach strong i{background:#73B56B}#roles .coord strong i{background:#A984C5}
 #roles .profile-card:active{transform:translate(3px,3px)!important;box-shadow:3px 4px 0 rgba(11,11,11,.17)!important}
-@media(max-width:360px){#roles .profile-card{grid-template-columns:46% 54%!important;min-height:154px!important}#roles .profile-art{height:154px!important}#roles .profile-art img{width:145px!important;height:151px!important}#roles .profile-card strong{font-size:17px!important;margin-right:11px!important;padding:17px 13px 14px 17px!important}}
+@media(max-width:360px){#roles .profile-card{grid-template-columns:46% 54%!important;min-height:154px!important}#roles .profile-art{height:154px!important}#roles .profile-art img{width:145px!important;height:151px!important}}
 </style>
 <style>
-/* v15 — Padre/Madre/Tutor Legal igual que el resto: elimina la flecha heredada de v10 */
-#roles .profile-card.parent strong::after{content:none!important;display:none!important;}
 </style>
 
 <style>
@@ -287,31 +272,12 @@ input:focus,select:focus{border-color:var(--yellow);box-shadow:0 0 0 3px #ffc107
 #roles .grid{margin-top:24px!important;}
 #roles .profile-card{box-shadow:6px 8px 0 rgba(11,11,11,.16)!important;}
 #roles .profile-card::after{content:""!important;position:absolute!important;left:-28px!important;top:-24px!important;width:190px!important;height:190px!important;border:0!important;border-radius:0!important;opacity:.105!important;background:repeating-linear-gradient(135deg,rgba(11,11,11,.85) 0 3px,transparent 3px 10px)!important;clip-path:polygon(0 0,76% 0,100% 26%,71% 48%,100% 74%,60% 100%,0 88%,18% 58%,0 34%)!important;z-index:0!important;pointer-events:none!important;}
-#roles .profile-card .profile-art,#roles .profile-card strong{position:relative!important;z-index:2!important;}
-#roles .profile-card strong{clip-path:polygon(5% 7%,96% 0,100% 83%,91% 100%,1% 96%)!important;box-shadow:none!important;}
-#roles .profile-card strong:before{content:"";position:absolute;right:0;bottom:0;width:27px;height:27px;background:rgba(11,11,11,.08);clip-path:polygon(100% 0,100% 100%,0 100%);}
-#roles .profile-card strong i{position:relative;overflow:hidden;font-weight:950!important;transition:transform .16s ease!important;isolation:isolate;font-size:0!important;}
-#roles .profile-card strong i:before{content:"";position:absolute;inset:-8px;opacity:.13;background:repeating-linear-gradient(135deg,#0B0B0B 0 2px,transparent 2px 6px);transform:rotate(8deg);}
-#roles .profile-card strong i::after{content:"→";position:absolute;inset:0;display:grid;place-items:center;z-index:2;font-size:26px;background:transparent;}
-@media (hover:hover) and (pointer:fine){#roles .profile-card:hover strong i{transform:translateX(2px) rotate(-4deg)!important;}}
+#roles .profile-card .profile-art{position:relative!important;z-index:2!important;}
+@media (hover:hover) and (pointer:fine){}
 @media(max-width:360px){#roles .brand-path{width:188px!important;height:164px!important;}}
 </style>
 
 <style>
-/* v25 — restaura EXACTAMENTE los botones anteriores al patrón de rayas (estilo v16) */
-#roles .profile-card strong i{
-  font-style:normal!important;display:grid!important;place-items:center!important;
-  width:39px!important;height:39px!important;border-radius:50%!important;
-  margin:12px 0 0 auto!important;border:2px solid #0B0B0B!important;
-  box-shadow:3px 3px 0 #0B0B0B!important;font-size:24px!important;line-height:1!important;
-  position:relative!important;overflow:visible!important;transform:none!important;
-}
-#roles .profile-card strong i:before{content:none!important;display:none!important;background:none!important;}
-#roles .profile-card strong i::after{content:none!important;display:none!important;background:none!important;}
-#roles .parent strong i{background:#FFC107!important}
-#roles .player strong i{background:#48AFC8!important}
-#roles .coach strong i{background:#73B56B!important}
-#roles .coord strong i{background:#A984C5!important}
 </style>
 
 <style>
@@ -333,15 +299,12 @@ input:focus,select:focus{border-color:var(--yellow);box-shadow:0 0 0 3px #ffc107
   z-index:0!important;
   pointer-events:none!important;
 }
-/* botones: estilo limpio anterior, sin ningún patrón */
-#roles .profile-card strong i{
+/* botones: estilo limpio anterior{
   background:transparent!important;
   background-image:none!important;
   overflow:visible!important;
   font-size:24px!important;
 }
-#roles .profile-card strong i:before,
-#roles .profile-card strong i::after{content:none!important;display:none!important;background:none!important;}
 </style>
 
 <style id="v27-exact-gg-logo">
@@ -789,7 +752,6 @@ input:focus,select:focus{border-color:var(--yellow);box-shadow:0 0 0 3px #ffc107
 #roles .profile-card .profile-art{background:transparent!important;overflow:hidden!important;display:flex!important;align-items:center!important;justify-content:center!important}
 #roles .profile-card .profile-art::before,#roles .profile-card .profile-art::after{display:none!important}
 #roles .profile-card .profile-art svg.gg-v106-outline{position:relative!important;width:76%!important;height:76%!important;max-width:155px!important;max-height:155px!important;stroke-width:3.2!important;flex:none!important}
-#roles .profile-card strong{color:#141414!important;text-shadow:none!important}
 #roles .profile-card .profile-art img{display:none!important}
 #roles .profile-card .profile-art{isolation:isolate}
 @media(min-width:850px){#roles .profile-card .profile-art svg.gg-v106-outline{max-width:175px!important;max-height:175px!important}}
@@ -821,10 +783,10 @@ input:focus,select:focus{border-color:var(--yellow);box-shadow:0 0 0 3px #ffc107
 </div>
   <h1>¿Qué perfil eres?</h1><p>Selecciona tu perfil para continuar.</p>
   <div class="grid">
-    <button class="card profile-card parent" onclick="pickRole('Padre / Madre / Tutor Legal')"><span class="profile-art"><svg class="gg-v118-art" aria-hidden="true" viewBox="0 0 352 292" preserveAspectRatio="xMidYMid meet"><use href="assets/gg-original-icons.svg#role-parent"></use></svg></span><strong><span>Padre / Madre / Tutor Legal</span><i aria-hidden="true">→</i></strong></button>
-    <button class="card profile-card player" onclick="pickRole('Jugador / Jugadora')"><span class="profile-art"><svg class="gg-v118-art" aria-hidden="true" viewBox="0 0 352 292" preserveAspectRatio="xMidYMid meet"><use href="assets/gg-original-icons.svg#role-player"></use></svg></span><strong><span>Jugador/a</span><i aria-hidden="true">→</i></strong></button>
-    <button class="card profile-card coach" onclick="pickRole('Entrenador / Entrenadora')"><span class="profile-art"><svg class="gg-v118-art" aria-hidden="true" viewBox="0 0 352 292" preserveAspectRatio="xMidYMid meet"><use href="assets/gg-original-icons.svg#role-coach"></use></svg></span><strong><span>Entrenador/a</span><i aria-hidden="true">→</i></strong></button>
-    <button class="card profile-card coord" onclick="pickRole('Coordinador / Coordinadora')"><span class="profile-art"><svg class="gg-v118-art" aria-hidden="true" viewBox="0 0 352 292" preserveAspectRatio="xMidYMid meet"><use href="assets/gg-original-icons.svg#role-coord"></use></svg></span><strong><span>Coordinador/a</span><i aria-hidden="true">→</i></strong></button>
+    <button class="card profile-card parent" onclick="pickRole('Padre / Madre / Tutor Legal')"><span class="profile-art"><svg class="gg-v118-art" aria-hidden="true" viewBox="0 0 352 292" preserveAspectRatio="xMidYMid meet"><use href="assets/gg-original-icons.svg#role-parent"></use></svg></span><strong><span>Padre / Madre / Tutor Legal</span><i aria-hidden="true">›</i></strong></button>
+    <button class="card profile-card player" onclick="pickRole('Jugador / Jugadora')"><span class="profile-art"><svg class="gg-v118-art" aria-hidden="true" viewBox="0 0 352 292" preserveAspectRatio="xMidYMid meet"><use href="assets/gg-original-icons.svg#role-player"></use></svg></span><strong><span>Jugador/a</span><i aria-hidden="true">›</i></strong></button>
+    <button class="card profile-card coach" onclick="pickRole('Entrenador / Entrenadora')"><span class="profile-art"><svg class="gg-v118-art" aria-hidden="true" viewBox="0 0 352 292" preserveAspectRatio="xMidYMid meet"><use href="assets/gg-original-icons.svg#role-coach"></use></svg></span><strong><span>Entrenador/a</span><i aria-hidden="true">›</i></strong></button>
+    <button class="card profile-card coord" onclick="pickRole('Coordinador / Coordinadora')"><span class="profile-art"><svg class="gg-v118-art" aria-hidden="true" viewBox="0 0 352 292" preserveAspectRatio="xMidYMid meet"><use href="assets/gg-original-icons.svg#role-coord"></use></svg></span><strong><span>Coordinador/a</span><i aria-hidden="true">›</i></strong></button>
   </div>
 
 <div class="bg-stroke" aria-hidden="true"></div></section>
@@ -1669,17 +1631,7 @@ document.addEventListener('click',function(e){
  if(b.id==='ggV97Back'||(b.classList.contains('gg-v83-back')&&b.textContent.includes('Volver al panel'))){
  e.preventDefault();e.stopImmediatePropagation();homeSport();return;
  }
- if(b.id==='ggV99SportBack'){
- e.preventDefault();e.stopImmediatePropagation();
- homeSport();
- const main=document.getElementById('ggV71Main');
- main?.querySelector('.gg-v71-module-grid')?.remove();
- main?.querySelector('#ggV77Extras')?.remove();
- const sports=main?.querySelector('.gg-v71-sports');if(sports)sports.style.display='grid';
- const grid=main?.querySelector('.gg-v71-grid');if(grid)grid.style.removeProperty('display');
- const title=main?.querySelector('.gg-v71-heading h3');if(title)title.textContent='Elige un deporte';
- b.remove();document.getElementById('ggV71Switch')?.style.setProperty('display','none');
- }
+
 },true);
 })();
 </script><style id="gg-v103-visual-fixes">
@@ -1739,7 +1691,6 @@ profiles();teams();
 #roles .profile-card .profile-art{position:relative!important;overflow:hidden!important;background:transparent!important}
 #roles .profile-card .profile-art img{display:none!important}
 #roles .profile-card .profile-art svg.gg-v106-outline{display:block!important;position:relative!important;z-index:5!important;width:95%!important;height:95%!important;max-width:210px!important;max-height:210px!important;stroke:#fff!important;filter:drop-shadow(0 3px 5px #0002)!important}
-#roles .profile-card strong{color:#fff!important;text-shadow:0 2px 7px #0005}
 @media(min-width:800px){#roles .profile-card .profile-art svg.gg-v106-outline{max-width:230px!important;max-height:230px!important}}
 </style><style>
 /* v32 — el SVG del balón ocupa toda la circunferencia, sin círculo exterior duplicado */
@@ -2173,6 +2124,13 @@ function draw(){
  const calendar=document.getElementById('ggV71Calendar');if(calendar)calendar.onclick=()=>window.ggView('calendar');
  const community=document.getElementById('ggV71Community');if(community)community.onclick=()=>window.ggOpenCommunity?.('posts');
 }
+window.ggRenderClubHome=function(){
+ section='home';sport=sports().length===1?sports()[0]:null;
+ const workspace=document.getElementById('ggWorkspace');
+ if(workspace){workspace.hidden=true;workspace.style.removeProperty('display')}
+ dash.classList.remove('gg-v83-workspace','gg-subscreen');main.style.removeProperty('display');
+ draw();window.scrollTo(0,0);
+};
 const oldGo=go;
 go=function(id){oldGo(id);if(id==='dashboard'){section='home';sport=sports().length===1?sports()[0]:null;draw()}};
 draw();
@@ -2215,6 +2173,10 @@ function paintSports(){
  b.addEventListener('click',()=>{currentSport=name;currentModule=null;setTimeout(showSport,0)});
  });
 }
+window.ggReturnToSports=function(){
+ currentSport=null;currentModule=null;dashboardSelectedSport=null;
+ window.ggRenderClubHome();paintSports();
+};
 function showSport(){
  const name=getSport();if(!name)return;
  const h=main.querySelector('.gg-v71-heading');if(!h)return;
@@ -2235,8 +2197,14 @@ function showSport(){
  g.insertAdjacentElement('afterend',extra);
  extra.querySelectorAll('[data-v77-action]').forEach(b=>b.onclick=()=>{const k=b.dataset.v77Action;if(k==='community')window.ggOpenCommunity?.('posts');else window.ggView?.(k)});
 
- const multiBackId='ggV99SportBack';document.getElementById(multiBackId)?.remove();if((data.sports||[]).length>1){const choose=document.createElement('button');choose.type='button';choose.id=multiBackId;choose.className='gg-v99-sport-back';choose.textContent='‹ Todos los deportes';choose.onclick=()=>{document.querySelector('#ggV71Bottom [data-section="home"]')?.click();currentSport=null;currentModule=null;const pick=main.querySelector('.gg-v71-sports');if(pick){pick.style.display='grid';main.querySelector('.gg-v71-module-grid')?.remove();main.querySelector('#ggV77Extras')?.remove();h.querySelector('h3').textContent='Elige un deporte';choose.remove();document.getElementById('ggV71Switch')?.style.setProperty('display','none');window.scrollTo({top:0,behavior:'smooth'});}else document.querySelector('#ggV71Bottom [data-section="home"]')?.click();};h.parentNode.insertBefore(choose,h);}
- const back=document.getElementById('ggV71Switch');if(back)back.onclick=()=>{currentSport=null;currentModule=null;const pick=main.querySelector('.gg-v71-sports');if(pick){pick.style.display='grid';pick.scrollIntoView({block:'start',behavior:'smooth'});const heading=h.querySelector('h3');if(heading)heading.textContent='Elige un deporte';const mod=main.querySelector('.gg-v71-module-grid');if(mod)mod.remove();back.style.display='none';}else{const home=document.querySelector('#ggV71Bottom [data-section="home"]');home?.click();setTimeout(()=>main.querySelector('.gg-v71-sports')?.scrollIntoView({block:'start'}),80)}};
+ const multiBackId='ggV99SportBack';document.getElementById(multiBackId)?.remove();
+ if((data.sports||[]).length>1){
+  const choose=document.createElement('button');choose.type='button';choose.id=multiBackId;
+  choose.className='gg-v99-sport-back';choose.textContent='‹ Todos los deportes';
+  choose.onclick=window.ggReturnToSports;h.parentNode.insertBefore(choose,h);
+ }
+ const back=document.getElementById('ggV71Switch');if(back)back.onclick=window.ggReturnToSports;
+
 }
 function showModule(i){
  currentModule=i;const name=getSport(),title=modules[i][0];
@@ -2388,7 +2356,7 @@ refresh();
  coach:'<circle cx="17" cy="13" r="6"/><path d="M5 43V31a12 12 0 0 1 24 0v12"/><rect x="32" y="12" width="15" height="27" rx="2"/><path d="M36 19h7m-7 6h7m-7 6h5"/>',
  family:'<circle cx="14" cy="14" r="5"/><circle cx="35" cy="14" r="5"/><circle cx="25" cy="29" r="4"/><path d="M3 40v-10a11 11 0 0 1 18-8M30 22a11 11 0 0 1 19 8v10M17 46v-5a8 8 0 0 1 16 0v5"/>',
  coordinator:'<circle cx="18" cy="12" r="6"/><path d="M5 44V31a13 13 0 0 1 22-9"/><rect x="30" y="23" width="16" height="23" rx="2"/><path d="M35 23v-4h6v4m-6 9h6m-6 7h6"/>',
- teams:'<path d="M6 45V9h40v36M6 20h40M17 9v36M35 9v36"/><circle cx="26" cy="32" r="6"/>',
+ teams:'<path d="m17 6-12 6 5 13 6-3v24h20V22l6 3 5-13-12-6c-2 8-16 8-18 0Z"/>',
  venue:'<rect x="4" y="10" width="44" height="32" rx="3"/><path d="M26 10v32M4 20h11v12H4m44-12H37v12h11"/><circle cx="26" cy="26" r="5"/>',
  calendar:'<rect x="5" y="10" width="42" height="36" rx="4"/><path d="M15 5v11m22-11v11M5 22h42m-31 9h4m9 0h4"/>',
  community:'<path d="M5 8h42v30H23L10 47v-9H5z"/><path d="M14 19h24M14 28h17"/>',
@@ -2598,10 +2566,6 @@ let scheduled=false;const observer=new MutationObserver(()=>{if(scheduled)return
 #roles button.profile-card .profile-art img{display:none!important}
 #roles button.profile-card .profile-art::before,#roles button.profile-card .profile-art::after{display:none!important}
 #roles button.profile-card .profile-art svg.gg-v106-outline{display:block!important;position:relative!important;z-index:4!important;width:82%!important;height:82%!important;max-width:148px!important;max-height:148px!important;stroke:white!important;stroke-width:3.4!important;filter:none!important}
-#roles button.profile-card strong{color:#10131a!important;text-shadow:none!important;background:#fffdf7!important;opacity:1!important}
-#roles button.profile-card strong span{color:#10131a!important;text-shadow:none!important}
-#roles button.profile-card strong i{color:#111!important;background:#fff!important;border-color:#111!important;text-shadow:none!important}
-#roles button.profile-card strong i svg{stroke:#111!important}
 @media(min-width:850px){#roles button.profile-card .profile-art svg.gg-v106-outline{max-width:175px!important;max-height:175px!important}}
 </style>
 
@@ -2609,7 +2573,6 @@ let scheduled=false;const observer=new MutationObserver(()=>{if(scheduled)return
 #roles button.profile-card .profile-art svg.gg-v106-outline{stroke-width:3.1!important;max-width:142px!important;max-height:142px!important}
 #roles button.profile-card::after{display:none!important}
 #roles button.profile-card .profile-art{z-index:2!important}
-#roles button.profile-card strong{z-index:3!important}
 .gg-v92-symbol svg{stroke-width:3.8!important;stroke-linejoin:round!important;stroke-linecap:round!important}
 </style>
 <style id="gg-v110-icon-refinement">
@@ -2710,10 +2673,7 @@ document.addEventListener('click',safeTeams,true);
 #roles .profile-card .profile-art::after{display:none!important}
 #roles .profile-card .profile-art img,#roles .profile-card .profile-art svg.gg-v106-outline{display:none!important}
 #roles .profile-card .profile-art svg.gg-v118-art{display:block!important;position:relative!important;inset:auto!important;flex:none!important;width:100%!important;height:auto!important;aspect-ratio:352 / 292!important;max-height:155px!important;min-width:0!important;overflow:hidden!important;object-fit:contain!important;transform:none!important;filter:none!important}
-#roles .profile-card strong{grid-column:2!important;grid-row:1!important;align-self:center!important;min-width:0!important;max-width:100%!important;overflow-wrap:break-word!important;font-size:clamp(14px,2.4vw,19px)!important;margin:0 12px 0 0!important;padding:16px 14px!important;line-height:1.18!important;clip-path:polygon(5% 4%,97% 0,100% 94%,0 100%)!important}
-#roles .profile-card strong span{display:block!important;white-space:normal!important}
-#roles .profile-card strong i{width:33px!important;height:33px!important;font-size:20px!important;margin:8px 0 0 auto!important}
-@media(max-width:430px){#roles .grid{gap:12px!important;margin-top:19px!important}#roles .profile-card{grid-template-columns:minmax(105px,38%) minmax(0,62%)!important;min-height:120px!important;border-radius:17px!important}#roles .profile-card .profile-art{min-height:120px!important;padding:7px!important}#roles .profile-card .profile-art svg.gg-v118-art{max-height:116px!important}#roles .profile-card strong{font-size:15px!important;padding:11px 12px!important;margin-right:9px!important}#roles .profile-card strong i{width:29px!important;height:29px!important;font-size:18px!important;margin-top:6px!important}}
+@media(max-width:430px){#roles .grid{gap:12px!important;margin-top:19px!important}#roles .profile-card{grid-template-columns:minmax(105px,38%) minmax(0,62%)!important;min-height:120px!important;border-radius:17px!important}#roles .profile-card .profile-art{min-height:120px!important;padding:7px!important}#roles .profile-card .profile-art svg.gg-v118-art{max-height:116px!important}}
 </style>
 
 
@@ -2890,9 +2850,8 @@ window.ggRemoveLogoWhiteBackground=async function(src){
 #roles .profile-card.coach::before{background:linear-gradient(155deg,transparent 0 27%,#004a4540 27% 50%,transparent 50% 100%)!important}
 #roles .profile-card.coord::before{background:linear-gradient(154deg,transparent 0 26%,#36118c4a 26% 50%,transparent 50% 100%)!important}
 #roles .profile-card .profile-art{z-index:1!important}
-#roles .profile-card strong{z-index:2!important}
 </style>
 
 
-<link rel="stylesheet" href="assets/identity.css?v=4">
+<link rel="stylesheet" href="assets/identity.css?v=5">
 </body></html>
