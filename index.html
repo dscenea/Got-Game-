@@ -2335,7 +2335,7 @@ refresh();
 </style>
 
 <style id="gg-v75-navigation">
-#dashboard.gg-v71 > :not(#ggV71Main):not(.gg-v71-bottom):not(#clubSettingsEditor){display:none!important}
+#dashboard.gg-v71 > :not(:where(#ggV71Main,.gg-v71-bottom,#ggWorkspace,#clubSettingsEditor)){display:none!important}
 #dashboard.gg-v71 #ggV71Main{display:block!important;min-height:calc(100dvh - 140px);padding-top:18px!important;padding-bottom:125px!important}
 #dashboard.gg-v71 .gg-v71-page-back{display:inline-flex;align-items:center;border:1px solid #ccd5e3;background:#fff;color:#123f81;border-radius:13px;padding:13px 16px;margin:0 0 22px;font-size:15px;font-weight:800}
 #dashboard.gg-v71 .gg-v71-header{margin-bottom:14px}
@@ -2760,10 +2760,9 @@ function sync(){
  }
  setupLogo();
 }
-function logoKey(){return 'gg-club-logo:'+encodeURIComponent(data.clubCode||data.club||'demo')}
 function canEditLogo(){return !selectedRole||roleKey(selectedRole)==='coord'}
 function logoImage(){
- const url=localStorage.getItem(logoKey())||data.logoDataUrl;
+ const url=data.logoDataUrl;
  return url||null;
 }
 function applyLogo(){
@@ -2783,7 +2782,6 @@ function setupLogo(){
 }
 function openLogo(){
  if(!canEditLogo())return;
- const editingKey=logoKey();
  let dialog=document.getElementById('ggV121LogoDialog');if(dialog){dialog.remove();dialog=null}
  if(!dialog){
   dialog=document.createElement('dialog');dialog.id='ggV121LogoDialog';dialog.className='gg-v121-logo-dialog';
@@ -2794,11 +2792,11 @@ function openLogo(){
    const file=e.target.files?.[0];if(!file)return;
    if(!/^image\/(png|jpeg|webp|svg\+xml)$/.test(file.type)){dialog.querySelector('#ggV121LogoMessage').textContent='Selecciona una imagen válida.';return}
    if(file.size>1500000){dialog.querySelector('#ggV121LogoMessage').textContent='El archivo debe ocupar menos de 1,5 MB.';return}
-   const reader=new FileReader();reader.onload=async()=>{try{const processed=await window.ggRemoveLogoWhiteBackground(reader.result);localStorage.setItem(editingKey,processed);data.logoDataUrl=processed;applyLogo();dialog.close()}catch(err){dialog.querySelector('#ggV121LogoMessage').textContent='No se pudo procesar o guardar la imagen.'}};reader.readAsDataURL(file);
+   const reader=new FileReader();reader.onload=async()=>{try{const processed=await window.ggRemoveLogoWhiteBackground(reader.result);data.logoDataUrl=processed;persistClubSettings();applyLogo();dialog.close()}catch(err){dialog.querySelector('#ggV121LogoMessage').textContent='No se pudo procesar o guardar la imagen.'}};reader.readAsDataURL(file);
   };
   dialog.querySelector('#ggV121LogoSave').onclick=async()=>{
    const value=dialog.querySelector('#ggV121LogoUrl').value.trim();
-   try{const u=new URL(value);if(u.protocol!=='https:')throw Error('https');await new Promise((resolve,reject)=>{const img=new Image();img.onload=resolve;img.onerror=reject;img.src=u.href});let logo=u.href;try{logo=await window.ggRemoveLogoWhiteBackground(u.href)}catch(e){}localStorage.setItem(editingKey,logo);data.logoDataUrl=logo;applyLogo();dialog.close()}catch(err){dialog.querySelector('#ggV121LogoMessage').textContent='Introduce una dirección HTTPS válida de imagen.'}
+   try{const u=new URL(value);if(u.protocol!=='https:')throw Error('https');await new Promise((resolve,reject)=>{const img=new Image();img.onload=resolve;img.onerror=reject;img.src=u.href});let logo=u.href;try{logo=await window.ggRemoveLogoWhiteBackground(u.href)}catch(e){}data.logoDataUrl=logo;persistClubSettings();applyLogo();dialog.close()}catch(err){dialog.querySelector('#ggV121LogoMessage').textContent='Introduce una dirección HTTPS válida de imagen.'}
   };
  }
  dialog.showModal();
