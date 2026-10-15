@@ -2979,3 +2979,32 @@ function start(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
 })();
 </script>
+<style id="gg-v122-responsive-mode">
+/* Phone: natural full-width mobile UI. Desktop: full desktop dashboard;
+   onboarding/auth screens retain a centered phone-sized layout. */
+@media (min-width:1024px) and (hover:hover) and (pointer:fine){
+ body:has(.screen.active:not(#dashboard)){background:#e8ebf0!important}
+ body:has(.screen.active:not(#dashboard)) .app{width:430px!important;max-width:430px!important;min-height:100dvh!important;margin:0 auto!important;overflow:hidden!important;background:#fbf8f1!important;box-shadow:0 12px 50px #17233b1c}
+ body:has(.screen.active:not(#dashboard)) .screen.active:not(#dashboard){width:430px!important;max-width:430px!important;min-height:100dvh!important;margin:0!important;padding-left:22px!important;padding-right:22px!important}
+ body:has(.screen.active:not(#dashboard)) #roles .grid{width:100%!important;max-width:100%!important}
+ body:has(.screen.active:not(#dashboard)) #roles .profile-card{width:100%!important;max-width:100%!important}
+ body:has(#dashboard.screen.active) .app{width:100%!important;max-width:none!important;box-shadow:none!important;overflow:visible!important}
+}
+@media (min-width:1024px) and (hover:none), (min-width:1024px) and (pointer:coarse){
+ /* Large touch screens should use the phone UI, not desktop sidebar. */
+ html,body{background:#e8ebf0!important}
+ .app{width:430px!important;max-width:430px!important;margin:0 auto!important;overflow:hidden!important}
+ #dashboard.gg-v71{width:430px!important;max-width:430px!important;padding:20px 18px 100px!important;min-height:100dvh!important}
+ #dashboard.gg-v71 .gg-v71-bottom{position:fixed!important;left:50%!important;right:auto!important;top:auto!important;bottom:0!important;transform:translateX(-50%)!important;width:430px!important;max-width:430px!important;border-radius:20px 20px 0 0!important;flex-direction:row!important;justify-content:space-around!important;padding:12px 8px!important}
+ #dashboard.gg-v71 .gg-v71-bottom:before{display:none!important}
+ #dashboard.gg-v71 .gg-v71-bottom button{flex-direction:column!important;justify-content:center!important;padding:8px 4px!important;font-size:12px!important;min-height:60px!important}
+ #dashboard.gg-v71 .gg-v71-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #dashboard.gg-v71 .gg-v71-sports{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #dashboard.gg-v71 .gg-v71-module-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #ggV71Main{max-width:100%!important}
+}
+@media(max-width:1023px){
+ .app{width:100%!important;max-width:none!important;margin:0!important}
+ #dashboard.gg-v71{max-width:100%!important}
+}
+</style>
