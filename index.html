@@ -2772,3 +2772,42 @@ document.addEventListener('click',safeTeams,true);
 #ggWorkspace .gg-v114-teams .gg-team-symbol{background:linear-gradient(135deg,#102e51,#ffba32)!important}
 #ggWorkspace .gg-v114-teams .gg-team-symbol svg{stroke-width:4!important}
 </style>
+<style id="gg-v118-original-icons-integration">
+/* The approved vector sprites include their own coloured tiles. */
+.gg-v118-art{display:block!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;stroke:none!important;fill:none!important;filter:none!important;overflow:visible}
+.gg-v118-art use{stroke:none!important;filter:none!important}
+.gg-v92-symbol:has(.gg-v118-art){padding:0!important;background:transparent!important;width:100%;height:100%}
+.gg-v71-symbol:has(.gg-v118-art),.sport-selector-icon:has(.gg-v118-art),.wz-sporticon:has(.gg-v118-art),.sport-mark:has(.gg-v118-art),.gg-team-symbol:has(.gg-v118-art),.gg-sport-icon:has(.gg-v118-art),.wz-choice-icon:has(.gg-v118-art){background:transparent!important;padding:0!important;overflow:hidden!important}
+.gg-v71-symbol:has(.gg-v118-art)::before,.gg-v71-symbol:has(.gg-v118-art)::after,.sport-selector-icon:has(.gg-v118-art)::before,.sport-selector-icon:has(.gg-v118-art)::after,.gg-sport-icon:has(.gg-v118-art)::before,.gg-sport-icon:has(.gg-v118-art)::after{display:none!important}
+#roles .profile-card .profile-art:has(.gg-v118-art){background:transparent!important;overflow:hidden!important}
+#roles .profile-card .profile-art .gg-v106-outline{display:none!important}
+#roles .profile-card .profile-art .gg-v118-art{width:100%!important;height:100%!important;max-width:none!important;max-height:none!important}
+</style>
+<script id="gg-v118-original-icons-integration">
+(function(){
+const file='assets/gg-original-icons.svg#';
+const sports={'Baloncesto':'baloncesto','Fútbol':'futbol','Voleibol':'voleibol','Balonmano':'balonmano','Tenis':'tenis','Pádel':'padel','Atletismo':'atletismo','Natación':'natacion'};
+const roles={parent:'parent',coach:'coach',player:'player',coord:'coord'};
+const svg=(id)=>'<svg class="gg-v118-art" aria-hidden="true" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet"><use href="'+file+id+'"></use></svg>';
+function sync(){
+ document.querySelectorAll('.gg-v71-sport,.gg-v71-sport-card,.sport-selector-button,.wz-choice,.sport-card,.gg-team-card,[data-sport],.wz-sport-card,.wz-sport-choice').forEach(card=>{
+  const label=(card.dataset.sport||card.textContent||'').trim();
+  const name=Object.keys(sports).find(s=>new RegExp('(^|[^\\p{L}])'+s+'([^\\p{L}]|$)','iu').test(label));
+  if(!name)return;
+  const target=card.querySelector('.gg-v71-symbol,.sport-selector-icon,.wz-sporticon,.sport-mark,.gg-team-symbol,.gg-sport-icon,.wz-choice-icon,.gg-sport-art')||card.querySelector('img.gg-sport-art')?.parentElement;
+  if(!target||target.querySelector('.gg-v118-art'))return;
+  target.dataset.ggUnifiedIcon=name;
+  target.innerHTML='<span class="gg-v92-symbol">'+svg('sport-'+sports[name])+'</span>';
+ });
+ document.querySelectorAll('#roles .profile-card').forEach(card=>{
+  const role=Object.keys(roles).find(s=>card.classList.contains(s));if(!role)return;
+  const art=card.querySelector('.profile-art');if(!art||art.querySelector('.gg-v118-art'))return;
+  art.insertAdjacentHTML('beforeend',svg('role-'+roles[role]));
+ });
+}
+let scheduled=false;
+const observer=new MutationObserver(()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;sync()})});
+function start(){sync();observer.observe(document.body,{childList:true,subtree:true});document.addEventListener('click',()=>requestAnimationFrame(sync),false)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
+</script>
