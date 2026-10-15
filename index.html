@@ -3008,3 +3008,55 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  #dashboard.gg-v71{max-width:100%!important}
 }
 </style>
+<style id="gg-v123-integrated-profile-icons">
+/* Profile art uses the approved vector's white contours with transparent background. */
+#roles .profile-card{grid-template-columns:38% 62%!important}
+#roles .profile-card .profile-art{width:100%!important;min-width:0!important;max-width:100%!important;height:100%!important;min-height:120px!important;padding:14px 7px 14px 16px!important;box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:visible!important;z-index:1!important}
+#roles .profile-card .profile-art img.gg-v123-cutout{display:block!important;position:static!important;width:100%!important;height:100%!important;max-width:100%!important;max-height:155px!important;object-fit:contain!important;object-position:center!important;transform:none!important;filter:none!important;mix-blend-mode:normal!important}
+#roles .profile-card strong{grid-column:2!important;position:relative!important;z-index:2!important;min-width:0!important;margin:0 10px 0 0!important;padding:14px 12px!important;font-size:clamp(14px,3.5vw,19px)!important}
+@media(max-width:430px){#roles .profile-card{grid-template-columns:38% 62%!important}#roles .profile-card .profile-art{padding:15px 3px 15px 12px!important}#roles .profile-card .profile-art img.gg-v123-cutout{max-height:128px!important}#roles .profile-card strong{font-size:15px!important}}
+</style>
+<script id="gg-v123-profile-cutouts">
+(function(){
+const roles=['parent','coach','player','coord'];
+const cache={};
+function cutout(src,done){
+ const img=new Image();
+ img.onload=()=>{
+  const canvas=document.createElement('canvas');canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;
+  const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0);
+  const pixels=ctx.getImageData(0,0,canvas.width,canvas.height);
+  const p=pixels.data;
+  for(let i=0;i<p.length;i+=4){
+   const red=p[i],green=p[i+1],blue=p[i+2];
+   const lo=Math.min(red,green,blue),hi=Math.max(red,green,blue);
+   // Preserve only the neutral cream/white vector strokes. Fade antialiasing at their edges.
+   const neutrality=Math.max(0,Math.min(1,(38-(hi-lo))/23));
+   const brightness=Math.max(0,Math.min(1,(lo-174)/48));
+   const alpha=Math.round(255*neutrality*brightness);
+   p[i]=255;p[i+1]=255;p[i+2]=255;p[i+3]=alpha;
+  }
+  ctx.putImageData(pixels,0,0);
+  done(canvas.toDataURL('image/png'));
+ };
+ img.onerror=()=>done(null);img.src=src;
+}
+function sync(){
+ roles.forEach(role=>{
+  const img=document.querySelector('#roles .profile-card.'+role+' .profile-art img.gg-v121-tile');
+  if(!img||img.classList.contains('gg-v123-cutout')||img.dataset.ggCutoutPending)return;
+  if(cache[role]){img.src=cache[role];img.classList.add('gg-v123-cutout');return}
+  img.dataset.ggCutoutPending='1';
+  cutout(img.src,url=>{
+   delete img.dataset.ggCutoutPending;
+   if(!url)return;
+   cache[role]=url;
+   img.src=url;img.classList.add('gg-v123-cutout');
+  });
+ });
+}
+let scheduled=false;const obs=new MutationObserver(()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;sync()})});
+function start(){sync();obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['src']})}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
+</script>
