@@ -15,8 +15,8 @@
  window.ggOpenEconomy=function(){
   if(roleKey(selectedRole)!=='coord')return;
   window.ggView('teams');const host=document.getElementById('ggWorkspace');host.hidden=false;document.getElementById('dashboard').classList.add('gg-subscreen');
-  host.innerHTML='<button class="gg-v100-back" type="button" data-back aria-label="Volver al inicio">‹ <span>Inicio</span></button><h1>Economía del club</h1><p>Cuotas y seguimiento de cobros. Registro manual de demostración; no mueve dinero ni genera justificantes bancarios.</p><details><summary>Activar por deporte</summary><div data-config></div></details><div data-ledger></div>';
-  host.querySelector('[data-back]').onclick=()=>window.ggView('home');ggModuleSettings(host.querySelector('[data-config]'),'pay');ggEconomyMount(host.querySelector('[data-ledger]'));
+  host.innerHTML='<button class="gg-v100-back" type="button" data-back aria-label="Volver al inicio">‹ <span>Inicio</span></button><h1>Economía del club</h1><p>Cuotas y seguimiento de cobros. Registro manual de demostración; no mueve dinero ni genera justificantes bancarios.</p><details><summary>Activar por deporte</summary><div data-config></div></details><details><summary>Formas de pago del club</summary><div data-methods></div></details><div data-ledger></div>';
+  host.querySelector('[data-back]').onclick=()=>window.ggView('home');ggModuleSettings(host.querySelector('[data-config]'),'pay');ggBillingMethods(host.querySelector('[data-methods]'));ggEconomyMount(host.querySelector('[data-ledger]'));
  };
  window.ggOpenRefereeSettings=function(){const workspace=document.getElementById('ggWorkspace');let panel=workspace.querySelector('#ggRefereeSettings');if(panel){panel.remove();return}panel=document.createElement('div');panel.id='ggRefereeSettings';workspace.querySelector('.gg-v59-tools')?.after(panel);window.ggModuleSettings(panel,'refs');panel.scrollIntoView({block:'nearest',behavior:'smooth'})};
  window.ggEconomyMount=function(host){
