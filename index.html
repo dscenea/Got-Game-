@@ -755,7 +755,7 @@ input:focus,select:focus{border-color:var(--yellow);box-shadow:0 0 0 3px #ffc107
 #roles .profile-card .profile-art img{display:none!important}
 #roles .profile-card .profile-art{isolation:isolate}
 @media(min-width:850px){#roles .profile-card .profile-art svg.gg-v106-outline{max-width:175px!important;max-height:175px!important}}
-</style><script src="assets/logo-tools.js"></script>
+</style><script src="assets/logo-tools.js?v=2"></script>
 </head>
 <body><main class="app">
 <section class="screen active" id="welcome" aria-label="Inicio de got GAME!">
@@ -1114,12 +1114,15 @@ async function wizardPrepareLogo(src){
  try{
   const img=new Image();await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=src});
   const scale=Math.min(1,1600/Math.max(img.naturalWidth,img.naturalHeight));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0,canvas.width,canvas.height);
-  const image=ctx.getImageData(0,0,canvas.width,canvas.height),result=GGLogoTools.removeWhiteBackground(image.data,canvas.width,canvas.height);
-  if(result.removed<canvas.width*canvas.height*.005)return src;
-  image.data.set(result.pixels);ctx.putImageData(image,0,0);const clean=canvas.toDataURL('image/png');
+  const image=ctx.getImageData(0,0,canvas.width,canvas.height),original=new Uint8ClampedArray(image.data),detected=GGLogoTools.detectBackground(original,canvas.width,canvas.height);
+  if(!detected)return src;
+  let clean=src;
   return await new Promise(resolve=>{
-   const dialog=document.createElement('dialog');dialog.className='gg-logo-preview';dialog.innerHTML='<h2>¿Quitar el fondo blanco?</h2><p>Compara ambas versiones antes de aplicar el escudo. Las zonas blancas interiores se conservan.</p><div class="gg-logo-comparison"><figure><img alt="Imagen original"><figcaption>Original</figcaption></figure><figure><img alt="Vista previa sin fondo blanco"><figcaption>Sin fondo blanco</figcaption></figure></div><div class="gg-logo-actions"><button type="button" data-choice="original">Conservar original</button><button type="button" data-choice="clean">Usar sin fondo blanco</button><button type="button" data-choice="cancel">Cancelar</button></div>';
-   dialog.querySelectorAll('img')[0].src=src;dialog.querySelectorAll('img')[1].src=clean;
+   const dialog=document.createElement('dialog');dialog.className='gg-logo-preview';dialog.innerHTML='<h2>¿Quitar el fondo?</h2><p>Detectamos el color del borde. Puedes cambiarlo y ajustar la tolerancia. Solo se quitan las zonas conectadas al borde; revisa el escudo antes de aplicarlo.</p><div class="gg-logo-comparison"><figure><img alt="Imagen original"><figcaption>Original</figcaption></figure><figure><img alt="Vista previa sin fondo"><figcaption>Sin fondo</figcaption></figure></div><div class="gg-logo-actions"><button type="button" data-choice="original">Conservar original</button><button type="button" data-choice="clean">Usar sin fondo</button><button type="button" data-choice="cancel">Cancelar</button></div>';
+   const controls=document.createElement('div');controls.className='gg-logo-controls';controls.innerHTML='<label>Color del fondo <input type="color" aria-label="Color del fondo"></label><label>Tolerancia <input type="range" min="0" max="100" value="28" aria-label="Tolerancia del fondo"></label><p role="status"></p>';dialog.querySelector('.gg-logo-actions').before(controls);
+   const colorInput=controls.querySelector('input[type=color]'),toleranceInput=controls.querySelector('input[type=range]');colorInput.value='#'+detected.map(v=>v.toString(16).padStart(2,'0')).join('');
+   const update=()=>{const color=[1,3,5].map(i=>parseInt(colorInput.value.slice(i,i+2),16));const result=GGLogoTools.removeBackground(original,canvas.width,canvas.height,color,Number(toleranceInput.value));image.data.set(result.pixels);ctx.putImageData(image,0,0);clean=canvas.toDataURL('image/png');dialog.querySelectorAll('img')[1].src=clean;controls.querySelector('[role=status]').textContent=result.removed?'Vista previa actualizada.':'No se ha encontrado ese color en el borde.';dialog.querySelector('[data-choice=clean]').disabled=!result.removed;};
+   dialog.querySelectorAll('img')[0].src=src;controls.addEventListener('input',update);update();
    const finish=value=>{dialog.close();dialog.remove();resolve(value)};dialog.addEventListener('cancel',e=>{e.preventDefault();finish(null)});dialog.addEventListener('click',e=>{const choice=e.target.closest('[data-choice]')?.dataset.choice;if(choice)finish(choice==='clean'?clean:choice==='original'?src:null)});document.body.append(dialog);dialog.showModal();
   });
  }catch{return src;}
