@@ -2185,7 +2185,7 @@ function paintSports(){
 }
 window.ggReturnToSports=function(){
  currentSport=null;currentModule=null;dashboardSelectedSport=null;
- window.ggRenderClubHome();paintSports();
+ window.ggRenderClubHome();paintSports();if((data.sports||[]).length===1)showSport();
 };
 function showSport(){
  const name=getSport();if(!name)return;
