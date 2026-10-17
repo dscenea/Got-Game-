@@ -1142,7 +1142,7 @@ let wzSportsExpanded=false;
 function wizardToggleSportsList(){wzSportsExpanded=!wzSportsExpanded;renderWizard();}
 function renderWizard(){
  const titles=['Personaliza tu club','¿Dónde entrenáis?','Activa lo que necesites','Todo listo para empezar'];
- const desc=['Añade tu escudo, elige los colores de los perfiles y selecciona los deportes.','Añade instalaciones y asigna los deportes que las utilizan.','Solo los módulos que encajan con tu club. Sin complicaciones.','Revisa tu selección antes de entrar al panel de coordinación.'];
+ const desc=['Añade tu escudo, elige los dos colores del club y selecciona los deportes.','Añade instalaciones y asigna los deportes que las utilizan.','Solo los módulos que encajan con tu club. Sin complicaciones.','Revisa tu selección antes de entrar al panel de coordinación.'];
  document.getElementById('wzStepText').textContent='0'+(wzStep+1)+' / 04';document.getElementById('wzTitle').textContent=titles[wzStep];document.getElementById('wzDesc').textContent=desc[wzStep];
  document.getElementById('wzEyebrow').textContent=['CONFIGURA TU CLUB','INSTALACIONES','MÓDULOS OPCIONALES','RESUMEN'][wzStep];
  document.querySelectorAll('.wz-pane').forEach((el,i)=>el.classList.toggle('on',i===wzStep));document.querySelectorAll('#wzProgress i').forEach((el,i)=>el.classList.toggle('on',i<=wzStep));
@@ -2766,6 +2766,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  body:has(.screen.active:not(#dashboard)) .app{width:100%!important;max-width:none!important;overflow:visible!important;box-shadow:none!important}
  body:has(.screen.active:not(#dashboard)) .screen.active:not(#dashboard){width:100%!important;max-width:1200px!important;margin:0 auto!important;padding:48px!important;box-sizing:border-box}
  #welcome.active{display:flex!important;flex-direction:column;justify-content:center;align-items:center;position:relative}
+ #welcome .welcome-actions{max-width:560px;margin:32px auto 0!important}
  #welcome .welcome-logo{width:320px!important;max-width:100%!important;margin:0 auto 24px!important}
  #welcome .btn,#welcome>button,#welcome>p{width:480px;max-width:100%}
  #roles .grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:24px!important;max-width:none!important}
