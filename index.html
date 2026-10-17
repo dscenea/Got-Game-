@@ -1118,12 +1118,12 @@ async function wizardPrepareLogo(src){
   if(!detected)return src;
   let clean=src;
   return await new Promise(resolve=>{
-   const dialog=document.createElement('dialog');dialog.className='gg-logo-preview';dialog.innerHTML='<h2>¿Quitar el fondo?</h2><p>Detectamos el color del borde. Puedes cambiarlo y ajustar la tolerancia. Solo se quitan las zonas conectadas al borde; revisa el escudo antes de aplicarlo.</p><div class="gg-logo-comparison"><figure><img alt="Imagen original"><figcaption>Original</figcaption></figure><figure><img alt="Vista previa sin fondo"><figcaption>Sin fondo</figcaption></figure></div><div class="gg-logo-actions"><button type="button" data-choice="original">Conservar original</button><button type="button" data-choice="clean">Usar sin fondo</button><button type="button" data-choice="cancel">Cancelar</button></div>';
-   const controls=document.createElement('div');controls.className='gg-logo-controls';controls.innerHTML='<label>Color del fondo <input type="color" aria-label="Color del fondo"></label><label>Tolerancia <input type="range" min="0" max="100" value="28" aria-label="Tolerancia del fondo"></label><p role="status"></p>';dialog.querySelector('.gg-logo-actions').before(controls);
+   const dialog=document.createElement('dialog');dialog.className='gg-logo-preview';dialog.innerHTML='<h2>Prepara el escudo</h2><div class="gg-logo-options"><label><input type="radio" name="logo-background" value="original" checked> Mantener original</label><label><input type="radio" name="logo-background" value="clean"> Quitar fondo</label></div><div class="gg-logo-comparison"><figure><img alt="Vista previa del escudo"><figcaption>Original</figcaption></figure></div><details class="gg-logo-adjust"><summary>Ajustar eliminación del fondo</summary></details><div class="gg-logo-actions"><button type="button" data-choice="apply">Aplicar escudo</button><button type="button" data-choice="cancel">Cancelar</button></div>';
+   const controls=document.createElement('div');controls.className='gg-logo-controls';controls.innerHTML='<label>Color del fondo <input type="color" aria-label="Color del fondo"></label><label>Tolerancia <input type="range" min="0" max="100" value="28" aria-label="Tolerancia del fondo"></label><p role="status"></p>';dialog.querySelector('.gg-logo-adjust').append(controls);
    const colorInput=controls.querySelector('input[type=color]'),toleranceInput=controls.querySelector('input[type=range]');colorInput.value='#'+detected.map(v=>v.toString(16).padStart(2,'0')).join('');
-   const update=()=>{const color=[1,3,5].map(i=>parseInt(colorInput.value.slice(i,i+2),16));const result=GGLogoTools.removeBackground(original,canvas.width,canvas.height,color,Number(toleranceInput.value));image.data.set(result.pixels);ctx.putImageData(image,0,0);clean=canvas.toDataURL('image/png');dialog.querySelectorAll('img')[1].src=clean;controls.querySelector('[role=status]').textContent=result.removed?'Vista previa actualizada.':'No se ha encontrado ese color en el borde.';dialog.querySelector('[data-choice=clean]').disabled=!result.removed;};
-   dialog.querySelectorAll('img')[0].src=src;controls.addEventListener('input',update);update();
-   const finish=value=>{dialog.close();dialog.remove();resolve(value)};dialog.addEventListener('cancel',e=>{e.preventDefault();finish(null)});dialog.addEventListener('click',e=>{const choice=e.target.closest('[data-choice]')?.dataset.choice;if(choice)finish(choice==='clean'?clean:choice==='original'?src:null)});document.body.append(dialog);dialog.showModal();
+   const update=()=>{const color=[1,3,5].map(i=>parseInt(colorInput.value.slice(i,i+2),16));const result=GGLogoTools.removeBackground(original,canvas.width,canvas.height,color,Number(toleranceInput.value));image.data.set(result.pixels);ctx.putImageData(image,0,0);clean=canvas.toDataURL('image/png');const removing=dialog.querySelector('input[value=clean]').checked;dialog.querySelector('img').src=removing?clean:src;dialog.querySelector('figcaption').textContent=removing?'Sin fondo':'Original';controls.querySelector('[role=status]').textContent=result.removed?'Vista previa actualizada.':'No se ha encontrado ese color en el borde.';dialog.querySelector('[data-choice=apply]').disabled=removing&&!result.removed;};
+   controls.addEventListener('input',update);dialog.querySelector('.gg-logo-options').addEventListener('change',update);update();
+   const finish=value=>{dialog.close();dialog.remove();resolve(value)};dialog.addEventListener('cancel',e=>{e.preventDefault();finish(null)});dialog.addEventListener('click',e=>{const choice=e.target.closest('[data-choice]')?.dataset.choice;if(choice)finish(choice==='apply'?(dialog.querySelector('input[value=clean]').checked?clean:src):null)});document.body.append(dialog);dialog.showModal();
   });
  }catch{return src;}
 }
@@ -1144,7 +1144,7 @@ function clubColorHex(hex){return /^#[0-9a-fA-F]{6}$/.test(hex||'')?hex:'#154C9B
 function clubMix(hex,base,amount){hex=clubColorHex(hex);const a=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16));const b=base==='white'?[255,255,255]:[0,0,0];return '#'+a.map((v,i)=>Math.round(v*(1-amount)+b[i]*amount).toString(16).padStart(2,'0')).join('');}
 function wizardApplyBranding(){
  const roles=data.roleColors||{};const color=clubColorHex(roles.coord||'#154C9B');const contrast=wizardContrast(color);
- const secondary=clubColorHex(data.roleSecondary?.coord||data.clubSecondary||'#FFC107');const wash=clubMix(color,'white',.94);const dark=clubMix(color,'black',.64);
+ const secondary=clubColorHex(data.roleSecondary?.coord||data.clubSecondary||data.clubPalette?.[1]||'#FFC107');const wash=clubMix(secondary,'white',.91);const dark=clubMix(color,'black',.64);
  for(const id of ['dashboard','sportArea']){const el=document.getElementById(id);if(!el)continue;el.classList.toggle('has-club-brand',!!data.clubPalette);el.style.setProperty('--club-secondary',secondary);el.style.setProperty('--club-secondary-text',wizardContrast(secondary));el.style.setProperty('--club-primary',color);el.style.setProperty('--club-accent',color);el.style.setProperty('--club-accent-text',contrast);el.style.setProperty('--club-wash',wash);el.style.setProperty('--club-dark',dark);el.style.setProperty('--club-border',clubMix(color,'white',.80));}
  const top=document.querySelector('#dashboard .top');if(top){
   let strip=top.querySelector('.gg-brand-strip');if(!strip){strip=document.createElement('div');strip.className='gg-brand-strip';top.prepend(strip);}
@@ -2890,5 +2890,5 @@ window.ggRemoveLogoWhiteBackground=async function(src){
 </style>
 
 
-<link rel="stylesheet" href="assets/identity.css?v=15">
+<link rel="stylesheet" href="assets/identity.css?v=16">
 </body></html>
