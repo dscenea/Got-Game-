@@ -2764,7 +2764,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 @media (min-width:1024px) and (hover:hover) and (pointer:fine){
  body:has(.screen.active:not(#dashboard)){background:#fbf8f1!important}
  body:has(.screen.active:not(#dashboard)) .app{width:100%!important;max-width:none!important;overflow:visible!important;box-shadow:none!important}
- body:has(.screen.active:not(#dashboard)) .screen.active:not(#dashboard){width:100%!important;max-width:1200px!important;margin:0 auto!important;padding:48px!important;box-sizing:border-box}
+ body:has(.screen.active:not(#dashboard)) .screen.active:not(#dashboard){width:100%!important;max-width:none!important;margin:0!important;padding:48px max(48px,calc((100vw - 1104px)/2))!important;box-sizing:border-box}
  #welcome.active{display:flex!important;flex-direction:column;justify-content:center;align-items:center;position:relative}
  #welcome .welcome-actions{max-width:560px;margin:32px auto 0!important}
  #welcome .welcome-logo{width:320px!important;max-width:100%!important;margin:0 auto 24px!important}
@@ -2776,7 +2776,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  #registerScreen>label,#registerScreen>input{grid-column:1}
  #registerScreen #coordFields,#registerScreen #linkedFields{grid-column:2;grid-row:5 / span 4}
  #registerScreen>.back,#registerScreen>.role-chip,#registerScreen>h1,#registerScreen>p,#registerScreen>.btn,#registerMsg{grid-column:1 / -1}
- #wizard.screen.active{max-width:1280px!important;padding:0 40px 24px!important}
+ #registerScreen>.back{justify-self:start;align-self:start;width:44px;margin-left:0!important;margin-right:0!important;text-align:left}
+ #registerScreen>.role-chip{justify-self:start;width:fit-content;max-width:100%;box-sizing:border-box}
+ #wizard.screen.active{max-width:none!important;padding:0 max(40px,calc((100vw - 1200px)/2)) 24px!important}
  #wizard .wz-head{padding:30px 32px;border-radius:0 0 24px 24px}
  #wizard .wz-body{padding:28px 0 12px}
  #wizard .wz-brand-panel{max-width:none}
