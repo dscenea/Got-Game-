@@ -1,0 +1,3 @@
+const {test}=require('node:test');const assert=require('node:assert/strict');const {removeWhiteBackground}=require('../assets/logo-tools.js');
+test('removes border white while preserving enclosed white and colored crest',()=>{const p=new Uint8ClampedArray(5*5*4).fill(255);for(let y=1;y<4;y++)for(let x=1;x<4;x++){if(x===2&&y===2)continue;let i=(y*5+x)*4;p[i]=120;p[i+1]=20;p[i+2]=180}const r=removeWhiteBackground(p,5,5);assert.equal(r.removed,16);assert.equal(r.pixels[(2*5+2)*4+3],255);assert.equal(r.pixels[(1*5+1)*4+3],255);assert.equal(p[3],255)});
+test('keeps an already transparent colorful image unchanged',()=>{const p=new Uint8ClampedArray([0,0,0,0,255,200,0,255]);const r=removeWhiteBackground(p,2,1);assert.equal(r.removed,0);assert.deepEqual(r.pixels,p)});

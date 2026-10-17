@@ -755,7 +755,8 @@ input:focus,select:focus{border-color:var(--yellow);box-shadow:0 0 0 3px #ffc107
 #roles .profile-card .profile-art img{display:none!important}
 #roles .profile-card .profile-art{isolation:isolate}
 @media(min-width:850px){#roles .profile-card .profile-art svg.gg-v106-outline{max-width:175px!important;max-height:175px!important}}
-</style></head>
+</style><script src="assets/logo-tools.js"></script>
+</head>
 <body><main class="app">
 <section class="screen active" id="welcome" aria-label="Inicio de got GAME!">
 <div class="gg-welcome-language" id="ggWelcomeLanguage">
@@ -1107,7 +1108,21 @@ function wizardUploadLogo(event){
  const file=event.target.files?.[0];if(!file)return;
  if(!['image/png','image/jpeg','image/webp','image/svg+xml'].includes(file.type)){alert('Sube una imagen PNG, JPG, WEBP o SVG.');return;}
  if(file.size>5*1024*1024){alert('El logo debe ocupar menos de 5 MB.');return;}
- const reader=new FileReader();reader.onload=()=>{const url=String(reader.result||'');wzBrand.logoDataUrl=url;wizardRenderBranding();wizardDetectPalette(url);};reader.readAsDataURL(file);
+ const reader=new FileReader();reader.onload=async()=>{const url=await wizardPrepareLogo(String(reader.result||''));if(!url)return;wzBrand.logoDataUrl=url;wizardRenderBranding();wizardDetectPalette(url);};reader.readAsDataURL(file);
+}
+async function wizardPrepareLogo(src){
+ try{
+  const img=new Image();await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=src});
+  const scale=Math.min(1,1600/Math.max(img.naturalWidth,img.naturalHeight));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0,canvas.width,canvas.height);
+  const image=ctx.getImageData(0,0,canvas.width,canvas.height),result=GGLogoTools.removeWhiteBackground(image.data,canvas.width,canvas.height);
+  if(result.removed<canvas.width*canvas.height*.005)return src;
+  image.data.set(result.pixels);ctx.putImageData(image,0,0);const clean=canvas.toDataURL('image/png');
+  return await new Promise(resolve=>{
+   const dialog=document.createElement('dialog');dialog.className='gg-logo-preview';dialog.innerHTML='<h2>¿Quitar el fondo blanco?</h2><p>Compara ambas versiones antes de aplicar el escudo. Las zonas blancas interiores se conservan.</p><div class="gg-logo-comparison"><figure><img alt="Imagen original"><figcaption>Original</figcaption></figure><figure><img alt="Vista previa sin fondo blanco"><figcaption>Sin fondo blanco</figcaption></figure></div><div class="gg-logo-actions"><button type="button" data-choice="original">Conservar original</button><button type="button" data-choice="clean">Usar sin fondo blanco</button><button type="button" data-choice="cancel">Cancelar</button></div>';
+   dialog.querySelectorAll('img')[0].src=src;dialog.querySelectorAll('img')[1].src=clean;
+   const finish=value=>{dialog.close();dialog.remove();resolve(value)};dialog.addEventListener('cancel',e=>{e.preventDefault();finish(null)});dialog.addEventListener('click',e=>{const choice=e.target.closest('[data-choice]')?.dataset.choice;if(choice)finish(choice==='clean'?clean:choice==='original'?src:null)});document.body.append(dialog);dialog.showModal();
+  });
+ }catch{return src;}
 }
 function wizardDetectPalette(src,onDetected,isCurrent=()=>true){
  const img=new Image();img.onload=()=>{
@@ -1116,7 +1131,7 @@ function wizardDetectPalette(src,onDetected,isCurrent=()=>true){
    const pixels=ctx.getImageData(0,0,112,112).data;const hist=new Map();
    for(let i=0;i<pixels.length;i+=8){const a=pixels[i+3];if(a<140)continue;const rgb=[pixels[i],pixels[i+1],pixels[i+2]];const max=Math.max(...rgb),min=Math.min(...rgb);if(max>247&&min>247)continue;
     const q=rgb.map(v=>Math.min(255,Math.round(v/24)*24));const key=q.join(',');const saturation=max-min;hist.set(key,(hist.get(key)||0)+1+(saturation>55?.7:0));}
-   const ranked=[...hist.entries()].sort((a,b)=>b[1]-a[1]);const picked=[];
+   const entries=[...hist.entries()].sort((a,b)=>b[1]-a[1]);const chromatic=entries.filter(([key,count])=>{const rgb=key.split(',').map(Number);return Math.max(...rgb)-Math.min(...rgb)>45&&count>6});const ranked=[...chromatic,...entries.filter(entry=>!chromatic.includes(entry))];const picked=[];
    for(const [key] of ranked){const rgb=key.split(',').map(Number);if(picked.every(p=>Math.hypot(...p.map((v,i)=>v-rgb[i]))>75)){picked.push(rgb);if(picked.length===5)break;}}
    if(picked.length){const hex=picked.map(rgb=>'#'+rgb.map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase());if(onDetected){onDetected(hex);return;}wzBrand.palette=hex;wzBrand.selected=hex[0];wzBrand.secondary=hex.find(c=>c!==hex[0])||'#FFC107';wzBrand.roles=Object.fromEntries(WZ_ROLES.map(([role])=>[role,hex[0]]));wzBrand.roleSecondary=Object.fromEntries(WZ_ROLES.map(([role])=>[role,wzBrand.secondary]));wizardRenderBranding();document.getElementById('wzColorHint').textContent='· Detectados del logo';}else if(onDetected){onDetected([]);}
   }catch(err){if(onDetected){onDetected([]);return;}document.getElementById('wzColorHint').textContent='· Elige los colores manualmente';}
@@ -1127,7 +1142,7 @@ function clubMix(hex,base,amount){hex=clubColorHex(hex);const a=[1,3,5].map(i=>p
 function wizardApplyBranding(){
  const roles=data.roleColors||{};const color=clubColorHex(roles.coord||'#154C9B');const contrast=wizardContrast(color);
  const secondary=clubColorHex(data.roleSecondary?.coord||data.clubSecondary||'#FFC107');const wash=clubMix(color,'white',.94);const dark=clubMix(color,'black',.64);
- for(const id of ['dashboard','sportArea']){const el=document.getElementById(id);if(!el)continue;el.classList.toggle('has-club-brand',!!data.clubPalette);el.style.setProperty('--club-secondary',secondary);el.style.setProperty('--club-secondary-text',wizardContrast(secondary));el.style.setProperty('--club-accent',color);el.style.setProperty('--club-accent-text',contrast);el.style.setProperty('--club-wash',wash);el.style.setProperty('--club-dark',dark);el.style.setProperty('--club-border',clubMix(color,'white',.80));}
+ for(const id of ['dashboard','sportArea']){const el=document.getElementById(id);if(!el)continue;el.classList.toggle('has-club-brand',!!data.clubPalette);el.style.setProperty('--club-secondary',secondary);el.style.setProperty('--club-secondary-text',wizardContrast(secondary));el.style.setProperty('--club-primary',color);el.style.setProperty('--club-accent',color);el.style.setProperty('--club-accent-text',contrast);el.style.setProperty('--club-wash',wash);el.style.setProperty('--club-dark',dark);el.style.setProperty('--club-border',clubMix(color,'white',.80));}
  const top=document.querySelector('#dashboard .top');if(top){
   let strip=top.querySelector('.gg-brand-strip');if(!strip){strip=document.createElement('div');strip.className='gg-brand-strip';top.prepend(strip);}
   const mark=top.querySelector('.logo-dot.logo-dot-svg');if(mark && mark.parentElement!==strip)strip.appendChild(mark);
@@ -1270,7 +1285,7 @@ const originalUploadLogo=wizardUploadLogo;wizardUploadLogo=function(event){
  const file=event.target.files?.[0];if(!file)return;
  if(!['image/png','image/jpeg','image/webp','image/svg+xml'].includes(file.type)||file.size>5*1024*1024){document.getElementById('settingsError').textContent='PNG, JPG, WEBP o SVG · Máx. 5 MB';return;}
  clearLogoProposal();const generation=++settingsLogoGeneration;const current=()=>clubSettingsSection==='colors'&&generation===settingsLogoGeneration;const reader=new FileReader();
- reader.onload=()=>{if(!current())return;wzBrand.logoDataUrl=String(reader.result||'');wizardRenderBranding();applyLanguage();colorProposal.hidden=false;colorProposal.textContent=tr('Detectando colores…');wizardDetectPalette(wzBrand.logoDataUrl,showLogoProposal,current);};
+ reader.onload=async()=>{if(!current())return;const prepared=await wizardPrepareLogo(String(reader.result||''));if(!current()||!prepared)return;wzBrand.logoDataUrl=prepared;wizardRenderBranding();applyLanguage();colorProposal.hidden=false;colorProposal.textContent=tr('Detectando colores…');wizardDetectPalette(wzBrand.logoDataUrl,showLogoProposal,current);};
  reader.onerror=()=>{if(current())document.getElementById('settingsError').textContent=tr('No se ha podido leer el logo.');};reader.readAsDataURL(file);
 };
 const originalFinishClubSetting=finishClubSetting;finishClubSetting=function(){clearLogoProposal();originalFinishClubSetting();};
@@ -2344,12 +2359,12 @@ refresh();
 </style>
 <style id="gg-v80-cohesion">
 :root{--ebro-red:#c52237;--ebro-blue:#123e87;--ebro-white:#fff}
-#dashboard.gg-v71:not(.gg-logrobasket-demo) .gg-v71-header{background:linear-gradient(115deg,#102b60 0%,#194b9b 48%,#c52237 100%)!important}
-#dashboard.gg-v71:not(.gg-logrobasket-demo) .gg-v71-bottom{background:#123e87!important;color:#fff!important}
-#dashboard.gg-v71:not(.gg-logrobasket-demo) .gg-v71-bottom button.active{color:#fff!important;background:#c52237!important}
+#dashboard.gg-v71:not(.gg-logrobasket-demo) .gg-v71-header{background:linear-gradient(115deg,var(--club-dark) 0%,var(--club-accent) 48%,var(--club-secondary) 100%)!important}
+#dashboard.gg-v71:not(.gg-logrobasket-demo) .gg-v71-bottom{background:var(--club-dark)!important;color:#fff!important}
+#dashboard.gg-v71:not(.gg-logrobasket-demo) .gg-v71-bottom button.active{color:var(--club-secondary-text)!important;background:var(--club-secondary)!important}
 #dashboard.gg-v71:not(.gg-logrobasket-demo) .gg-v71-bottom button{color:#fff!important}
-#dashboard.gg-v71:not(.gg-logrobasket-demo) .gg-v71-module svg{stroke:#123e87!important}
-#dashboard.gg-v71:not(.gg-logrobasket-demo) .gg-v71-sport{--sport-dark:#123e87;--sport-light:#c52237}
+#dashboard.gg-v71:not(.gg-logrobasket-demo) .gg-v71-module svg{stroke:var(--club-accent)!important}
+#dashboard.gg-v71:not(.gg-logrobasket-demo) .gg-v71-sport{--sport-dark:var(--club-accent);--sport-light:var(--club-secondary)}
 #ggV71Switch,#ggV72Switch{display:none!important}
 .gg-unified-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0}
 .gg-unified-icon svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -2872,5 +2887,5 @@ window.ggRemoveLogoWhiteBackground=async function(src){
 </style>
 
 
-<link rel="stylesheet" href="assets/identity.css?v=14">
+<link rel="stylesheet" href="assets/identity.css?v=15">
 </body></html>

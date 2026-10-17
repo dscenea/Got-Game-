@@ -81,3 +81,18 @@
  #wizard .wz-brand-panel>.wz-color-title,#wizard .wz-brand-panel>#wzPalette,#wizard .wz-brand-panel>.wz-dual-grid{grid-column:1}
  #wizard .wz-brand-panel>#wzBrandPreview{grid-column:2;grid-row:5 / span 4;align-self:center;min-height:140px}
 }
+
+/* Club theme is inherited by every workspace, including freshly created clubs. */
+#dashboard.gg-v71.has-club-brand{background:var(--club-wash)!important}
+#dashboard.gg-v71.has-club-brand .gg-v71-module{color:var(--club-accent)!important;border-color:var(--club-border)!important}
+#dashboard.gg-v71.has-club-brand .gg-v77-stats strong{color:var(--club-accent)!important}
+#dashboard.gg-v71.has-club-brand #ggWorkspace .gg-team-symbol{background:linear-gradient(135deg,var(--club-accent),var(--club-secondary))!important}
+.gg-logo-preview{border:0;border-radius:22px;padding:24px;width:min(640px,calc(100% - 32px));box-sizing:border-box;color:#171717;background:#fff;max-height:90dvh;overflow:auto}
+.gg-logo-preview::backdrop{background:#0009}
+.gg-logo-comparison{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.gg-logo-comparison figure{margin:0;min-width:0;text-align:center}
+.gg-logo-comparison img{width:100%;height:180px;object-fit:contain;background:repeating-conic-gradient(#e3e3e3 0% 25%,#fff 0% 50%) 0/16px 16px;border-radius:12px}
+.gg-logo-comparison figcaption{padding:8px;font-weight:700}
+.gg-logo-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.gg-logo-actions button{padding:12px 16px;border:1px solid #ddd;border-radius:12px;background:#f7f3e9;font:inherit;cursor:pointer}
+.gg-logo-actions [data-choice="clean"]{background:#ffc107;border-color:#ffc107;font-weight:800}
