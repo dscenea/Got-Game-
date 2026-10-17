@@ -1305,7 +1305,7 @@ node.nodeValue=source.replace(trimmed,value);saved.result=node.nodeValue;languag
 const originalDashboardRender=renderDashboardSports;renderDashboardSports=function(){originalDashboardRender();applyLanguage();};
 </script><script>
 const loadedClubSettings=new WeakSet();
-const persistedKeys=['sports','facilities','clubModules','sportModules','logoDataUrl','clubPalette','clubSecondary','roleColors','roleSecondary'];
+const persistedKeys=['sports','facilities','clubModules','sportModules','logoDataUrl','clubPalette','clubSecondary','roleColors','roleSecondary','publicLocation'];
 function persistClubSettings(){try{const snapshot=Object.fromEntries(persistedKeys.filter(k=>data[k]!==undefined).map(k=>[k,data[k]]));localStorage.setItem('gg-club-settings:'+data.club,JSON.stringify(snapshot));}catch{document.getElementById('settingsError').textContent='Los cambios se han aplicado, pero no se han podido guardar en este dispositivo.';}}
 dash.querySelectorAll('.coord-nav button:not(.coord-settings-btn)').forEach(button=>button.addEventListener('click',()=>{if(clubSettingsSection)cancelClubSetting();closeClubSettings();}));
 const originalGo=go;go=function(id){if(clubSettingsSection&&id!=='dashboard'){cancelClubSetting();closeClubSettings();}if(id==='dashboard'&&!loadedClubSettings.has(data)){loadedClubSettings.add(data);try{const saved=JSON.parse(localStorage.getItem('gg-club-settings:'+data.club)||'null');if(saved&&Array.isArray(saved.sports)&&saved.sports.length&&saved.sports.every(x=>typeof x==='string')){for(const k of persistedKeys)if(saved[k]!==undefined)data[k]=saved[k];}}catch{}}originalGo(id);if(id==='dashboard')applyLanguage();};
@@ -2131,7 +2131,7 @@ function open(tab='posts'){
  document.getElementById('gcPost').onsubmit=e=>{e.preventDefault();posts.push({title:document.getElementById('gcTitle').value,text:document.getElementById('gcText').value});localStorage.setItem('gg-community-posts',JSON.stringify(posts));open('posts')};render();
  }else if(tab==='network'){content.innerHTML='<h2>Red de clubes</h2><div class="gg-community-tabs"><button id="gcFind">Buscar clubes</button><button id="gcEvents">Convocatorias</button><button id="gcCreate">Crear torneo o amistoso</button></div><div id="gcResult"></div>';
  const host=document.getElementById('gcResult');
- document.getElementById('gcFind').onclick=()=>{host.innerHTML='<input class="gg-demo-input" placeholder="Buscar clubes o localidad" id="gcQuery"><div id="gcClubs"></div>';const clubs=['Basket Rioja · Logroño','CD Najerilla · Nájera','Basket Arnedo · Arnedo','Deportivo Iregua · Alberite'];const draw=()=>document.getElementById('gcClubs').innerHTML=clubs.filter(c=>c.toLowerCase().includes(document.getElementById('gcQuery').value.toLowerCase())).map(c=>'<div class="gg-demo-card">'+c+'<p><button class="gg-button" onclick="document.getElementById(\'gcCreate\').click()">Proponer encuentro</button></p></div>').join('');document.getElementById('gcQuery').oninput=draw;draw()};
+ document.getElementById('gcFind').onclick=()=>window.ggNetworkMount(host,club=>{document.getElementById('gcCreate').click();document.getElementById('gcName').value='Propuesta de amistoso · '+club.name;document.getElementById('gcCity').value=club.town;document.getElementById('gcType').value='Amistoso';const sport=document.getElementById('gcSport');sport.replaceChildren(...club.sports.map(name=>{const option=document.createElement('option');option.textContent=name;return option}));});
  document.getElementById('gcEvents').onclick=()=>{host.innerHTML='<h3>Encuentros publicados</h3>'+entries.map((e,i)=>'<div class="gg-demo-card"><h3>'+clean(e.title)+'</h3><p>'+clean(e.type)+' · '+clean(e.sport)+' · '+clean(e.city)+' · '+clean(e.date)+'</p><button class="gg-button" data-i="'+i+'">'+(e.interested?'Interés registrado':'Me interesa')+'</button></div>').join('');host.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{entries[+b.dataset.i].interested=true;save();document.getElementById('gcEvents').click()})};
  document.getElementById('gcCreate').onclick=()=>{host.innerHTML='<form id="gcForm" class="gg-demo-card"><h3>Crear convocatoria</h3><input id="gcName" class="gg-demo-input" required placeholder="Nombre del evento"><select id="gcType"><option>Torneo</option><option>Amistoso</option></select><select id="gcSport"><option>Baloncesto</option><option>Fútbol</option></select><input id="gcCity" class="gg-demo-input" required placeholder="Localidad"><input id="gcDate" type="date" required class="gg-demo-input"><button class="gg-button selected">Publicar convocatoria</button><p class="gg-muted">Demo local: todavía no se envía a otros clubes.</p></form>';document.getElementById('gcForm').onsubmit=e=>{e.preventDefault();let v=id=>document.getElementById(id).value;entries.push({title:v('gcName'),type:v('gcType'),sport:v('gcSport'),city:v('gcCity'),date:v('gcDate')});save();document.getElementById('gcEvents').click()}};
  document.getElementById('gcFind').click();
@@ -3008,6 +3008,9 @@ window.ggRemoveLogoWhiteBackground=async function(src){
 
 
 <link rel="stylesheet" href="assets/facility-schedule.css?v=1">
+<script src="assets/club-network.js"></script>
+<script src="assets/club-network-ui.js"></script>
+<link rel="stylesheet" href="assets/club-network.css">
 <script src="assets/section-heading.js"></script>
 <link rel="stylesheet" href="assets/identity.css?v=23">
 </body></html>
