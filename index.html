@@ -2436,7 +2436,19 @@ const dash=document.getElementById('dashboard'),bottom=document.getElementById('
 if(!dash||!bottom||!main||!workspace)return;
 const reset=()=>{dash.classList.remove('gg-v83-workspace');workspace.hidden=true;};
 const active=key=>bottom.querySelectorAll('[data-section]').forEach(b=>b.classList.toggle('active',b.dataset.section===key));
-function backButton(){const b=document.createElement('button');b.type='button';b.className='gg-v83-back';b.setAttribute('aria-label','Volver al inicio');b.innerHTML='<span class="gg-back-chevron" aria-hidden="true">‹</span><span class="gg-back-label">Volver a inicio</span>';b.onclick=()=>bottom.querySelector('[data-section="home"]')?.click();workspace.prepend(b)}
+function backButton(){
+ const b=document.createElement('button');b.type='button';b.className='gg-v83-back';b.setAttribute('aria-label','Volver al inicio');b.innerHTML='<span class="gg-back-chevron" aria-hidden="true">‹</span><span class="gg-back-label">Volver a inicio</span>';b.onclick=()=>bottom.querySelector('[data-section="home"]')?.click();
+ if(!window.matchMedia('(max-width:1023px)').matches){workspace.prepend(b);return;}
+ const existing=workspace.querySelector('.gg-section-heading');
+ if(existing){existing.querySelector(':scope > button')?.remove();existing.prepend(b);return;}
+ const title=workspace.querySelector('h1');
+ if(!title){workspace.prepend(b);return;}
+ const header=document.createElement('div');header.className='gg-section-heading';
+ const copy=document.createElement('div');copy.className='gg-section-heading-copy';
+ const eyebrow=title.previousElementSibling?.classList.contains('gg-eyebrow')?title.previousElementSibling:null;
+ if(eyebrow)copy.append(eyebrow);
+ copy.append(title);header.append(b,copy);workspace.prepend(header);
+}
 const familyLinks=GGFamilyLinks.createRepository(localStorage);
 function openPersonProfile(person){
  const previous=[...workspace.childNodes],previousScroll=window.scrollY;const club=data.club||'Club Deportivo Horizonte';
@@ -2936,5 +2948,6 @@ window.ggRemoveLogoWhiteBackground=async function(src){
 </style>
 
 
-<link rel="stylesheet" href="assets/identity.css?v=22">
+<script src="assets/section-heading.js"></script>
+<link rel="stylesheet" href="assets/identity.css?v=23">
 </body></html>
