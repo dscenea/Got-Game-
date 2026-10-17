@@ -1041,7 +1041,7 @@ function initWizard(){
 }
 function openWizardFromDashboard(){
  wzCustomSportOpen=false;wzFacilityEditorOpen=false;wzOrigin='dashboard';wzStep=0;
- if(data.sports?.length){wzState={sports:[...data.sports],facilities:(data.facilities||[]).map(f=>({...f,sports:[...f.sports],spaces:(f.spaces||[]).map(p=>({...p,sports:[...p.sports]}))})),clubModules:{...(data.clubModules||{social:false})},sportModules:JSON.parse(JSON.stringify(data.sportModules||{}))};wzSportTab=wzState.sports[0];}
+ if(data.sports?.length){wzState={sports:[...data.sports],facilities:(data.facilities||[]).map((f,fi)=>({...f,id:f.id??(fi+1),sports:[...(f.sports||[])],spaces:(f.spaces||[]).map((p,pi)=>({...p,id:p.id??((fi+1)*1000+pi+1),sports:[...(p.sports||[])]}))})),clubModules:{...(data.clubModules||{social:false})},sportModules:JSON.parse(JSON.stringify(data.sportModules||{}))};wzSportTab=wzState.sports[0];}
  else{wzState={sports:['Baloncesto','Fútbol','Voleibol'],facilities:[],clubModules:{social:false},sportModules:{}};wzSportTab='Baloncesto';}
  wizardInitBranding(true);wzSportsExpanded=wzState.sports.some(x=>!['Baloncesto','Fútbol'].includes(x));renderWizard();go('wizard');}
 function wizardBack(){if(wzStep===0){go(wzOrigin==='dashboard'?'dashboard':'registerScreen');return;}wzStep--;renderWizard();window.scrollTo(0,0);}
@@ -2256,6 +2256,17 @@ function showModule(i){
  const links={0:[['Ver plantillas y equipos','teams'],['Consultar horarios','calendar']],1:[['Ver jugadores y familias','people'],['Ver equipos','teams']],2:[['Ver equipos y entrenadores','teams'],['Directorio de entrenadores','people']],3:[['Consultar calendario de instalaciones','calendar']],4:[['Abrir calendario','calendar']],5:[['Publicaciones','posts'],['Red de clubes','clubs'],['Redes sociales','social']]};
  const description={0:'Plantillas, asistencia y fichas de los equipos.',2:'Personal técnico y asignaciones de los equipos.',3:'Instalaciones, pistas y disponibilidad.',4:'Entrenamientos, partidos y actividades.',5:'Publicaciones, colaboración entre clubes y redes sociales.'};
  body.innerHTML='<h3>'+title+' · '+name+'</h3><p>'+description[i]+'</p><div class="gg-v82-actions">'+(links[i]||[]).map(([label,key])=>'<button type="button" data-v82-open="'+key+'">'+label+' →</button>').join('')+'</div>';
+ if(i===3){
+  const facilities=(data.facilities||[]).filter(f=>(f.sports||[]).includes(name));
+  const list=document.createElement('div');list.className='gg-facility-list';
+  if(!facilities.length){const empty=document.createElement('p');empty.textContent='Todavía no hay instalaciones asignadas a '+name+'.';list.append(empty);}
+  facilities.forEach(f=>{const card=document.createElement('article');card.className='gg-v71-card';const heading=document.createElement('h3');heading.textContent=f.name;card.append(heading);if(f.address){const address=document.createElement('p');address.textContent=f.address;card.append(address);}const spaces=document.createElement('p');spaces.textContent=(f.spaces||[]).filter(p=>(p.sports||[]).includes(name)).map(p=>p.name).join(' · ')||'Sin pistas o salas asignadas';card.append(spaces);list.append(card);});
+  body.querySelector('.gg-v82-actions').before(list);
+  if(!selectedRole||roleKey(selectedRole)==='coord'){
+   const manage=document.createElement('button');manage.type='button';manage.className='gg-button';manage.textContent='Añadir / gestionar instalaciones';
+   manage.onclick=()=>openClubSetting('facilities');body.querySelector('.gg-v82-actions').prepend(manage);
+  }
+ }
  body.querySelectorAll('[data-v82-open]').forEach(btn=>btn.onclick=()=>{
  const key=btn.dataset.v82Open;
  if(key==='teams'||key==='calendar'){
@@ -2496,21 +2507,13 @@ function open(key){
  if(key==='settings'){
  reset();active('settings');
  dash.classList.add('gg-v83-workspace');workspace.hidden=false;
- workspace.innerHTML='<div class="gg-v84-club-head"><span>GOT GAME! / CLUB</span><h1>Gestiona tu club</h1><p>Identidad, instalaciones, organización y configuración.</p></div><div class="gg-v84-settings-grid">'+[['logo','Escudo y colores','Personaliza la identidad visual'],['sports','Deportes','Configura las disciplinas'],['facilities','Instalaciones','Gestiona pistas y espacios'],['language','Idioma','Personaliza el idioma'],['payments','Pagos y cuotas','Configura los cobros del club']].map(([id,title,desc])=>'<button type="button" data-club-setting="'+id+'"><strong>'+title+'</strong><small>'+desc+'</small><span aria-hidden="true">→</span></button>').join('')+'</div>';
+ workspace.innerHTML='<div class="gg-v84-club-head"><span>GOT GAME! / CLUB</span><h1>Gestiona tu club</h1><p>Identidad, deportes y configuración del club.</p></div><div class="gg-v84-settings-grid">'+[['logo','Escudo y colores','Personaliza la identidad visual'],['sports','Deportes','Configura las disciplinas'],['language','Idioma','Personaliza el idioma'],['payments','Pagos y cuotas','Configura los cobros del club']].map(([id,title,desc])=>'<button type="button" data-club-setting="'+id+'"><strong>'+title+'</strong><small>'+desc+'</small><span aria-hidden="true">→</span></button>').join('')+'</div>';
  const settingsGrid=workspace.querySelector('.gg-v84-settings-grid');
- const sections=[['Identidad',['logo','language']],['Organización',['sports','facilities']],['Administración',['payments']]];
+ const sections=[['Identidad',['logo','language']],['Organización',['sports']],['Administración',['payments']]];
  const groups=document.createElement('div');groups.className='gg-v89-settings-groups';
  sections.forEach(([heading,keys])=>{const section=document.createElement('section');section.className='gg-v89-settings-section';const title=document.createElement('h2');title.textContent=heading;section.append(title);const grid=document.createElement('div');grid.className='gg-v84-settings-grid';keys.forEach(key=>{const tile=settingsGrid.querySelector('[data-club-setting="'+key+'"]');if(tile)grid.append(tile)});section.append(grid);groups.append(section)});
  settingsGrid.replaceWith(groups);
 
- const organizationGrid=groups.querySelectorAll('.gg-v84-settings-grid')[1];
- const organizationLinks=[['teams','Equipos y plantillas','Consulta los equipos y sus jugadores'],['coaches','Entrenadores','Accede al personal técnico del club'],['people','Usuarios y permisos','Directorio de responsables y entrenadores']];
- organizationLinks.forEach(([key,title,description])=>{const button=document.createElement('button');button.type='button';button.dataset.organizationLink=key;const strong=document.createElement('strong');strong.textContent=title;const small=document.createElement('small');small.textContent=description;const arrow=document.createElement('span');arrow.setAttribute('aria-hidden','true');arrow.textContent='→';button.append(strong,small,arrow);organizationGrid.append(button)});
- organizationGrid.querySelectorAll('[data-organization-link]').forEach(button=>button.onclick=()=>{const key=button.dataset.organizationLink;
- if(key==='people'){openAccessManagement();return}
- if(key==='coaches'){const peopleNav=bottom.querySelector('[data-section="people"]');if(peopleNav)peopleNav.click();if(key==='coaches'){const coachFilter=workspace.querySelector('[data-person-filter="personal"]');if(coachFilter)coachFilter.click()}return}
- if(key==='teams'){const teamsNav=bottom.querySelector('[data-section="teams"]');if(teamsNav){teamsNav.click();return}reset();active('people');dash.classList.add('gg-v83-workspace');workspace.hidden=false;window.ggView?.('teams');backButton();window.scrollTo(0,0)}
- });
  groups.lastElementChild.querySelector('.gg-v84-settings-grid').insertAdjacentHTML('beforeend','<button type="button" id="ggClubLogoutV88" class="gg-v88-logout"><strong>Cerrar sesión</strong><small>Volver a la pantalla de acceso</small><span aria-hidden="true">→</span></button>');
  workspace.querySelector('#ggClubLogoutV88').onclick=()=>{if(typeof clubLogout==='function')clubLogout();};
  backButton();
