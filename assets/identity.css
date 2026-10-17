@@ -112,3 +112,8 @@
 #dashboard.gg-v71.has-club-brand .gg-v71-module svg{stroke:var(--club-accent)!important}
 #dashboard.gg-v71.has-club-brand .gg-v71-card,#dashboard.gg-v71.has-club-brand .gg-panel,#dashboard.gg-v71.has-club-brand .gg-v77-stats>div{border-color:var(--club-border)!important}
 #dashboard.gg-v71.has-club-brand .gg-v71-sport{border-color:var(--club-accent)!important}
+
+#ggWorkspace .gg-staff-actions [hidden]{display:none!important}
+#ggWorkspace .gg-person-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+#ggWorkspace .gg-person-actions button{min-height:44px}
+@media(max-width:600px){#ggWorkspace .gg-person-actions{width:100%}#ggWorkspace .gg-person-actions button{flex:1}}
