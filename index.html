@@ -2436,7 +2436,7 @@ const dash=document.getElementById('dashboard'),bottom=document.getElementById('
 if(!dash||!bottom||!main||!workspace)return;
 const reset=()=>{dash.classList.remove('gg-v83-workspace');workspace.hidden=true;};
 const active=key=>bottom.querySelectorAll('[data-section]').forEach(b=>b.classList.toggle('active',b.dataset.section===key));
-function backButton(){const b=document.createElement('button');b.className='gg-v83-back';b.textContent='← Volver a inicio';b.onclick=()=>bottom.querySelector('[data-section="home"]')?.click();workspace.prepend(b)}
+function backButton(){const b=document.createElement('button');b.type='button';b.className='gg-v83-back';b.setAttribute('aria-label','Volver al inicio');b.innerHTML='<span class="gg-back-chevron" aria-hidden="true">‹</span><span class="gg-back-label">Volver a inicio</span>';b.onclick=()=>bottom.querySelector('[data-section="home"]')?.click();workspace.prepend(b)}
 const familyLinks=GGFamilyLinks.createRepository(localStorage);
 function openPersonProfile(person){
  const previous=[...workspace.childNodes],previousScroll=window.scrollY;const club=data.club||'Club Deportivo Horizonte';
@@ -2936,5 +2936,5 @@ window.ggRemoveLogoWhiteBackground=async function(src){
 </style>
 
 
-<link rel="stylesheet" href="assets/identity.css?v=21">
+<link rel="stylesheet" href="assets/identity.css?v=22">
 </body></html>

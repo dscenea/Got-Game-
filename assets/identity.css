@@ -134,3 +134,16 @@
 #ggWorkspace .gg-person-heading{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
 #ggWorkspace .gg-profile-button{display:inline-flex;align-items:center;min-height:36px;padding:6px 12px!important;background:transparent!important;border:1px solid var(--club-accent,#171717)!important;border-radius:10px!important;color:var(--club-dark,#171717)!important;font:inherit;font-size:13px!important;font-weight:700;cursor:pointer}
 #ggWorkspace #ggPersonDetails{margin-top:18px}
+
+/* Compact section entry on phones, with a full 44px touch target. */
+@media(max-width:1023px){
+ #dashboard.gg-v71.gg-v83-workspace{padding-top:calc(65px + env(safe-area-inset-top))!important}
+ #dashboard.gg-v71.gg-v83-workspace #ggWorkspace{padding-top:6px!important}
+ #ggWorkspace .gg-v83-back{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;min-height:44px;box-sizing:border-box;padding:0!important;margin:0 8px 8px -6px;border:0!important;border-radius:50%;background:transparent!important;color:var(--club-dark,#171717)!important;box-shadow:none!important}
+ #ggWorkspace .gg-v83-back:has(+h1){float:left}
+ #ggWorkspace .gg-v83-back .gg-back-chevron{font-size:32px;line-height:1}
+ #ggWorkspace .gg-v83-back .gg-back-label{display:none}
+ #ggWorkspace .gg-v83-back+h1{display:flex;align-items:center;min-height:44px;margin:0 0 12px;line-height:1.15}
+ #ggWorkspace .gg-v83-back+h1+p{clear:both}
+ #ggWorkspace .gg-v83-back:focus-visible{outline:2px solid var(--club-accent,#171717);outline-offset:2px}
+}
