@@ -1,0 +1,12 @@
+.gg-facility-sheet{width:min(1000px,calc(100% - 24px));max-height:90dvh;border:1px solid var(--club-border,#e9e4da);border-radius:24px;padding:24px;background:var(--paper,#fbf8f1);color:#111;overflow:auto;box-sizing:border-box}
+.gg-facility-sheet::backdrop{background:#0009}
+.gg-facility-sheet h2{font-size:clamp(24px,4vw,34px);overflow-wrap:anywhere}
+.gg-facility-spaces{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.gg-facility-spaces article{border:1px solid #e4ded3;background:white;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.gg-facility-spaces small{color:#666}.gg-facility-week{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:18px}
+.gg-facility-week section{min-width:0;background:#fff;border:1px solid #e4ded3;border-radius:16px;padding:12px}.gg-facility-week h4{margin:0 0 12px}
+.gg-facility-booking{display:flex;flex-direction:column;gap:6px;width:100%;border:0;border-left:4px solid var(--club-accent,#a20f16);background:#f4f0e8;padding:12px;border-radius:10px;text-align:left;margin:8px 0;cursor:pointer;font:inherit;overflow-wrap:anywhere}
+.gg-facility-sheet .gg-button{cursor:pointer;white-space:normal}.gg-schedule-check{display:flex;gap:10px;align-items:center}.gg-schedule-check input{width:auto;flex:none}.gg-schedule-check[hidden],#ggConflictLabel[hidden]{display:none!important}
+#ggScheduleError,#ggSpaceError{color:#a20f16}#ggPlayerDialog .gg-v59-form{min-width:0}#ggPlayerDialog select{max-width:100%}
+button.gg-inline-event,button.gg-v100-event{font:inherit;text-align:left;cursor:pointer;width:100%;color:inherit}
+@media(max-width:600px){.gg-facility-sheet{padding:18px;border-radius:18px}.gg-facility-week{grid-template-columns:1fr}.gg-facility-sheet .gg-toolbar{gap:8px}.gg-facility-sheet .gg-toolbar strong{font-size:14px}}
