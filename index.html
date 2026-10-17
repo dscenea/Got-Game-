@@ -2708,7 +2708,7 @@ function sync(){
   const button=document.createElement('button');button.type='button';button.className='gg-sidebar-brand gg-brand-home';button.setAttribute('aria-label','got GAME! · Volver al inicio del club');button.innerHTML='<img class="gg-original-brand" src="assets/brand-wordmark.svg?v=transparent" alt="got GAME!">';nav.prepend(button);
  }
  const dash=document.getElementById('dashboard');
- if(dash&&!document.getElementById('ggMobileBrand')){const bar=document.createElement('div');bar.id='ggMobileBrand';bar.innerHTML='<button class="gg-brand-home" type="button" aria-label="got GAME! · Volver al inicio del club"><img src="assets/brand-wordmark.svg?v=transparent" alt="got GAME!"></button><span>Tu club. Todo conectado.</span>';dash.prepend(bar)}
+ if(dash&&!document.getElementById('ggMobileBrand')){const bar=document.createElement('div');bar.id='ggMobileBrand';bar.innerHTML='<button class="gg-brand-home" type="button" aria-label="got GAME! · Volver al inicio del club"><img src="assets/brand-gg.svg" alt="got GAME!"></button>';dash.prepend(bar)}
 
  setupLogo();
 }
@@ -2857,5 +2857,5 @@ window.ggRemoveLogoWhiteBackground=async function(src){
 </style>
 
 
-<link rel="stylesheet" href="assets/identity.css?v=11">
+<link rel="stylesheet" href="assets/identity.css?v=12">
 </body></html>
