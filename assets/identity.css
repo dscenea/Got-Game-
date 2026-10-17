@@ -126,7 +126,11 @@
 #dashboard.gg-v71.has-club-brand #ggWorkspace .gg-team-symbol.gg-club-team-logo,#ggWorkspace .gg-team-symbol.gg-club-team-logo{width:72px;height:72px;min-width:72px;min-height:72px;background:transparent!important;border:0!important;border-radius:0!important;overflow:visible;padding:0;filter:drop-shadow(0 3px 4px #0002)}
 #ggWorkspace .gg-club-team-logo img,#ggWorkspace .gg-club-team-logo svg{display:block;width:100%!important;height:100%!important;object-fit:contain;background:transparent;border:0;padding:0}
 
-#ggWorkspace .gg-person-name{background:transparent!important;border:0!important;padding:4px 0!important;color:var(--club-dark,#171717)!important;font:inherit;font-weight:800!important;text-align:left;cursor:pointer;text-decoration:underline;text-underline-offset:4px}
+
 #ggWorkspace .gg-family-links{display:grid;gap:12px;margin-bottom:24px}
 #ggWorkspace .gg-family-links article{border:1px solid var(--club-border,#ddd);border-left:4px solid var(--club-accent,#171717);border-radius:12px;padding:16px;background:var(--club-wash,#fafafa)}
 #ggWorkspace #ggFamilyLinkForm{max-width:640px}
+
+#ggWorkspace .gg-person-heading{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+#ggWorkspace .gg-profile-button{display:inline-flex;align-items:center;min-height:36px;padding:6px 12px!important;background:transparent!important;border:1px solid var(--club-accent,#171717)!important;border-radius:10px!important;color:var(--club-dark,#171717)!important;font:inherit;font-size:13px!important;font-weight:700;cursor:pointer}
+#ggWorkspace #ggPersonDetails{margin-top:18px}
