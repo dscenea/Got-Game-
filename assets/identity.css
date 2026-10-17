@@ -41,3 +41,9 @@
 .gg-custom-sport-initial{display:grid;place-items:center;width:100%;height:100%;border-radius:14px;background:linear-gradient(135deg,var(--club-accent,#102e51),var(--club-secondary,#ffae27));color:var(--club-accent-text,#fff);font-size:28px;font-weight:800}
 #dashboard.gg-v71.settings-open #wzSports{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 #clubSettingsEditor #wizard{min-height:0!important}
+
+/* Team editor and roster: shared layout with phone-sized controls. */
+#ggPlayerDialog{box-sizing:border-box;width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 32px);overflow:auto}
+#ggTeamForm{display:grid;gap:16px}#ggTeamForm label{display:grid;gap:6px}#ggTeamForm input,#ggTeamForm select{box-sizing:border-box;width:100%;min-height:44px;font:inherit;padding:10px;border:1px solid #ccc;border-radius:10px}#ggTeamError{color:#a31d2d;margin:0}
+#ggWorkspace{min-width:0}#ggWorkspace .gg-toolbar{flex-wrap:wrap;gap:12px}#ggWorkspace .gg-team-card .gg-muted{overflow-wrap:anywhere}
+@media(max-width:600px){#ggWorkspace .gg-button{min-height:44px}#ggWorkspace .gg-roster{min-width:0;width:100%}#ggWorkspace .gg-roster thead{display:none}#ggWorkspace .gg-roster tbody{display:grid;gap:12px}#ggWorkspace .gg-roster tr{display:grid;grid-template-columns:60px minmax(0,1fr) 44px;border:1px solid #ddd;border-radius:14px;padding:8px}#ggWorkspace .gg-roster td{padding:6px;border:0;min-width:0}#ggWorkspace .gg-roster td:last-child{grid-column:2/4}#ggWorkspace .gg-player-link{max-width:100%;white-space:normal;text-align:left}#ggWorkspace .gg-player-link span{overflow-wrap:anywhere}#ggWorkspace .gg-inline-week{display:flex;overflow-x:auto;gap:8px;padding-bottom:10px}#ggWorkspace .gg-inline-day{flex:0 0 140px}#ggWorkspace .gg-roster-actions{display:flex;flex-wrap:wrap}#ggWorkspace .gg-roster-actions button{flex:1 1 140px}}
