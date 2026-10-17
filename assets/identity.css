@@ -117,3 +117,8 @@
 #ggWorkspace .gg-person-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 #ggWorkspace .gg-person-actions button{min-height:44px}
 @media(max-width:600px){#ggWorkspace .gg-person-actions{width:100%}#ggWorkspace .gg-person-actions button{flex:1}}
+
+#ggWorkspace .gg-v91-tools[hidden],#ggWorkspace #ggAccessUsers[hidden]{display:none!important}
+#ggWorkspace .gg-access-back{display:inline-flex;align-items:center;gap:8px;background:transparent!important;border:0!important;color:var(--club-dark,#171717)!important;padding:4px 8px 4px 0!important;min-height:44px;font:inherit;cursor:pointer;margin-bottom:12px}
+#ggWorkspace .gg-access-back span{font-size:32px;line-height:1}
+#ggWorkspace .gg-access-back:focus-visible{outline:2px solid var(--club-accent,#171717);outline-offset:4px}
