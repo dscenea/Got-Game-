@@ -1,4 +1,4 @@
-/* A brief, silent photo montage. The original logo, rays and cards stay intact. */
+/* A brief sports intro with original ribbons, bouncing basketball and football kick. */
 #roles > .ri-montage{position:absolute!important;z-index:0!important;inset:0;pointer-events:none;overflow:hidden;contain:paint}
 .ri-scene{position:absolute;inset:0 0 auto;height:min(1100px,110svh);background-size:cover;background-position:62% 35%;opacity:0;filter:grayscale(1);mask-image:linear-gradient(#000 0%,#000 55%,transparent 100%);-webkit-mask-image:linear-gradient(#000 0%,#000 55%,transparent 100%)}
 .ri-scene-football{opacity:.045}
@@ -6,10 +6,10 @@
 #roles.ri-enter .brand-path{animation:ri-brand .55s cubic-bezier(.2,.7,.2,1) both}
 #roles.ri-enter h1{animation:ri-rise .55s .07s cubic-bezier(.2,.7,.2,1) both}
 #roles.ri-enter > .muted{animation:ri-rise .55s .13s cubic-bezier(.2,.7,.2,1) both}
-#roles.ri-enter .profile-card{animation:ri-card .58s cubic-bezier(.2,.7,.2,1) both;animation-delay:.16s}
-#roles.ri-enter .profile-card:nth-child(2){animation-delay:.24s}
-#roles.ri-enter .profile-card:nth-child(3){animation-delay:.32s}
-#roles.ri-enter .profile-card:nth-child(4){animation-delay:.40s}
+#roles.ri-enter .profile-card{animation:ri-card .58s cubic-bezier(.2,.7,.2,1) both;animation-delay:.28s}
+#roles.ri-enter .profile-card:nth-child(2){animation-delay:.36s}
+#roles.ri-enter .profile-card:nth-child(3){animation-delay:.44s}
+#roles.ri-enter .profile-card:nth-child(4){animation-delay:.52s}
 #roles.ri-film .ri-scene-basketball{animation:ri-basketball 2.8s ease-out both}
 #roles.ri-film .ri-scene-football{animation:ri-football 2.8s ease-out both}
 @keyframes ri-brand{from{opacity:.82;translate:0 12px;scale:.97}to{opacity:1;translate:0 0;scale:1}}
@@ -17,5 +17,35 @@
 @keyframes ri-card{from{opacity:.8;translate:24px 0}to{opacity:1;translate:0 0}}
 @keyframes ri-basketball{0%{opacity:0;transform:scale(1.08) translateX(2%)}12%,35%{opacity:.19}48%,100%{opacity:0;transform:scale(1.01) translateX(-1%)}}
 @keyframes ri-football{0%,34%{opacity:0;transform:scale(1.09) translateX(-2%)}49%,72%{opacity:.17}100%{opacity:.045;transform:scale(1) translateX(0)}}
+.ri-streaks{position:absolute;inset:0;overflow:hidden;opacity:0}
+.ri-streaks i{position:absolute;left:var(--ri-x);top:0;height:100%;width:3%;background:linear-gradient(90deg,#ffc10700,#ffc107c9,#ffd95e66);transform:scaleY(.01);transform-origin:50% 45%;opacity:0}
+.ri-streaks i:nth-child(3n){width:1.2%;background:linear-gradient(90deg,#17171700,#1717178c,#17171700)}
+.ri-streaks i:nth-child(4n){width:4%;filter:blur(3px)}
+.ri-action{position:absolute;inset:0 0 auto;height:clamp(300px,45svh,430px);opacity:0;--ri-size:clamp(66px,8vw,108px)}
+.ri-ball{position:absolute;bottom:18%;width:var(--ri-size);height:var(--ri-size)}
+.ri-ball svg{display:block;width:100%;height:100%;filter:drop-shadow(0 5px 4px #0002)}
+.ri-basketball{left:8%;transform-origin:center bottom}
+.ri-football{left:72%;opacity:0}
+.ri-football::before{content:"";position:absolute;right:90%;top:42%;width:120px;height:7px;background:linear-gradient(90deg,transparent,#ffc107);border-radius:50%;opacity:0}
+.ri-shadow{position:absolute;bottom:16%;left:8%;width:var(--ri-size);height:8px;background:#17171726;filter:blur(3px);border-radius:50%;transform:scaleX(.45)}
+.ri-boot{position:absolute;bottom:16%;left:calc(72% - var(--ri-size));width:var(--ri-size);height:var(--ri-size);opacity:0;transform-origin:30% 0}
+#roles.ri-enter .ri-streaks{animation:ri-ribbons 1.05s ease-out both}
+#roles.ri-enter .ri-streaks i{animation:ri-line .85s cubic-bezier(.16,.8,.25,1) both;animation-delay:calc(var(--ri-i)*.012s)}
+#roles.ri-enter .ri-action{animation:ri-action 2.9s .12s ease-out both}
+#roles.ri-enter .ri-basketball{animation:ri-bounce 1.9s .18s both}
+#roles.ri-enter .ri-basketball svg{animation:ri-spin 1.9s .18s linear both}
+#roles.ri-enter .ri-shadow{animation:ri-shadow 1.9s .18s both}
+#roles.ri-enter .ri-boot{animation:ri-kick .8s 1s ease-in-out both}
+#roles.ri-enter .ri-football{animation:ri-shot 1.15s 1s cubic-bezier(.2,.6,.5,1) both}
+#roles.ri-enter .ri-football::before{animation:ri-trail 1.15s 1s both}
+@keyframes ri-ribbons{0%{opacity:0}15%,65%{opacity:.55}100%{opacity:0}}
+@keyframes ri-line{0%{opacity:0;transform:scaleY(.01) translateX(-60px)}30%{opacity:.9;transform:scaleY(1) translateX(0)}65%{opacity:.7;transform:scaleY(1.2) translateX(30px)}100%{opacity:0;transform:scaleY(1.4) translateX(100px)}}
+@keyframes ri-action{0%{opacity:0}12%,68%{opacity:.62}100%{opacity:0}}
+@keyframes ri-bounce{0%{transform:translateY(-180px);animation-timing-function:ease-in}24%{transform:translateY(0) scale(1.12,.86);animation-timing-function:ease-out}28%{transform:translateY(-8px);animation-timing-function:ease-out}44%{transform:translateY(-95px);animation-timing-function:ease-in}62%{transform:translateY(0) scale(1.07,.92);animation-timing-function:ease-out}77%{transform:translateY(-37px);animation-timing-function:ease-in}91%{transform:translateY(0) scale(1.03,.97)}100%{transform:translateY(0)}}
+@keyframes ri-shadow{0%,44%{opacity:.2;transform:scaleX(.4)}24%,62%,91%,100%{opacity:.85;transform:scaleX(1)}77%{opacity:.45;transform:scaleX(.7)}}
+@keyframes ri-spin{to{rotate:150deg}}
+@keyframes ri-kick{0%{opacity:0;transform:rotate(28deg) translateX(-18px)}18%{opacity:.8;transform:rotate(30deg) translateX(-15px)}38%{opacity:.9;transform:rotate(-20deg) translateX(16px)}72%,100%{opacity:0;transform:rotate(-28deg) translateX(22px)}}
+@keyframes ri-shot{0%,26%{opacity:1;transform:translate(0,0) rotate(0)}80%{opacity:.9}100%{opacity:0;transform:translate(48vw,-140px) rotate(460deg) scale(.6)}}
+@keyframes ri-trail{0%,35%,100%{opacity:0}42%,75%{opacity:.55}}
 @media(min-width:900px){.ri-scene{height:100%;background-position:center 35%}}
-@media(prefers-reduced-motion:reduce){#roles.ri-enter .brand-path,#roles.ri-enter h1,#roles.ri-enter > .muted,#roles.ri-enter .profile-card,#roles.ri-film .ri-scene{animation:none!important}.ri-montage{display:none!important}}
+@media(prefers-reduced-motion:reduce){#roles.ri-enter .brand-path,#roles.ri-enter h1,#roles.ri-enter > .muted,#roles.ri-enter .profile-card,#roles.ri-film .ri-scene,#roles.ri-enter .ri-montage *{animation:none!important}.ri-montage{display:none!important}}

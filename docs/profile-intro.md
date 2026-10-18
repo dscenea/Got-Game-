@@ -1,9 +1,12 @@
 # Profile selection motion
 
 The original got GAME! logo, profile icons, card gradients and diagonal rays are preserved.
-This is a silent montage of generated stills animated in CSS, not footage of moving players.
+This is a silent montage of generated stills, animated SVG balls and CSS, not footage of
+moving players. Original black/yellow light ribbons reveal the screen, a basketball
+bounces with squash and shadow, and a football spins away from an animated boot.
 It plays once per page load on the first profile selection entry. Cards remain visible and
-clickable throughout. The image sequence starts after decoding and finishes in 2.8 seconds.
+clickable throughout. The ball sequence runs for 3.1 seconds; the image sequence starts
+after decoding and finishes in 2.8 seconds.
 Returning to another screen cancels pending image work and timers. Reduced motion uses the
 original static screen, without downloading these photos. Image loading failure does not
 block navigation. The photos are loaded only when profile selection is first opened.
