@@ -2110,8 +2110,9 @@ window.ggOpenCommunity=open;
 <script src="assets/club-proposals.js"></script>
 <script src="assets/community-controls.js"></script>
 <script src="assets/economy-store.js?v=2"></script>
-<script src="assets/billing-store.js"></script>
-<script src="assets/billing-ui.js"></script>
+<script src="assets/billing-store.js?v=2"></script>
+<script src="assets/billing-ui.js?v=2"></script>
+<script src="assets/family-billing-profile.js"></script>
 <script src="assets/economy-players.js?v=2"></script>
 <script src="assets/club-modules.js?v=4"></script>
 <script src="assets/community-publications.js?v=3"></script>
@@ -2513,7 +2514,8 @@ function openPersonProfile(person){
 function familyPeople(){
  const demos=[['Laura Martínez Ruiz','Madre / tutora legal','familia','Baloncesto · Martín García · Alevín A'],['Javier Pérez Gil','Padre / tutor legal','familia','Fútbol · Lucas Ruiz · Alevín A'],['Ana López Sáenz','Madre / tutora legal','familia','Baloncesto · Hugo Pérez · Alevín A / Fútbol · Infantil']];
  let saved=[];try{saved=JSON.parse(localStorage.getItem('gg-family-directory-v1')||'{}')[data.club]||[]}catch{}
- return [...(/Logrobasket|Ebro Norte|Horizonte/i.test(data.club||'')?demos.filter(p=>(data.sports||[]).some(s=>p[3].includes(s))):[]),...saved];
+ let profiles=[];try{profiles=Object.values(GGBilling.createRepository(localStorage).get(data.club).profiles).map(p=>[p.name,'Familiar / tutor legal','familia','Perfil local · Pendiente de vinculación'])}catch{}
+ return [...(/Logrobasket|Ebro Norte|Horizonte/i.test(data.club||'')?demos.filter(p=>(data.sports||[]).some(s=>p[3].includes(s))):[]),...saved,...profiles];
 }
 function addFamily(onSaved){
  if(selectedRole&&roleKey(selectedRole)!=='coord')return;
