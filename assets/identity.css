@@ -34,11 +34,12 @@
  #dashboard.gg-v71.settings-open{width:100%!important;max-width:100%!important;margin:0 auto!important;padding:32px 40px 100px 280px!important;min-height:100dvh!important}
 }
 /* Management actions: compact cards with prominent, club-coloured symbols. */
-#dashboard.gg-v71 .gg-v71-module{box-sizing:border-box;aspect-ratio:1;min-height:0!important;padding:12px 6px!important;align-items:center;justify-content:center;gap:8px;text-align:center;font-size:clamp(10px,2.9vw,12px)!important;line-height:1.2;word-break:normal!important;overflow-wrap:normal!important;hyphens:none;min-width:0}
-#dashboard.gg-v71 .gg-v71-module .gg-unified-icon{width:48px!important;height:48px!important;aspect-ratio:1;flex:0 0 48px;align-self:center}
-#dashboard.gg-v71 .gg-v71-module .gg-unified-icon svg{width:100%!important;height:100%!important;aspect-ratio:1;object-fit:contain;transform:none}
+#dashboard.gg-v71 .gg-v71-module{box-sizing:border-box;aspect-ratio:auto;min-height:140px!important;padding:14px 10px!important;align-items:center;justify-content:center;gap:10px;text-align:center;font-size:14px!important;line-height:1.25;word-break:normal!important;overflow-wrap:normal!important;hyphens:none;min-width:0;border-radius:20px;position:relative}
+#dashboard.gg-v71 .gg-v71-module .gg-unified-icon{width:64px!important;height:64px!important;aspect-ratio:1;flex:0 0 64px;align-self:center;background:color-mix(in srgb,var(--club-accent,#222) 9%,white);border-radius:18px;color:var(--club-accent,#222)}
+#dashboard.gg-v71 .gg-v71-module .gg-unified-icon svg{width:56px!important;height:56px!important;aspect-ratio:1;object-fit:contain;transform:none}
 #dashboard.gg-v71 .gg-v71-module>span:not(.gg-unified-icon){max-width:100%;word-break:normal!important;overflow-wrap:normal!important;hyphens:none}
-@media(min-width:1024px){#dashboard.gg-v71 .gg-v71-module{aspect-ratio:auto;min-height:112px!important;padding:20px!important;flex-direction:row;justify-content:flex-start;gap:22px;text-align:left;font-size:16px!important}#dashboard.gg-v71 .gg-v71-module .gg-unified-icon{width:72px!important;height:72px!important;flex-basis:72px}}
+@media(min-width:1024px){#dashboard.gg-v71 .gg-v71-module{min-height:124px!important;padding:18px!important;flex-direction:row;justify-content:flex-start;gap:14px;text-align:left;font-size:15px!important}#dashboard.gg-v71 .gg-v71-module .gg-unified-icon{width:64px!important;height:64px!important;flex-basis:64px}}
+@media(max-width:700px){#dashboard.gg-v71 .gg-v71-module-grid{gap:10px!important}#dashboard.gg-v71 .gg-v71-heading{margin-top:18px;margin-bottom:12px}#dashboard.gg-v71 .gg-v71-heading h3{font-size:21px}#dashboard.gg-v71 .gg-v71-module{min-height:132px!important}#ggV77Extras{margin-top:16px}#ggV77Extras h3{font-size:21px;margin:22px 0 12px}}
 .gg-add-sport-icon{display:block;width:100%;height:100%;object-fit:contain}
 .gg-custom-sport-initial{display:grid;place-items:center;width:100%;height:100%;border-radius:14px;background:linear-gradient(135deg,var(--club-accent,#102e51),var(--club-secondary,#ffae27));color:var(--club-accent-text,#fff);font-size:28px;font-weight:800}
 #dashboard.gg-v71.settings-open #wzSports{grid-template-columns:repeat(2,minmax(0,1fr))!important}
@@ -108,8 +109,19 @@
 #dashboard.gg-v71.has-club-brand .gg-v71-header{background:linear-gradient(115deg,var(--club-dark),var(--club-accent) 65%,var(--club-secondary))!important;color:var(--club-accent-text)!important}
 #dashboard.gg-v71.has-club-brand .gg-v71-bottom{background:var(--club-dark)!important}
 #dashboard.gg-v71.has-club-brand .gg-v71-bottom button.active{background:var(--club-secondary)!important;color:var(--club-secondary-text)!important}
-#dashboard.gg-v71.has-club-brand .gg-v71-module,#dashboard.gg-v71.has-club-brand .gg-team-card{border:2px solid var(--club-accent)!important;box-shadow:0 4px 12px color-mix(in srgb,var(--club-accent) 10%,transparent);color:var(--club-dark)!important}
+#dashboard.gg-v71.has-club-brand .gg-v71-module{border:1px solid var(--club-border)!important;box-shadow:0 3px 10px color-mix(in srgb,var(--club-accent) 7%,transparent);color:var(--club-dark)!important;background:linear-gradient(145deg,#fff,color-mix(in srgb,var(--club-accent) 3%,white))}
+#dashboard.gg-v71.has-club-brand .gg-team-card{border:2px solid var(--club-accent)!important;box-shadow:0 4px 12px color-mix(in srgb,var(--club-accent) 10%,transparent);color:var(--club-dark)!important}
 #dashboard.gg-v71.has-club-brand .gg-v71-module svg{stroke:var(--club-accent)!important}
+#dashboard.gg-v71.has-club-brand .gg-v71-module:first-child{background:var(--club-accent)!important;color:var(--club-accent-text,#fff)!important;border-color:var(--club-accent)!important}
+#dashboard.gg-v71.has-club-brand .gg-v71-module:first-child .gg-unified-icon{background:color-mix(in srgb,var(--club-accent-text,#fff) 14%,transparent);color:var(--club-accent-text,#fff)}
+#dashboard.gg-v71.has-club-brand .gg-v71-module:first-child svg{stroke:var(--club-accent-text,#fff)!important}
+#dashboard.gg-v71 .gg-v77-stats{padding:14px 4px;border:1px solid var(--club-border,#ddd);border-radius:18px;background:#fff;gap:0!important}
+#dashboard.gg-v71 .gg-v77-stats>div{border:0!important;border-radius:0;background:transparent;box-shadow:none;padding:10px 16px!important;gap:5px;min-width:0}
+#dashboard.gg-v71 .gg-v77-stats>div+div{border-left:1px solid var(--club-border,#ddd)!important}
+#dashboard.gg-v71 .gg-v77-stats strong{font-size:30px;line-height:1.1;font-variant-numeric:tabular-nums}
+#dashboard.gg-v71 .gg-v77-stats span{font-size:12px;color:var(--club-dark,#333)}
+#dashboard.gg-v71 .gg-v77-feed article{border-top:3px solid color-mix(in srgb,var(--club-accent,#222) 45%,white);box-shadow:0 3px 12px #00000004}
+@media(min-width:1024px){#dashboard.gg-v71 .gg-v77-feed article{min-height:190px!important}}
 #dashboard.gg-v71.has-club-brand .gg-v71-card,#dashboard.gg-v71.has-club-brand .gg-panel,#dashboard.gg-v71.has-club-brand .gg-v77-stats>div{border-color:var(--club-border)!important}
 #dashboard.gg-v71.has-club-brand .gg-v71-sport{border-color:var(--club-accent)!important}
 

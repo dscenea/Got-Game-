@@ -2117,8 +2117,9 @@ window.ggOpenCommunity=open;
 <script src="assets/economy-players.js?v=2"></script>
 <script src="assets/club-modules.js?v=4"></script>
 <script src="assets/community-publications.js?v=3"></script>
-<script src="assets/resources-store.js"></script>
-<script src="assets/inventory-ui.js?v=2"></script>
+<script src="assets/material-icons.js"></script>
+<script src="assets/resources-store.js?v=2"></script>
+<script src="assets/inventory-ui.js?v=3"></script>
 <script src="assets/gallery-ui.js"></script>
 <link rel="stylesheet" href="assets/club-modules.css?v=3">
 <style id="gg-new-architecture-v71">
@@ -2263,7 +2264,7 @@ function showSport(){
  modules.forEach(([title,key],i)=>{if([1,4,5].includes(i))return;const b=document.createElement('button');b.className='gg-v71-module';b.dataset.ggIcon=({0:'teams',2:'coach',3:'venue'})[i];b.innerHTML='<span>'+title+'</span>';b.onclick=()=>{if(i===0){const ws=document.getElementById('ggWorkspace');if(!ws||typeof window.ggView!=='function')return;window.ggView('teams');main.style.display='none';ws.hidden=false;ws.style.setProperty('display','block','important');dash.classList.add('gg-v83-workspace');let back=ws.querySelector('#ggV97Back');if(!back){back=document.createElement('button');back.id='ggV97Back';back.className='gg-v71-page-back';back.textContent='‹ Volver al panel';ws.prepend(back)}back.onclick=()=>{ws.hidden=true;ws.style.removeProperty('display');main.style.removeProperty('display');dash.classList.remove('gg-v83-workspace');showSport();window.scrollTo(0,0)};window.scrollTo(0,0)}else showModule(i)};g.append(b)});
  h.insertAdjacentElement('afterend',g);
  if(roleKey(selectedRole)==='coord'){
-  g.classList.add('gr-has-material');const material=document.createElement('button');material.type='button';material.className='gg-v71-module';material.innerHTML=window.ggMaterialIcon+'<span>Material</span>';material.onclick=()=>window.ggOpenMaterial(name);g.append(material);
+  g.classList.add('gr-has-material');const material=document.createElement('button');material.type='button';material.className='gg-v71-module';material.innerHTML='<span class="gg-unified-icon" data-kind="material">'+window.ggMaterialIcon+'</span><span>Material</span>';material.onclick=()=>window.ggOpenMaterial(name);g.append(material);
  }
  const oldExtra=main.querySelector('#ggV77Extras');if(oldExtra)oldExtra.remove();
  const extra=document.createElement('div');extra.id='ggV77Extras';
@@ -2995,7 +2996,7 @@ window.ggRemoveLogoWhiteBackground=async function(src){
 <script src="assets/club-network.js"></script>
 <script src="assets/club-network-ui.js?v=2"></script>
 <link rel="stylesheet" href="assets/club-network.css?v=3">
-<link rel="stylesheet" href="assets/resources.css?v=2">
+<link rel="stylesheet" href="assets/resources.css?v=3">
 <script src="assets/section-heading.js"></script>
-<link rel="stylesheet" href="assets/identity.css?v=23">
+<link rel="stylesheet" href="assets/identity.css?v=24">
 </body></html>
