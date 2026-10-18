@@ -1,5 +1,6 @@
 (function(){
  const paths={posts:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h3M8 18h8"/>',network:'<path d="M9 3h6v5l-3 2-3-2zM2 14h6v5l-3 2-3-2zM16 14h6v5l-3 2-3-2zM12 10v2M5 14v-2h14v2"/>',social:'<circle cx="5" cy="12" r="3"/><circle cx="19" cy="5" r="3"/><circle cx="19" cy="19" r="3"/><path d="m8 10 8-4M8 14l8 4"/>'};
+ paths.gallery='<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 5-5 4 4 4-6 5 7"/>';
  window.ggCommunityIcon=k=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+paths[k]+'</svg>';
  window.ggCommunitySocial=function(host){
   const networks=[['instagram','Instagram'],['facebook','Facebook'],['x','X'],['tiktok','TikTok']],key='gg-community-social:'+data.club;

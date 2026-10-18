@@ -2090,7 +2090,7 @@ function open(tab='posts'){
  window.ggView('teams');area.hidden=false;dash.classList.add('gg-subscreen');
  area.innerHTML='<div class="gg-eyebrow">COMUNIDAD</div><h1>Comunidad</h1><div class="gg-community-tabs" id="gcTabs"></div><section id="gcContent"></section>';
  const tabs=area.querySelector('#gcTabs'),content=area.querySelector('#gcContent');
- [['posts','Publicaciones'],['network','Red de clubes'],['social','Redes sociales']].forEach(([k,n])=>{let b=document.createElement('button');b.innerHTML=window.ggCommunityIcon(k)+'<span>'+n+'</span>';b.className=k===tab?'active':'';b.setAttribute('aria-pressed',String(k===tab));b.onclick=()=>open(k);tabs.append(b)});
+ [['posts','Publicaciones'],['network','Red de clubes'],['gallery','Galería'],['social','Redes sociales']].forEach(([k,n])=>{let b=document.createElement('button');b.innerHTML=window.ggCommunityIcon(k)+'<span>'+n+'</span>';b.className=k===tab?'active':'';b.setAttribute('aria-pressed',String(k===tab));b.onclick=()=>open(k);tabs.append(b)});
  if(tab==='posts'){window.ggPublicationsMount(content);
  }else if(tab==='network'){content.innerHTML='<h2>Red de clubes</h2><div class="gg-community-tabs"><button id="gcFind">Buscar clubes</button><button id="gcInbox">Buzón de propuestas</button><button id="gcEvents">Convocatorias</button><button id="gcCreate">Crear convocatoria abierta</button></div><div id="gcResult"></div>';
  const host=document.getElementById('gcResult');
@@ -2099,7 +2099,7 @@ function open(tab='posts'){
  document.getElementById('gcEvents').onclick=()=>{host.innerHTML='<h3>Encuentros publicados</h3>'+entries.map((e,i)=>'<div class="gg-demo-card"><h3>'+clean(e.title)+'</h3><p>'+clean(e.type)+' · '+clean(e.sport)+' · '+clean(e.city)+' · '+clean(e.date)+'</p><button class="gg-button" data-i="'+i+'">'+(e.interested?'Interés registrado':'Me interesa')+'</button></div>').join('');host.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{entries[+b.dataset.i].interested=true;save();document.getElementById('gcEvents').click()})};
  document.getElementById('gcCreate').onclick=()=>{host.innerHTML='<form id="gcForm" class="gg-demo-card"><h3>Crear convocatoria</h3><input id="gcName" class="gg-demo-input" required placeholder="Nombre del evento"><select id="gcType"><option>Torneo</option><option>Amistoso</option></select><select id="gcSport"><option>Baloncesto</option><option>Fútbol</option></select><input id="gcCity" class="gg-demo-input" required placeholder="Localidad"><input id="gcDate" type="date" required class="gg-demo-input"><button class="gg-button selected">Publicar convocatoria</button><p class="gg-muted">Demo local: todavía no se envía a otros clubes.</p></form>';document.getElementById('gcForm').onsubmit=e=>{e.preventDefault();let v=id=>document.getElementById(id).value;entries.push({title:v('gcName'),type:v('gcType'),sport:v('gcSport'),city:v('gcCity'),date:v('gcDate')});save();document.getElementById('gcEvents').click()}};
  document.getElementById('gcFind').click();
- }else{window.ggCommunitySocial(content)};
+ }else if(tab==='gallery'){window.ggGalleryMount(content)}else{window.ggCommunitySocial(content)};
 
 }
 const b=[...nav.querySelectorAll(':scope > button')].find(x=>x.textContent.trim()==='Comunidad');if(b)b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();open('posts')},true);
@@ -2108,7 +2108,7 @@ window.ggOpenCommunity=open;
 </script>
 
 <script src="assets/club-proposals.js"></script>
-<script src="assets/community-controls.js"></script>
+<script src="assets/community-controls.js?v=2"></script>
 <script src="assets/economy-store.js?v=2"></script>
 <script src="assets/billing-store.js?v=2"></script>
 <script src="assets/billing-ui.js?v=2"></script>
@@ -2116,6 +2116,9 @@ window.ggOpenCommunity=open;
 <script src="assets/economy-players.js?v=2"></script>
 <script src="assets/club-modules.js?v=4"></script>
 <script src="assets/community-publications.js?v=3"></script>
+<script src="assets/resources-store.js"></script>
+<script src="assets/inventory-ui.js"></script>
+<script src="assets/gallery-ui.js"></script>
 <link rel="stylesheet" href="assets/club-modules.css?v=3">
 <style id="gg-new-architecture-v71">
 #dashboard.gg-v71 .coord-nav{display:none!important}
@@ -2258,6 +2261,9 @@ function showSport(){
  const g=document.createElement('div');g.className='gg-v71-module-grid';
  modules.forEach(([title,key],i)=>{if([1,4,5].includes(i))return;const b=document.createElement('button');b.className='gg-v71-module';b.dataset.ggIcon=({0:'teams',2:'coach',3:'venue'})[i];b.innerHTML='<span>'+title+'</span>';b.onclick=()=>{if(i===0){const ws=document.getElementById('ggWorkspace');if(!ws||typeof window.ggView!=='function')return;window.ggView('teams');main.style.display='none';ws.hidden=false;ws.style.setProperty('display','block','important');dash.classList.add('gg-v83-workspace');let back=ws.querySelector('#ggV97Back');if(!back){back=document.createElement('button');back.id='ggV97Back';back.className='gg-v71-page-back';back.textContent='‹ Volver al panel';ws.prepend(back)}back.onclick=()=>{ws.hidden=true;ws.style.removeProperty('display');main.style.removeProperty('display');dash.classList.remove('gg-v83-workspace');showSport();window.scrollTo(0,0)};window.scrollTo(0,0)}else showModule(i)};g.append(b)});
  h.insertAdjacentElement('afterend',g);
+ if(roleKey(selectedRole)==='coord'){
+  g.classList.add('gr-has-material');const material=document.createElement('button');material.type='button';material.className='gg-v71-module';material.innerHTML=window.ggMaterialIcon+'<span>Material</span>';material.onclick=()=>window.ggOpenMaterial(name);g.append(material);
+ }
  const oldExtra=main.querySelector('#ggV77Extras');if(oldExtra)oldExtra.remove();
  const extra=document.createElement('div');extra.id='ggV77Extras';
  const multi=(data.sports||[]).length>1;
@@ -2988,6 +2994,7 @@ window.ggRemoveLogoWhiteBackground=async function(src){
 <script src="assets/club-network.js"></script>
 <script src="assets/club-network-ui.js?v=2"></script>
 <link rel="stylesheet" href="assets/club-network.css?v=3">
+<link rel="stylesheet" href="assets/resources.css">
 <script src="assets/section-heading.js"></script>
 <link rel="stylesheet" href="assets/identity.css?v=23">
 </body></html>
