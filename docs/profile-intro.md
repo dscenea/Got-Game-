@@ -9,7 +9,9 @@ clickable throughout. All animations share the same 3.5-second timeline, cleaned
 3.6 seconds. Photos decode independently without restarting their animation. The ball's
 flight, spin and trail use separate layers; the basketball's squash is limited to impact
 instead of stretching through the flight. Temporary compositing hints apply only during
-the intro and the ribbon layers avoid blur filters.
+the intro and the ribbons avoid blur filters. The ribbons are a single composited group
+with constant horizontal travel and a 2.6-second eased opacity envelope. Individual bars
+do not resize, restart, or animate independently, preventing the earlier stop/start feel.
 Returning to another screen cancels pending image work and timers. Reduced motion uses the
 original static screen, without downloading these photos. Image loading failure does not
 block navigation. The photos are loaded only when profile selection is first opened.

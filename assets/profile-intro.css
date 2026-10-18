@@ -18,7 +18,7 @@
 @keyframes ri-basketball{0%{opacity:0;transform:scale(1.04) translate3d(1%,0,0)}18%,30%{opacity:.16}58%,100%{opacity:0;transform:scale(1) translate3d(-1%,0,0)}}
 @keyframes ri-football{0%,30%{opacity:0;transform:scale(1.04) translate3d(-1%,0,0)}58%,72%{opacity:.14}100%{opacity:.045;transform:scale(1) translate3d(0,0,0)}}
 .ri-streaks{position:absolute;inset:0;overflow:hidden;opacity:0}
-.ri-streaks i{position:absolute;left:var(--ri-x);top:0;height:100%;width:3%;background:linear-gradient(90deg,#ffc10700,#ffc107c9,#ffd95e66);transform:scaleY(.01);transform-origin:50% 45%;opacity:0}
+.ri-streaks i{position:absolute;left:var(--ri-x);top:0;height:100%;width:3%;background:linear-gradient(90deg,#ffc10700,#ffc107c9,#ffd95e66)}
 .ri-streaks i:nth-child(3n){width:1.2%;background:linear-gradient(90deg,#17171700,#1717178c,#17171700)}
 .ri-streaks i:nth-child(4n){width:4%}
 .ri-action{position:absolute;inset:0 0 auto;height:clamp(300px,45svh,430px);opacity:0;--ri-size:clamp(66px,8vw,108px)}
@@ -29,8 +29,7 @@
 .ri-football::before{content:"";position:absolute;right:90%;top:42%;width:120px;height:7px;background:linear-gradient(90deg,transparent,#ffc107);border-radius:50%;opacity:0}
 .ri-shadow{position:absolute;bottom:16%;left:8%;width:var(--ri-size);height:8px;background:#17171726;filter:blur(3px);border-radius:50%;transform:scaleX(.45)}
 .ri-boot{position:absolute;bottom:16%;left:calc(72% - var(--ri-size));width:var(--ri-size);height:var(--ri-size);opacity:0;transform-origin:30% 0}
-#roles.ri-enter .ri-streaks{animation:ri-ribbons 1.5s ease-in-out both}
-#roles.ri-enter .ri-streaks i{animation:ri-line 1.3s cubic-bezier(.22,.61,.36,1) both;animation-delay:calc(var(--ri-i)*.012s)}
+#roles.ri-enter .ri-streaks{animation:ri-ribbon-drift 2.6s linear both,ri-ribbon-fade 2.6s ease-in-out both}
 #roles.ri-enter .ri-action{animation:ri-action 3.5s ease-in-out both}
 #roles.ri-enter .ri-basketball{animation:ri-bounce 2.5s .1s both,ri-squash 2.5s .1s linear both}
 #roles.ri-enter .ri-basketball svg{animation:ri-spin 2.5s .1s linear both}
@@ -39,10 +38,11 @@
 #roles.ri-enter .ri-football{animation:ri-shot-x 1.6s 1.12s linear both,ri-shot-y 1.6s 1.12s linear both,ri-shot-fade 1.6s 1.12s linear both}
 #roles.ri-enter .ri-football svg{animation:ri-football-spin 1.6s 1.12s linear both}
 #roles.ri-enter .ri-football::before{animation:ri-trail 1.6s 1.12s ease-in-out both}
-#roles.ri-enter :is(.ri-scene,.ri-ball,.ri-shadow,.ri-boot,.ri-streaks i){will-change:transform,opacity}
+#roles.ri-enter :is(.ri-scene,.ri-ball,.ri-shadow,.ri-boot,.ri-streaks){will-change:transform,opacity}
 #roles.ri-enter .ri-football{will-change:translate,transform,opacity}
-@keyframes ri-ribbons{0%{opacity:0}22%,48%{opacity:.45}100%{opacity:0}}
-@keyframes ri-line{0%{opacity:0;transform:scaleY(.12) translate3d(-35px,0,0)}38%{opacity:.8;transform:scaleY(1) translate3d(0,0,0)}100%{opacity:0;transform:scaleY(1.12) translate3d(75px,0,0)}}
+/* One composited layer: constant travel and one long fade, without height resets. */
+@keyframes ri-ribbon-drift{from{transform:translate3d(-4%,0,0)}to{transform:translate3d(4%,0,0)}}
+@keyframes ri-ribbon-fade{0%{opacity:0}40%{opacity:.42}100%{opacity:0}}
 @keyframes ri-action{0%{opacity:0}18%,65%{opacity:.62}100%{opacity:0}}
 @keyframes ri-bounce{0%{transform:translate3d(0,-145px,0);animation-timing-function:cubic-bezier(.42,0,1,1)}20%{transform:translate3d(0,0,0);animation-timing-function:cubic-bezier(0,0,.58,1)}37%{transform:translate3d(0,-78px,0);animation-timing-function:cubic-bezier(.42,0,1,1)}54%{transform:translate3d(0,0,0);animation-timing-function:cubic-bezier(0,0,.58,1)}66%{transform:translate3d(0,-34px,0);animation-timing-function:cubic-bezier(.42,0,1,1)}78%{transform:translate3d(0,0,0);animation-timing-function:cubic-bezier(0,0,.58,1)}86%{transform:translate3d(0,-10px,0);animation-timing-function:cubic-bezier(.42,0,1,1)}94%,100%{transform:translate3d(0,0,0)}}
 @keyframes ri-squash{0%,18%,23%,52%,57%,76%,81%,92%,97%,100%{scale:1}20%{scale:1.055 .945}54%{scale:1.04 .96}78%{scale:1.025 .975}94%{scale:1.01 .99}}
