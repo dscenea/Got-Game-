@@ -1,0 +1,21 @@
+/* A brief, silent photo montage. The original logo, rays and cards stay intact. */
+#roles > .ri-montage{position:absolute!important;z-index:0!important;inset:0;pointer-events:none;overflow:hidden;contain:paint}
+.ri-scene{position:absolute;inset:0 0 auto;height:min(1100px,110svh);background-size:cover;background-position:62% 35%;opacity:0;filter:grayscale(1);mask-image:linear-gradient(#000 0%,#000 55%,transparent 100%);-webkit-mask-image:linear-gradient(#000 0%,#000 55%,transparent 100%)}
+.ri-scene-football{opacity:.045}
+.ri-montage::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,#f7f4eac9,transparent 75%),repeating-linear-gradient(130deg,transparent 0 88px,#ffc1070d 88px 92px,transparent 92px 170px)}
+#roles.ri-enter .brand-path{animation:ri-brand .55s cubic-bezier(.2,.7,.2,1) both}
+#roles.ri-enter h1{animation:ri-rise .55s .07s cubic-bezier(.2,.7,.2,1) both}
+#roles.ri-enter > .muted{animation:ri-rise .55s .13s cubic-bezier(.2,.7,.2,1) both}
+#roles.ri-enter .profile-card{animation:ri-card .58s cubic-bezier(.2,.7,.2,1) both;animation-delay:.16s}
+#roles.ri-enter .profile-card:nth-child(2){animation-delay:.24s}
+#roles.ri-enter .profile-card:nth-child(3){animation-delay:.32s}
+#roles.ri-enter .profile-card:nth-child(4){animation-delay:.40s}
+#roles.ri-film .ri-scene-basketball{animation:ri-basketball 2.8s ease-out both}
+#roles.ri-film .ri-scene-football{animation:ri-football 2.8s ease-out both}
+@keyframes ri-brand{from{opacity:.82;translate:0 12px;scale:.97}to{opacity:1;translate:0 0;scale:1}}
+@keyframes ri-rise{from{opacity:.8;translate:0 15px}to{opacity:1;translate:0 0}}
+@keyframes ri-card{from{opacity:.8;translate:24px 0}to{opacity:1;translate:0 0}}
+@keyframes ri-basketball{0%{opacity:0;transform:scale(1.08) translateX(2%)}12%,35%{opacity:.19}48%,100%{opacity:0;transform:scale(1.01) translateX(-1%)}}
+@keyframes ri-football{0%,34%{opacity:0;transform:scale(1.09) translateX(-2%)}49%,72%{opacity:.17}100%{opacity:.045;transform:scale(1) translateX(0)}}
+@media(min-width:900px){.ri-scene{height:100%;background-position:center 35%}}
+@media(prefers-reduced-motion:reduce){#roles.ri-enter .brand-path,#roles.ri-enter h1,#roles.ri-enter > .muted,#roles.ri-enter .profile-card,#roles.ri-film .ri-scene{animation:none!important}.ri-montage{display:none!important}}
