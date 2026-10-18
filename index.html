@@ -2088,7 +2088,8 @@ const save=()=>localStorage.setItem(key,JSON.stringify(entries));
 const clean=v=>String(v||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function open(tab='posts'){
  window.ggView('teams');area.hidden=false;dash.classList.add('gg-subscreen');
- area.innerHTML='<div class="gg-eyebrow">COMUNIDAD</div><h1>Comunidad</h1><div class="gg-community-tabs" id="gcTabs"></div><section id="gcContent"></section>';
+ area.innerHTML='<button class="gg-v83-back" type="button" data-community-home aria-label="Volver al inicio"><span class="gg-back-chevron" aria-hidden="true">‹</span><span class="gg-back-label">Volver a inicio</span></button><div class="gg-eyebrow">COMUNIDAD</div><h1>Comunidad</h1><div class="gg-community-tabs" id="gcTabs"></div><section id="gcContent"></section>';
+ area.querySelector('[data-community-home]').onclick=()=>dash.querySelector('.gg-v71-bottom [data-section="home"]')?.click();
  const tabs=area.querySelector('#gcTabs'),content=area.querySelector('#gcContent');
  [['posts','Publicaciones'],['network','Red de clubes'],['gallery','Galería'],['social','Redes sociales']].forEach(([k,n])=>{let b=document.createElement('button');b.innerHTML=window.ggCommunityIcon(k)+'<span>'+n+'</span>';b.className=k===tab?'active':'';b.setAttribute('aria-pressed',String(k===tab));b.onclick=()=>open(k);tabs.append(b)});
  if(tab==='posts'){window.ggPublicationsMount(content);
@@ -2117,7 +2118,7 @@ window.ggOpenCommunity=open;
 <script src="assets/club-modules.js?v=4"></script>
 <script src="assets/community-publications.js?v=3"></script>
 <script src="assets/resources-store.js"></script>
-<script src="assets/inventory-ui.js"></script>
+<script src="assets/inventory-ui.js?v=2"></script>
 <script src="assets/gallery-ui.js"></script>
 <link rel="stylesheet" href="assets/club-modules.css?v=3">
 <style id="gg-new-architecture-v71">
@@ -2562,7 +2563,7 @@ function open(key){
  }
  dash.classList.add('gg-v83-workspace');
  if(key==='calendar'){window.ggView?.('calendar');backButton()}
- else if(key==='community'){window.ggOpenCommunity?.('posts');backButton()}
+ else if(key==='community'){window.ggOpenCommunity?.('posts')}
  else if(key==='people'){
  window.ggView?.('teams');
  workspace.hidden=false;
@@ -2994,7 +2995,7 @@ window.ggRemoveLogoWhiteBackground=async function(src){
 <script src="assets/club-network.js"></script>
 <script src="assets/club-network-ui.js?v=2"></script>
 <link rel="stylesheet" href="assets/club-network.css?v=3">
-<link rel="stylesheet" href="assets/resources.css">
+<link rel="stylesheet" href="assets/resources.css?v=2">
 <script src="assets/section-heading.js"></script>
 <link rel="stylesheet" href="assets/identity.css?v=23">
 </body></html>

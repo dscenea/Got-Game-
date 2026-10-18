@@ -34,6 +34,8 @@
     panel.innerHTML='<h2>Historial de movimientos</h2><div class="gr-timeline">'+state.events.slice().reverse().map(e=>'<article class="gr-event '+(e.type==='incident'?'gr-warning':'')+'"><span class="gr-badge">'+labels[e.type]+'</span><h3>'+esc(names.get(e.itemId))+(e.quantity?' · '+e.quantity+' uds.':'')+'</h3><p>'+esc(e.actorName)+' · '+new Date(e.at).toLocaleString('es-ES')+'</p>'+(e.note?'<p>'+esc(e.note)+'</p>':'')+'</article>').join('')+'</div>'+(!state.events.length?'<div class="gr-empty">Las retiradas, devoluciones e incidencias aparecerán aquí.</div>':'');
    }
   }
+  const onStorage=e=>{if(e.key==='gg-inventory-v1'&&host.querySelector('.gr-page'))draw('Inventario actualizado desde otra pestaña.');};window.addEventListener('storage',onStorage);
+  const cleanup=new MutationObserver(()=>{if(!host.querySelector('.gr-page')){window.removeEventListener('storage',onStorage);cleanup.disconnect()}});cleanup.observe(host,{childList:true});
   draw();window.scrollTo(0,0);
  };
 })();
