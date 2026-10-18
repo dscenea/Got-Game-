@@ -1359,7 +1359,7 @@ function renderTeams(){workspace.innerHTML='<button class="gg-v100-back" onclick
 function attendance(p,type){const events=Object.entries(p.attendance).filter(([k])=>k.startsWith(type+':'));const count=events.filter(([,v])=>v==='yes').length;return '<span class="gg-attendance">'+count+'/'+events.length+'<span class="gg-bar"><i style="width:'+(events.length?count/events.length*100:0)+'%"></i></span></span>'}
 function renderRoster(){workspace.innerHTML='<button class="gg-v100-back" onclick="ggView(&quot;teams&quot;)" aria-label="Volver a equipos">‹ <span>Equipos</span></button><div class="gg-toolbar"><div><div class="gg-eyebrow">PLANTILLA · 2026 / 2027</div><h1>'+esc(teamLabel(selectedTeam))+'</h1></div><button class="gg-button" onclick="ggTeamWeek()">Horario semanal →</button></div><div class="gg-toolbar gg-roster-actions"><button class="gg-button selected" onclick="ggAddPlayer()">+ Añadir jugador</button><button class="gg-button" onclick="ggImportPlayers()">Importar Excel / CSV</button><button class="gg-button" onclick="ggEditTeam('+wzArg(selectedTeam)+')">Editar equipo</button><button class="gg-button" onclick="ggAddEvent()">+ Añadir actividad</button></div><div class="gg-table-scroll"><table class="gg-roster"><thead><tr><th>Nº</th><th>JUGADOR/A</th><th>INFO</th><th>ASISTENCIA</th></tr></thead><tbody>'+teamData(selectedTeam).map((p,i)=>'<tr><td data-label="Dorsal"><input class="gg-number" type="number" min="0" max="999" value="'+esc(p.number)+'" aria-label="Dorsal de '+esc(p.name)+'" onchange="ggNumber('+i+',this)"></td><td class="gg-roster-player"><button class="gg-player-link" onclick="ggProfile('+i+')"><img class="gg-avatar" src="'+avatar(p)+'" alt=""><span>'+esc(p.name)+'</span></button></td><td class="gg-roster-info"><button class="gg-info '+(/ejemplo/.test(p.allergies+p.needs)?'alert':'')+'" aria-label="Información importante de '+esc(p.name)+'" onclick="ggInfo('+i+')">i</button></td><td data-label="Asistencia" class="gg-roster-attendance"><div class="gg-att-compact"><span title="Entrenamientos">E '+attendance(p,'training')+'</span><span title="Partidos">P '+attendance(p,'match')+'</span></div></td></tr>').join('')+'</tbody></table></div><p class="gg-muted">E = entrenamientos · P = partidos. Pulsa la foto o el nombre para consultar la ficha.</p><p class="gg-save-note" id="ggRosterStatus" role="status"></p><section class="gg-inline-schedule" aria-label="Horario semanal del equipo"><h2>Horario semanal</h2><p class="gg-muted">Entrenamientos y partidos de este equipo, de lunes a domingo.</p><div class="gg-inline-week">'+['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'].map((day,i)=>{const items=events().filter(e=>e.team===selectedTeam&&e.day===i);return '<div class="gg-inline-day"><strong>'+day+'</strong>'+(items.length?items.map(e=>'<button type="button" class="gg-inline-event" onclick="ggEditScheduleEvent('+wzArg(e.id)+')"><b>'+time(e.hour)+'</b> · '+esc(e.type==='match'?'Partido':'Entrenamiento')+'<small>'+esc(schedulePlace(e))+'</small></button>').join(''):'<span class="gg-muted">Sin actividad</span>')+'</div>'}).join('')+'</div></section>';ggSyncTeamLogos()}
 function ggSyncTeamLogos(){
- const url=data.logoDataUrl||(data.club==='Logrobasket'?'assets/club-logrobasket.png':'');
+ const url=data.logoDataUrl||(data.club==='Logrobasket'?'assets/club-logrobasket-crest.svg':'');
  const source=dash.querySelector('#ggV71Main .gg-v71-header .gg-v71-logo');
  workspace.querySelectorAll('.gg-team-card .gg-team-symbol').forEach(el=>{
   if(url){const img=document.createElement('img');img.src=url;img.alt='Escudo de '+clubKey();el.replaceChildren(img);el.classList.add('gg-club-team-logo');}
@@ -2121,6 +2121,8 @@ window.ggOpenCommunity=open;
 <script src="assets/resources-store.js?v=2"></script>
 <script src="assets/inventory-ui.js?v=3"></script>
 <script src="assets/gallery-ui.js"></script>
+<script src="assets/backgrounds-store.js"></script>
+<script src="assets/backgrounds.js"></script>
 <link rel="stylesheet" href="assets/club-modules.css?v=3">
 <style id="gg-new-architecture-v71">
 #dashboard.gg-v71 .coord-nav{display:none!important}
@@ -2197,6 +2199,7 @@ function draw(){
  const people=document.getElementById('ggV71People');if(people)people.onclick=()=>window.ggView('teams');
  const calendar=document.getElementById('ggV71Calendar');if(calendar)calendar.onclick=()=>window.ggView('calendar');
  const community=document.getElementById('ggV71Community');if(community)community.onclick=()=>window.ggOpenCommunity?.('posts');
+ window.ggApplyClubBackground?.(section==='home'?(sport||''):'');
 }
 window.ggRenderClubHome=function(){
  section='home';sport=sports().length===1?sports()[0]:null;
@@ -2282,6 +2285,7 @@ function showSport(){
  }
  const back=document.getElementById('ggV71Switch');if(back)back.onclick=window.ggReturnToSports;
  window.ggApplyManagementIcons?.();
+ window.ggApplyClubBackground?.(name);
 
 }
 function showModule(i,returnToPanel){
@@ -2348,7 +2352,7 @@ paintSports();
 <script id="gg-logrobasket-theme-v73-script">
 (function(){
 const dash=document.getElementById('dashboard'),main=document.getElementById('ggV71Main');if(!dash||!main)return;
-const logo='<img class="gg-v71-logo" src="assets/club-logrobasket.png" alt="Escudo de Logrobasket" loading="lazy" referrerpolicy="no-referrer">';
+const logo='<img class="gg-v71-logo" src="assets/club-logrobasket-crest.svg" alt="Escudo de Logrobasket" loading="lazy" referrerpolicy="no-referrer">';
 function refresh(){
  const isMita=(typeof data!=='undefined'&&data.club==='Logrobasket');
  dash.classList.toggle('gg-logrobasket-demo',isMita);
@@ -2548,9 +2552,9 @@ function open(key){
  if(key==='settings'){
  reset();active('settings');
  dash.classList.add('gg-v83-workspace');workspace.hidden=false;
- workspace.innerHTML='<div class="gg-v84-club-head"><span>GOT GAME! / CLUB</span><h1>Gestiona tu club</h1><p>Identidad, deportes y configuración del club.</p></div><div class="gg-v84-settings-grid">'+[['logo','Escudo y colores','Personaliza la identidad visual'],['sports','Deportes','Configura las disciplinas'],['language','Idioma','Personaliza el idioma'],['payments','Economía del club','Cuotas y seguimiento de cobros']].map(([id,title,desc])=>'<button type="button" data-club-setting="'+id+'"><strong>'+title+'</strong><small>'+desc+'</small><span aria-hidden="true">→</span></button>').join('')+'</div>';
+ workspace.innerHTML='<div class="gg-v84-club-head"><span>GOT GAME! / CLUB</span><h1>Gestiona tu club</h1><p>Identidad, deportes y configuración del club.</p></div><div class="gg-v84-settings-grid">'+[['logo','Escudo y colores','Personaliza la identidad visual'],['backgrounds','Fondos del panel','Imágenes, color y efecto suave'],['sports','Deportes','Configura las disciplinas'],['language','Idioma','Personaliza el idioma'],['payments','Economía del club','Cuotas y seguimiento de cobros']].map(([id,title,desc])=>'<button type="button" data-club-setting="'+id+'"><strong>'+title+'</strong><small>'+desc+'</small><span aria-hidden="true">→</span></button>').join('')+'</div>';
  const settingsGrid=workspace.querySelector('.gg-v84-settings-grid');
- const sections=[['Identidad',['logo','language']],['Organización',['sports']],['Administración',['payments']]];
+ const sections=[['Identidad',['logo','backgrounds','language']],['Organización',['sports']],['Administración',['payments']]];
  const groups=document.createElement('div');groups.className='gg-v89-settings-groups';
  sections.forEach(([heading,keys])=>{const section=document.createElement('section');section.className='gg-v89-settings-section';const title=document.createElement('h2');title.textContent=heading;section.append(title);const grid=document.createElement('div');grid.className='gg-v84-settings-grid';keys.forEach(key=>{const tile=settingsGrid.querySelector('[data-club-setting="'+key+'"]');if(tile)grid.append(tile)});section.append(grid);groups.append(section)});
  settingsGrid.replaceWith(groups);
@@ -2558,7 +2562,7 @@ function open(key){
  groups.lastElementChild.querySelector('.gg-v84-settings-grid').insertAdjacentHTML('beforeend','<button type="button" id="ggClubLogoutV88" class="gg-v88-logout"><strong>Cerrar sesión</strong><small>Volver a la pantalla de acceso</small><span aria-hidden="true">→</span></button>');
  workspace.querySelector('#ggClubLogoutV88').onclick=()=>{if(typeof clubLogout==='function')clubLogout();};
  backButton();
- workspace.querySelectorAll('[data-club-setting]').forEach(b=>b.onclick=()=>{const id=b.dataset.clubSetting;if(id==='payments'){window.ggOpenEconomy();return}const btn=[...document.querySelectorAll('#clubSettingsMenu button')].find(x=>x.getAttribute('onclick')?.includes("'"+id+"'"));if(btn)btn.click();else{const fallback=document.querySelector('.coord-settings-btn');fallback?.click();}});
+ workspace.querySelectorAll('[data-club-setting]').forEach(b=>b.onclick=()=>{const id=b.dataset.clubSetting;if(id==='backgrounds'){window.ggOpenBackgroundSettings();return}if(id==='payments'){window.ggOpenEconomy();return}const btn=[...document.querySelectorAll('#clubSettingsMenu button')].find(x=>x.getAttribute('onclick')?.includes("'"+id+"'"));if(btn)btn.click();else{const fallback=document.querySelector('.coord-settings-btn');fallback?.click();}});
  
  window.scrollTo(0,0);return
  }
@@ -2999,4 +3003,5 @@ window.ggRemoveLogoWhiteBackground=async function(src){
 <link rel="stylesheet" href="assets/resources.css?v=3">
 <script src="assets/section-heading.js"></script>
 <link rel="stylesheet" href="assets/identity.css?v=24">
+<link rel="stylesheet" href="assets/backgrounds.css">
 </body></html>
