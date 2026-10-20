@@ -126,7 +126,7 @@
 @media(min-width:1024px) and (hover:hover) and (pointer:fine){#dashboard.gg-v71 #ggMobileBrand,#dashboard.gg-v71 #ggMobileBrand.gg-home-hidden{display:none!important}#dashboard.gg-v71 .gg-v71-bottom .gg-sidebar-brand{display:block!important;min-height:135px!important;margin:0 auto 18px!important;flex:0 0 135px!important}}
 
 /* Keep every wizard sport illustration square, independent of card width. */
-#wzSports .wz-choice .wz-sporticon{width:72px!important;height:72px!important;min-width:72px!important;max-width:72px!important;flex:0 0 72px!important;aspect-ratio:1;box-sizing:border-box}
+#wzSports .wz-choice:not(.wz-add-sport) .wz-sporticon{width:72px!important;height:72px!important;min-width:72px!important;max-width:72px!important;flex:0 0 72px!important;aspect-ratio:1;box-sizing:border-box}
 #wzSports .wz-sporticon .gg-v92-symbol{width:72px!important;height:72px!important;min-width:0!important;min-height:0!important;aspect-ratio:1;padding:9px!important;box-sizing:border-box}
 #wzSports .wz-sporticon .gg-approved-icon{width:100%!important;height:100%!important;object-fit:contain!important}
 @media(min-width:1024px) and (hover:hover) and (pointer:fine){
