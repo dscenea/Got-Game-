@@ -25,17 +25,6 @@
 }
 @media(prefers-reduced-motion:reduce){#roles button.profile-card{transition:none}#roles button.profile-card:active{transform:none}}
 
-.gg-approved-icon{display:block!important;position:static!important;inset:auto!important;width:100%!important;height:96px!important;max-width:128px!important;max-height:128px!important;object-fit:contain!important;object-position:center!important;transform:none!important;filter:drop-shadow(0 2px 2px #0002)!important;background:none!important;border:0!important;border-radius:0!important;padding:0!important;margin:0!important}
-/* Cristal: shared label treatment, no clipped paper or ornamental arrow layers. */
-#roles button.profile-card strong{grid-column:2;grid-row:1;align-self:center;display:flex;align-items:center;gap:10px;min-width:0;max-width:100%;min-height:74px;box-sizing:border-box;margin:12px 12px 12px 0;padding:13px 12px;border-radius:16px;border:1px solid #ffffff45;background:#ffffff24;color:#fff;clip-path:none;transform:none;box-shadow:none;text-shadow:0 1px 3px #0003;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-size:17px;line-height:1.2;font-weight:800;letter-spacing:-.25px;position:relative;z-index:2}
-#roles button.profile-card strong span{flex:1;min-width:0;white-space:normal;overflow-wrap:normal;color:inherit}
-#roles button.profile-card strong i{display:grid;place-items:center;flex:none;width:22px;height:28px;margin:0;padding:0;border:0;background:transparent;box-shadow:none;font-style:normal;font-size:29px;line-height:1;color:inherit}
-#roles button.profile-card.parent{background:linear-gradient(125deg,#132b45,#886125)!important}
-#roles button.profile-card.player{background:linear-gradient(125deg,#07378e,#087e8b)!important}
-#roles button.profile-card.coach{background:linear-gradient(125deg,#014f4b,#3e772e)!important}
-#roles button.profile-card.coord{background:linear-gradient(125deg,#3417a8,#a92f73)!important}
-@media(max-width:360px){#roles button.profile-card strong{font-size:15px;padding:12px 10px;gap:6px;margin-right:10px}#roles button.profile-card strong i{width:18px}}
-
 .gg-approved-icon{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important;position:static!important;transform:none!important;background:none!important;border:0!important;border-radius:0!important;filter:none!important;box-shadow:none!important}
 .gg-v92-symbol:has(.gg-approved-icon){display:flex!important;align-items:center!important;justify-content:center!important;min-width:0!important;min-height:0!important;width:100%!important;height:100%!important;box-sizing:border-box!important;padding:12%!important;background:linear-gradient(135deg,var(--gg-sport-start,#102e51),var(--gg-sport-end,#ffae27))!important;overflow:hidden!important;border-radius:16px!important;box-shadow:none!important}
 .gg-v71-symbol:has(.gg-approved-icon),.sport-selector-icon:has(.gg-approved-icon),.wz-sporticon:has(.gg-approved-icon),.gg-team-symbol:has(.gg-approved-icon){padding:0!important;background:transparent!important;display:block!important;overflow:hidden!important}
