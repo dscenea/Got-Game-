@@ -39,10 +39,37 @@
 .gg-v92-symbol:has([data-gg-approved="Pádel"]){--gg-sport-mask:url("icons/sport-padel-clean.svg")}
 .gg-v92-symbol:has([data-gg-approved="Atletismo"]){--gg-sport-mask:url("icons/sport-atletismo-clean.svg")}
 .gg-v92-symbol:has([data-gg-approved="Natación"]){--gg-sport-mask:url("icons/sport-natacion-clean.svg")}
-:is(#wzSports,.gg-v71-sports,#dashboardSportSelector) .gg-v92-symbol:has(.gg-approved-icon){position:relative;background:#171717!important}
+:is(.gg-v71-sports,#dashboardSportSelector) .gg-v92-symbol:has(.gg-approved-icon){position:relative;background:#171717!important}
+#wzSports .gg-v92-symbol:has(.gg-approved-icon){position:relative;background:transparent!important}
 :is(#wzSports,.gg-v71-sports,#dashboardSportSelector) .gg-v92-symbol:has(.gg-approved-icon)::after{content:"";position:absolute;inset:12%;background:#ffc107;mask:var(--gg-sport-mask) center / contain no-repeat;-webkit-mask:var(--gg-sport-mask) center / contain no-repeat;pointer-events:none}
 :is(#wzSports,.gg-v71-sports,#dashboardSportSelector) .gg-approved-icon{visibility:hidden}
 :is(#wzSports,.gg-v71-sports,#dashboardSportSelector) :is(.gg-v71-symbol,.wz-sporticon,.sport-selector-icon)::before,:is(#wzSports,.gg-v71-sports,#dashboardSportSelector) :is(.gg-v71-symbol,.wz-sporticon,.sport-selector-icon)::after{content:none!important}
+/* The onboarding cards carry the brand geometry; symbols have no inner tile. */
+#wzSports .wz-choice:not(.wz-add-sport)::before,#wzSports .wz-choice:not(.wz-add-sport)::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none}
+#wzSports .wz-choice:not(.wz-add-sport)::before{background:#ffc107;clip-path:polygon(78% 100%,100% 76%,100% 100%)}
+#wzSports .wz-choice:not(.wz-add-sport)::after{background:#2b2b2b;clip-path:polygon(45% 100%,100% 45%,100% 64%,64% 100%)}
+#wzSports .wz-choice:nth-child(even):not(.wz-add-sport)::before{clip-path:polygon(100% 25%,100% 44%,87% 34%)}
+#wzSports .wz-choice:nth-child(3n):not(.wz-add-sport)::after{background:#363636;clip-path:polygon(66% 100%,100% 60%,100% 82%,84% 100%)}
+#wzSports .wz-choice>*{position:relative;z-index:1}
+#wzSports .wz-choice:focus-visible{outline:3px solid #ffc107;outline-offset:3px}
+#wzSports .wz-add-sport{grid-column:1 / -1;min-height:64px;flex-direction:row;align-items:center;justify-content:center;gap:12px;background:#f7f4ea;color:#171717;border-color:#171717}
+#wzSports .wz-add-sport .wz-choicetop{min-height:0!important}
+#wzSports .wz-add-sport .wz-sporticon{width:36px!important;height:36px!important;min-width:36px!important;max-width:36px!important;flex-basis:36px!important}
+#wzSports .wz-add-sport .gg-add-sport-icon{background:transparent;color:#171717;border-radius:0}
+#wzSports .wz-add-sport .wz-check,#wzSports .wz-add-sport small,#wzSports .wz-add-sport br{display:none}
+#wzSports .wz-add-sport.selected{border-color:#ffc107}
+
+/* Club entry cards inherit both club colours, including clubs created from scratch. */
+#dashboard.gg-v71 .gg-v71-sport{background:var(--club-accent,#101126);color:var(--club-accent-text,#fff);border-color:var(--club-accent,#101126);cursor:pointer}
+#dashboard.gg-v71 .gg-v71-sport::before,#dashboard.gg-v71 .gg-v71-sport::after{content:"";position:absolute;inset:0;width:auto;height:auto;border:0;border-radius:0;z-index:0;pointer-events:none}
+#dashboard.gg-v71 .gg-v71-sport::before{background:var(--club-secondary,#19beaf);clip-path:polygon(85% 0,100% 0,100% 100%,90% 100%,68% 40%)}
+#dashboard.gg-v71 .gg-v71-sport::after{background:color-mix(in srgb,var(--club-accent,#101126) 85%,var(--club-accent-text,#fff));clip-path:polygon(48% 0,63% 0,100% 74%,100% 100%)}
+#dashboard.gg-v71 .gg-v71-sport:nth-child(even)::before{clip-path:polygon(78% 0,100% 0,100% 100%,94% 100%,64% 40%)}
+#dashboard.gg-v71 .gg-v71-sport>*{z-index:1}
+#dashboard.gg-v71 .gg-v71-sport small{color:inherit;line-height:1.4}
+#dashboard.gg-v71 .gg-v71-sport .gg-v71-alert{z-index:2}
+#dashboard.gg-v71 .gg-v71-sport:focus-visible{outline:3px solid var(--club-secondary,#19beaf);outline-offset:3px}
+@media(max-width:600px){#dashboard.gg-v71 .gg-v71-sport::before{clip-path:polygon(100% 0,100% 100%,92% 100%,82% 40%)}#dashboard.gg-v71 .gg-v71-sport:nth-child(even)::before{clip-path:polygon(100% 0,100% 100%,91% 100%,80% 35%)}}
 .gg-original-brand{display:block;object-fit:contain}
 #roles .brand-path img.gg-original-brand{width:100%;height:100%}
 #dashboard.gg-v71 .gg-v71-bottom:before{content:none!important;display:none!important}
@@ -151,7 +178,6 @@
 #dashboard.gg-v71 .gg-v77-feed article{border-top:3px solid color-mix(in srgb,var(--club-accent,#222) 45%,white);box-shadow:0 3px 12px #00000004}
 @media(min-width:1024px){#dashboard.gg-v71 .gg-v77-feed article{min-height:190px!important}}
 #dashboard.gg-v71.has-club-brand .gg-v71-card,#dashboard.gg-v71.has-club-brand .gg-panel,#dashboard.gg-v71.has-club-brand .gg-v77-stats>div{border-color:var(--club-border)!important}
-#dashboard.gg-v71.has-club-brand .gg-v71-sport{border-color:var(--club-accent)!important}
 
 #ggWorkspace .gg-staff-actions [hidden]{display:none!important}
 #ggWorkspace .gg-person-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
