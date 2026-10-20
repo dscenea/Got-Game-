@@ -1,10 +1,11 @@
-# Profile selection motion
+# Login and profile selection motion
 
 The original got GAME! logo, profile icons, gradients and static diagonal rays remain.
 Only one desaturated sports photo appears per page visit, softly faded into the cream
-background. Basketball and football alternate on successive visits in the same tab,
-using sessionStorage; blocked storage falls back to a random choice. Returning from
-registration keeps the same photo and does not repeat the intro.
+background. Login and profile selection share the same decoded photo per page visit,
+and each screen plays its entrance once. Basketball and football alternate on successive
+visits in the same tab, using sessionStorage; blocked storage falls back to a random
+choice. Returning from registration keeps the same photo and does not repeat the intro.
 
 The logo fades in, with small staggered entrances for the title and cards. The chosen
 photo fades in and makes one slow 3.5% zoom over seven seconds, then stays still.
@@ -13,7 +14,8 @@ Animated bars, balls, boots, shadows, trails and their obsolete keyframes are re
 All buttons remain visible and usable immediately. Leaving the screen cancels pending
 visual work. One decoded image promise is reused, so rapid navigation cannot lose the
 photo on returning. Reduced motion keeps the photo static. Image failure leaves the
-original cream background and rays. Only the selected photo is downloaded.
+original background. Only the selected photo is downloaded. Login inputs and actions
+remain above the decorative layer; authentication behavior is unchanged.
 
 ## Files
 

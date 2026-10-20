@@ -939,7 +939,7 @@ function showLoader(done){
  loader.classList.add('active'); loader.setAttribute('aria-hidden','false');
  setTimeout(()=>{ if(done) done(); requestAnimationFrame(()=>setTimeout(()=>{loader.classList.remove('active');loader.setAttribute('aria-hidden','true')},90)); },850);
 }
-function go(id){if(id==='dashboard' && typeof renderDashboardSports==='function'){renderDashboardSports();wizardApplyBranding();}document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');window.ggProfileIntro?.(id==='roles');scrollTo(0,0)}
+function go(id){if(id==='dashboard' && typeof renderDashboardSports==='function'){renderDashboardSports();wizardApplyBranding();}document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');window.ggAuthIntro?.(id);scrollTo(0,0)}
 function openLogin(){document.getElementById('email').value='coordinador@gotgame.es';document.getElementById('password').value='gotgame2026';document.getElementById('loginMsg').style.display='none';go('login')}
 function openCreateAccount(){selectedRole='';go('roles')}
 function roleKey(r){if(r.startsWith('Padre'))return 'parent';if(r.startsWith('Jugador'))return 'player';if(r.startsWith('Entrenador'))return 'coach';return 'coord'}
@@ -3004,6 +3004,6 @@ window.ggRemoveLogoWhiteBackground=async function(src){
 <script src="assets/section-heading.js"></script>
 <link rel="stylesheet" href="assets/identity.css?v=25">
 <link rel="stylesheet" href="assets/backgrounds.css?v=2">
-<link rel="stylesheet" href="assets/profile-intro.css?v=5">
-<script src="assets/profile-intro.js?v=5"></script>
+<link rel="stylesheet" href="assets/profile-intro.css?v=6">
+<script src="assets/profile-intro.js?v=6"></script>
 </body></html>

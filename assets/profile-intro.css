@@ -1,11 +1,13 @@
-/* One quiet sports photo; the original logo, diagonal rays and profile cards remain. */
-#roles > .ri-montage{position:absolute!important;z-index:0!important;inset:0;pointer-events:none;overflow:hidden;contain:paint}
+/* One shared quiet sports photo for profile selection and login. */
+.ri-auth-screen{position:relative;isolation:isolate;overflow:hidden}
+.ri-auth-screen > .ri-montage{position:absolute!important;z-index:0!important;inset:0;pointer-events:none;overflow:hidden;contain:paint}
+#login.ri-auth-screen > :not(.ri-montage){position:relative;z-index:1}
 .ri-scene{position:absolute;inset:0 0 auto;height:min(1100px,110svh);background-size:cover;background-position:62% 35%;opacity:0;filter:grayscale(1);transform:scale(1.035);transition:opacity .9s ease;mask-image:linear-gradient(#000 0%,#000 55%,transparent 100%);-webkit-mask-image:linear-gradient(#000 0%,#000 55%,transparent 100%)}
 .ri-scene.ri-ready{opacity:.11}
 .ri-montage::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,#f7f4ea88,transparent 75%)}
 .ri-scene.ri-photo-enter{animation:ri-photo-zoom 7s cubic-bezier(.2,.4,.3,1) both;will-change:transform}
-#roles.ri-enter .brand-path{animation:ri-brand .65s ease-out both}
-#roles.ri-enter h1{animation:ri-rise .65s .08s cubic-bezier(.16,1,.3,1) both}
+#roles.ri-enter .brand-path,#login.ri-enter #loginLogo{animation:ri-brand .65s ease-out both}
+.ri-auth-screen.ri-enter h1{animation:ri-rise .65s .08s cubic-bezier(.16,1,.3,1) both}
 #roles.ri-enter > .muted{animation:ri-rise .65s .14s cubic-bezier(.16,1,.3,1) both}
 #roles.ri-enter .profile-card{animation:ri-card .65s cubic-bezier(.16,1,.3,1) both;animation-delay:.22s}
 #roles.ri-enter .profile-card:nth-child(2){animation-delay:.28s}
@@ -16,4 +18,4 @@
 @keyframes ri-rise{from{opacity:.85;translate:0 8px}to{opacity:1;translate:0 0}}
 @keyframes ri-card{from{opacity:.85;translate:0 10px}to{opacity:1;translate:0 0}}
 @media(min-width:900px){.ri-scene{height:100%;background-position:center 35%}}
-@media(prefers-reduced-motion:reduce){#roles.ri-enter .brand-path,#roles.ri-enter h1,#roles.ri-enter > .muted,#roles.ri-enter .profile-card,.ri-scene{animation:none!important;transition:none!important;transform:none!important;will-change:auto!important}}
+@media(prefers-reduced-motion:reduce){#roles.ri-enter .brand-path,#login.ri-enter #loginLogo,.ri-auth-screen.ri-enter h1,#roles.ri-enter > .muted,#roles.ri-enter .profile-card,.ri-scene{animation:none!important;transition:none!important;transform:none!important;will-change:auto!important}}
