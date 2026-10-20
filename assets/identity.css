@@ -29,6 +29,20 @@
 .gg-v92-symbol:has(.gg-approved-icon){display:flex!important;align-items:center!important;justify-content:center!important;min-width:0!important;min-height:0!important;width:100%!important;height:100%!important;box-sizing:border-box!important;padding:12%!important;background:linear-gradient(135deg,var(--gg-sport-start,#102e51),var(--gg-sport-end,#ffae27))!important;overflow:hidden!important;border-radius:16px!important;box-shadow:none!important}
 .gg-v71-symbol:has(.gg-approved-icon),.sport-selector-icon:has(.gg-approved-icon),.wz-sporticon:has(.gg-approved-icon),.gg-team-symbol:has(.gg-approved-icon){padding:0!important;background:transparent!important;display:block!important;overflow:hidden!important}
 .gg-v71-symbol:has(.gg-approved-icon)::before,.gg-v71-symbol:has(.gg-approved-icon)::after{display:none!important}
+/* Sport pickers use the existing SVG silhouettes as masks, preserving their
+   geometry and leaving the club's other colours and custom-sport action intact. */
+.gg-v92-symbol:has([data-gg-approved="Baloncesto"]){--gg-sport-mask:url("icons/sport-baloncesto-clean.svg")}
+.gg-v92-symbol:has([data-gg-approved="Fútbol"]){--gg-sport-mask:url("icons/sport-futbol-clean.svg")}
+.gg-v92-symbol:has([data-gg-approved="Voleibol"]){--gg-sport-mask:url("icons/sport-voleibol-clean.svg")}
+.gg-v92-symbol:has([data-gg-approved="Balonmano"]){--gg-sport-mask:url("icons/sport-balonmano-clean.svg")}
+.gg-v92-symbol:has([data-gg-approved="Tenis"]){--gg-sport-mask:url("icons/sport-tenis-clean.svg")}
+.gg-v92-symbol:has([data-gg-approved="Pádel"]){--gg-sport-mask:url("icons/sport-padel-clean.svg")}
+.gg-v92-symbol:has([data-gg-approved="Atletismo"]){--gg-sport-mask:url("icons/sport-atletismo-clean.svg")}
+.gg-v92-symbol:has([data-gg-approved="Natación"]){--gg-sport-mask:url("icons/sport-natacion-clean.svg")}
+:is(#wzSports,.gg-v71-sports,#dashboardSportSelector) .gg-v92-symbol:has(.gg-approved-icon){position:relative;background:#171717!important}
+:is(#wzSports,.gg-v71-sports,#dashboardSportSelector) .gg-v92-symbol:has(.gg-approved-icon)::after{content:"";position:absolute;inset:12%;background:#ffc107;mask:var(--gg-sport-mask) center / contain no-repeat;-webkit-mask:var(--gg-sport-mask) center / contain no-repeat;pointer-events:none}
+:is(#wzSports,.gg-v71-sports,#dashboardSportSelector) .gg-approved-icon{visibility:hidden}
+:is(#wzSports,.gg-v71-sports,#dashboardSportSelector) :is(.gg-v71-symbol,.wz-sporticon,.sport-selector-icon)::before,:is(#wzSports,.gg-v71-sports,#dashboardSportSelector) :is(.gg-v71-symbol,.wz-sporticon,.sport-selector-icon)::after{content:none!important}
 .gg-original-brand{display:block;object-fit:contain}
 #roles .brand-path img.gg-original-brand{width:100%;height:100%}
 #dashboard.gg-v71 .gg-v71-bottom:before{content:none!important;display:none!important}
