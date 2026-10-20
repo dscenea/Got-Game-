@@ -1,20 +1,19 @@
 # Profile selection motion
 
-The original got GAME! logo, profile icons, card gradients and diagonal rays are preserved.
-This is a silent montage of generated stills, animated SVG balls and CSS, not footage of
-moving players. Original black/yellow light ribbons reveal the screen, a basketball
-bounces with squash and shadow, and a football spins away from an animated boot.
-It plays once per page load on the first profile selection entry. Cards remain visible and
-clickable throughout. All animations share the same 3.5-second timeline, cleaned up at
-3.6 seconds. Photos decode independently without restarting their animation. The ball's
-flight, spin and trail use separate layers; the basketball's squash is limited to impact
-instead of stretching through the flight. Temporary compositing hints apply only during
-the intro and the ribbons avoid blur filters. The ribbons are a single composited group
-with constant horizontal travel and a 2.6-second eased opacity envelope. Individual bars
-do not resize, restart, or animate independently, preventing the earlier stop/start feel.
-Returning to another screen cancels pending image work and timers. Reduced motion uses the
-original static screen, without downloading these photos. Image loading failure does not
-block navigation. The photos are loaded only when profile selection is first opened.
+The original got GAME! logo, profile icons, gradients and static diagonal rays remain.
+Only one desaturated sports photo appears per page visit, softly faded into the cream
+background. Basketball and football alternate on successive visits in the same tab,
+using sessionStorage; blocked storage falls back to a random choice. Returning from
+registration keeps the same photo and does not repeat the intro.
+
+The logo fades in, with small staggered entrances for the title and cards. The chosen
+photo fades in and makes one slow 3.5% zoom over seven seconds, then stays still.
+Animated bars, balls, boots, shadows, trails and their obsolete keyframes are removed.
+
+All buttons remain visible and usable immediately. Leaving the screen cancels pending
+visual work. One decoded image promise is reused, so rapid navigation cannot lose the
+photo on returning. Reduced motion keeps the photo static. Image failure leaves the
+original cream background and rays. Only the selected photo is downloaded.
 
 ## Files
 
