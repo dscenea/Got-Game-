@@ -39,9 +39,10 @@
 .gg-v92-symbol:has([data-gg-approved="Pádel"]){--gg-sport-mask:url("icons/sport-padel-clean.svg")}
 .gg-v92-symbol:has([data-gg-approved="Atletismo"]){--gg-sport-mask:url("icons/sport-atletismo-clean.svg")}
 .gg-v92-symbol:has([data-gg-approved="Natación"]){--gg-sport-mask:url("icons/sport-natacion-clean.svg")}
-:is(.gg-v71-sports,#dashboardSportSelector) .gg-v92-symbol:has(.gg-approved-icon){position:relative;background:#171717!important}
-#wzSports .gg-v92-symbol:has(.gg-approved-icon){position:relative;background:transparent!important}
-:is(#wzSports,.gg-v71-sports,#dashboardSportSelector) .gg-v92-symbol:has(.gg-approved-icon)::after{content:"";position:absolute;inset:12%;background:#ffc107;mask:var(--gg-sport-mask) center / contain no-repeat;-webkit-mask:var(--gg-sport-mask) center / contain no-repeat;pointer-events:none}
+#dashboardSportSelector .gg-v92-symbol:has(.gg-approved-icon){position:relative;background:#171717!important}
+:is(#wzSports,.gg-v71-sports) .gg-v92-symbol:has(.gg-approved-icon){position:relative;background:transparent!important}
+.gg-v71-sports{--gg-sport-ink:#fff}
+:is(#wzSports,.gg-v71-sports,#dashboardSportSelector) .gg-v92-symbol:has(.gg-approved-icon)::after{content:"";position:absolute;inset:12%;background:var(--gg-sport-ink,#ffc107);mask:var(--gg-sport-mask) center / contain no-repeat;-webkit-mask:var(--gg-sport-mask) center / contain no-repeat;pointer-events:none}
 :is(#wzSports,.gg-v71-sports,#dashboardSportSelector) .gg-approved-icon{visibility:hidden}
 :is(#wzSports,.gg-v71-sports,#dashboardSportSelector) :is(.gg-v71-symbol,.wz-sporticon,.sport-selector-icon)::before,:is(#wzSports,.gg-v71-sports,#dashboardSportSelector) :is(.gg-v71-symbol,.wz-sporticon,.sport-selector-icon)::after{content:none!important}
 /* The onboarding cards carry the brand geometry; symbols have no inner tile. */
