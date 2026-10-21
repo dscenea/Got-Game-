@@ -1822,13 +1822,13 @@ function community(tab='posts'){
  area.hidden=false;
  area.innerHTML='<div class="gg-eyebrow">COMUNIDAD</div><h1>Comunidad</h1><p class="gg-muted">Toda la actividad y las conexiones de tu club.</p><div class="gg-community-tabs" id="ggCommunityTabs"></div><div id="ggCommunityContent"></div>';
  const tabs=area.querySelector('#ggCommunityTabs'),content=area.querySelector('#ggCommunityContent');
- [['posts','Publicaciones'],['network','Red de clubes'],['social','Redes sociales']].forEach(([key,label])=>{
+ [['posts','Publicaciones'],['network','Red de clubes'],['social','Redes sociales'],['inbox','Buzón de entrada']].forEach(([key,label])=>{
  const b=document.createElement('button');b.type='button';b.textContent=label;b.className=key===tab?'active':'';b.onclick=()=>community(key);tabs.append(b);
  });
  if(tab==='posts'){
  content.innerHTML='<h2>Publicaciones del club</h2><p class="gg-muted">Noticias, resultados, fotografías y avisos para las familias.</p>';
  const button=document.createElement('button');button.className='gg-button selected';button.textContent='Ver publicaciones';button.onclick=()=>{if(typeof window.ggRenderCommunity==='function')try{window.ggRenderCommunity('posts')}catch(e){console.error(e)}};content.append(button);
- }else if(tab==='network'){
+ }else if(tab==='inbox'){content.innerHTML='<h2>Buzón de entrada</h2><p class="gg-muted">Conversaciones con personas autorizadas y clubes.</p><div id="ggInboxList"></div>';const original=area.innerHTML;try{if(typeof ggRenderMessages==='function'){ggRenderMessages();const markup=area.innerHTML;area.innerHTML=original;const list=area.querySelector('#ggInboxList');if(list){list.innerHTML=markup;list.querySelector('h1')?.remove();list.querySelector('.gg-eyebrow')?.remove();}}}catch(e){area.innerHTML=original;}}else if(tab==='network'){
  content.innerHTML='<h2>Red de clubes</h2><p class="gg-muted">Encuentra clubes para amistosos, torneos y colaboraciones.</p>';
  const source=document.getElementById('gg-mobile-network');
  const clubs=typeof ggMobileExampleClubs!=='undefined'?ggMobileExampleClubs:[];
@@ -2823,4 +2823,4 @@ document.addEventListener('click',e=>{if(e.target.closest('.gg-v71-bottom [data-
 mount();
 })();</script>
 <style id="gg-unified-module-heading-v126">#ggV71Main .gg-module-unified-head{display:flex;align-items:center;gap:20px;margin:0 0 18px;padding:8px 0 4px}#ggV71Main .gg-module-unified-head h1{font-size:clamp(25px,5.4vw,36px);font-weight:850;color:#151515;margin:0;line-height:1.15}#ggV71Main .gg-module-unified-head .gg-v71-page-back{position:static!important;display:inline-flex!important;align-items:center;justify-content:center;flex:none!important;width:42px!important;height:44px!important;padding:0!important;margin:0!important;border:0!important;background:transparent!important;box-shadow:none!important;border-radius:10px!important;color:var(--club-primary,#a20f16)!important;font-size:35px!important;line-height:1!important}#ggV71Main .gg-module-unified-eyebrow{font-size:12px;font-weight:850;letter-spacing:.22em;color:var(--club-primary,#a20f16);margin:8px 0 16px}#ggV71Main .gg-module-unified-head+.gg-module-unified-eyebrow+.gg-v71-card{margin-top:0!important}</style>
-</body></html>
+<style id="gg-community-inbox-v127">.gg-community-tabs{display:flex;gap:8px;flex-wrap:wrap}#ggInboxList .gg-demo-card{margin:10px 0;border-radius:14px}</style></body></html>
