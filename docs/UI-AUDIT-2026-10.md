@@ -31,3 +31,15 @@ Revisión estática de la aplicación y primera consolidación no invasiva. No s
 
 ## Próximo trabajo
 Realizar pruebas de navegación en navegador real, documentar incidencias concretas y migrar un único renderizador por módulo. Evitar refactorizaciones masivas hasta tener cobertura de pruebas.
+
+## Segunda pasada: cabeceras dinámicas y navegación (22 octubre)
+
+**Hallazgo confirmado por código:** la utilidad `shared-ui.js` normalizaba cabeceras únicamente en `DOMContentLoaded`, pero Equipos, Instalaciones, Personas, Comunidad y Calendario construyen vistas dinámicamente. Esto dejaba cabeceras posteriores sin las clases compartidas.
+
+**Corrección:** `shared-ui.js` ahora observa únicamente nodos añadidos al contenedor `#dashboard`, agrupa las actualizaciones en una microtarea y vuelve a aplicar las clases de cabecera. No intercepta rutas ni modifica los datos. Se ha comprobado la sintaxis del módulo y de los scripts integrados.
+
+**Revisión del calendario:** los días ahora tienen elementos independientes para número e indicador de actividad, con alturas fijas para evitar saltos de alineación en móvil.
+
+**Pendiente de verificar visualmente:** al abrir cada vista, la flecha se alinea con el título, la pestaña inferior seleccionada corresponde a la vista y los retornos mantienen el contexto deportivo. Las capturas y pruebas reales siguen siendo necesarias.
+
+**Precaución:** no se han eliminado renderizadores heredados de Equipos o Instalaciones porque no hay cobertura suficiente para garantizar que el cambio no afecte a los dos clubes de prueba.
