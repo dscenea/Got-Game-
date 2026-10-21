@@ -2028,7 +2028,8 @@ function draw(){
  if(section==='community')html+='<div class="gg-v71-card"><b>Comunidad del club</b><p>Publicaciones, red de clubes y redes sociales.</p><button class="gg-v71-back" id="ggV71Community">Abrir Comunidad</button></div>';
  }
  main.innerHTML=html;
- const allClub=document.getElementById('ggManageAllClub');if(allClub)allClub.onclick=()=>window.ggOpenCoordinationPanel('all');
+ if(section==='home'&&!sport){const welcome=main.querySelector('.gg-welcome-club');const agenda=ggCompactAgenda('all');if(welcome)welcome.insertAdjacentElement('afterend',agenda);else main.prepend(agenda);}
+ const allClubdocument.getElementById('ggManageAllClub');if(allClub)allClub.onclick=()=>window.ggOpenCoordinationPanel('all');
  const homeBack=document.getElementById('ggV75Home');if(homeBack)homeBack.onclick=()=>{section='home';draw();window.scrollTo(0,0)};
  bottom.innerHTML=[['home','house','Inicio'],['people','users','Personas'],['calendar','calendar','Calendario'],['community','message','Comunidad'],['settings','settings','Club']].map(([id,icon,label])=>'<button data-section="'+id+'" class="'+(section===id?'active':'')+'"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+({house:'<path d="m3 10 9-7 9 7v11H3z"/><path d="M9 21v-8h6v8"/>',users:'<circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3"/><path d="M17 6a3 3 0 0 1 0 6m1 3c2 1 3 3 3 6"/>',calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v5m10-5v5M3 11h18"/>',message:'<path d="M4 4h16v13H9l-5 4z"/><path d="M8 9h8m-8 4h6"/>',settings:'<circle cx="12" cy="12" r="3"/><path d="M10 2h4l1 3 3 1 3-1 2 4-3 2v3l3 2-2 4-3-1-3 1-1 3h-4l-1-3-3-1-3 1-2-4 3-2v-3L1 9l2-4 3 1 3-1z"/>'}[icon])+'</svg>'+label+'</button>').join('');
  bottom.querySelectorAll('[data-section]').forEach(b=>b.onclick=()=>{section=b.dataset.section;if(section==='home'&&sports().length>1)sport=null;draw();window.scrollTo(0,0)});
@@ -2097,6 +2098,22 @@ window.ggOpenCoordinationPanel=function(value=window.ggCurrentSport()){
  document.querySelectorAll('.gg-v71-bottom [data-section]').forEach(b=>b.classList.toggle('active',b.dataset.section==='home'));
 };
 window.ggOpenScopedFacilities=()=>showModule(3,()=>window.ggOpenCoordinationPanel(window.ggCurrentSport()));
+function ggCompactAgenda(scope){
+ const now=new Date(),dateLabel=new Intl.DateTimeFormat('es-ES',{day:'numeric',month:'short',weekday:'short'}).format(now);
+ const start=new Date(now.getFullYear(),0,1),week=Math.ceil(((now-start)/86400000+start.getDay()+6)/7);
+ const wrap=document.createElement('section');wrap.className='gg-compact-agenda';wrap.style.cssText='margin:12px 0 16px;border:1px solid #e2e3e8;border-radius:16px;background:#fff;overflow:hidden';
+ const details=document.createElement('details');
+ const summary=document.createElement('summary');summary.style.cssText='list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:13px 15px';
+ const day=document.createElement('span');day.style.cssText='background:#202650;color:white;border-radius:10px;padding:10px;min-width:85px;text-align:center;font-weight:800';day.textContent=dateLabel;
+ const info=document.createElement('span');info.style.cssText='flex:1;min-width:0';
+ const title=document.createElement('strong');title.textContent='Agenda de hoy';title.style.display='block';
+ const sub=document.createElement('small');sub.textContent='Semana '+week+' · '+(scope==='all'?'Todo el club':scope||'Todo el club');sub.style.cssText='display:block;color:#666;margin-top:3px';info.append(title,sub);
+ const arrow=document.createElement('span');arrow.textContent='⌄';arrow.style.fontSize='20px';summary.append(day,info,arrow);details.append(summary);
+ const body=document.createElement('div');body.style.cssText='padding:0 15px 15px';
+ const note=document.createElement('p');note.textContent='Consulta los entrenamientos, partidos y actividades programadas en el calendario.';note.style.cssText='font-size:13px;color:#555;margin:4px 0 12px';
+ const button=document.createElement('button');button.type='button';button.textContent='Ver calendario completo →';button.className='gg-v71-back';button.onclick=()=>{if(typeof window.ggView==='function')window.ggView('calendar')};
+ body.append(note,button);details.append(body);wrap.append(details);return wrap;
+}
 function showSport(){
  const name=getSport();if(!name)return;window.ggSelectSportContext(name);
  const h=main.querySelector('.gg-v71-heading');if(!h)return;
@@ -2109,6 +2126,8 @@ function showSport(){
  const g=document.createElement('div');g.className='gg-v71-module-grid';
  modules.forEach(([title,key],i)=>{if([1,4,5].includes(i))return;const b=document.createElement('button');b.className='gg-v71-module';b.dataset.ggIcon=({0:'teams',2:'coach',3:'venue'})[i];b.innerHTML='<span>'+title+'</span>';b.onclick=()=>{if(i===0){const ws=document.getElementById('ggWorkspace');if(!ws||typeof window.ggView!=='function')return;window.ggView('teams');main.style.display='none';ws.hidden=false;ws.style.setProperty('display','block','important');dash.classList.add('gg-v83-workspace');let back=ws.querySelector('#ggV97Back');if(!back){back=document.createElement('button');back.id='ggV97Back';back.className='gg-v71-page-back';back.textContent='‹ Volver al panel';ws.prepend(back)}back.onclick=()=>{ws.hidden=true;ws.style.removeProperty('display');main.style.removeProperty('display');dash.classList.remove('gg-v83-workspace');showSport();window.scrollTo(0,0)};window.scrollTo(0,0)}else showModule(i)};g.append(b)});
  h.insertAdjacentElement('afterend',g);
+ const previousAgenda=main.querySelector('.gg-compact-agenda');if(previousAgenda)previousAgenda.remove();
+ g.insertAdjacentElement('beforebegin',ggCompactAgenda(name));
  if(roleKey(selectedRole)==='coord'){
   g.classList.add('gr-has-material');const material=document.createElement('button');material.type='button';material.className='gg-v71-module';material.innerHTML='<span class="gg-unified-icon" data-kind="material">'+window.ggMaterialIcon+'</span><span>Material</span>';material.onclick=()=>window.ggOpenMaterial(name);g.append(material);
  }
