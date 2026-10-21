@@ -36,7 +36,7 @@
 .gg-v92-symbol:has([data-gg-approved="Voleibol"]){--gg-sport-mask:url("icons/sport-voleibol-clean.svg")}
 .gg-v92-symbol:has([data-gg-approved="Balonmano"]){--gg-sport-mask:url("icons/sport-balonmano-clean.svg?v=2")}
 .gg-v92-symbol:has([data-gg-approved="Tenis"]){--gg-sport-mask:url("icons/sport-tenis-clean.svg")}
-.gg-v92-symbol:has([data-gg-approved="Pádel"]){--gg-sport-mask:url("icons/sport-padel-clean.svg")}
+.gg-v92-symbol:has([data-gg-approved="Pádel"]){--gg-sport-mask:url("icons/sport-padel-clean.svg?v=2")}
 .gg-v92-symbol:has([data-gg-approved="Atletismo"]){--gg-sport-mask:url("icons/sport-atletismo-clean.svg?v=3")}
 .gg-v92-symbol:has([data-gg-approved="Natación"]){--gg-sport-mask:url("icons/sport-natacion-clean.svg")}
 #dashboardSportSelector .gg-v92-symbol:has(.gg-approved-icon){position:relative;background:#171717!important}
