@@ -9,3 +9,7 @@
 .gg-new-calendar .gg-calendar-scope{margin:0 0 18px;color:#777;font-size:14px}
 .gg-new-calendar nav,.gg-new-calendar .gg-calendar-days,.gg-new-calendar .gg-calendar-year,.gg-new-calendar>h3,.gg-new-calendar>p:not(.gg-calendar-scope),.gg-new-calendar>article,.gg-new-calendar>[data-add],.gg-new-calendar>form{position:relative}
 #dashboard.gg-v71 .gg-v71-bottom button[data-section="calendar"].active{background:var(--gg-calendar-nav-secondary,var(--club-secondary,#ffffff))!important;color:var(--gg-calendar-nav-foreground,#111)!important;border-radius:16px!important}
+
+/* Shared header-chevron appearance: same neutral size and color as Community. */
+#dashboard .gg-new-calendar .gg-calendar-page-head [data-back]{appearance:none!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 30px!important;width:30px!important;min-width:30px!important;height:42px!important;min-height:42px!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#171717!important;font-family:Arial,sans-serif!important;font-size:0!important;line-height:1!important;cursor:pointer}
+#dashboard .gg-new-calendar .gg-calendar-page-head [data-back]::before{content:'‹';display:block;color:inherit;font-size:42px;font-weight:400;line-height:1;transform:translateY(-2px)}
