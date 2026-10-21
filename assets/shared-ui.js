@@ -30,6 +30,20 @@
   if(e.target.closest('#ggWorkspace [data-community-home],#ggV71Main #ggV72Back'))return;
  },false);
  window.ggSharedUI={syncNav,normalize};
- // Run after existing renderers; no mutation observer, no route overrides.
- document.addEventListener('DOMContentLoaded',normalize,{once:true});
+ // Normalize newly rendered headings; never override existing route handlers.
+ function start(){
+  normalize();
+  const dashboard=document.getElementById('dashboard');
+  if(!dashboard||typeof MutationObserver==='undefined')return;
+  let queued=false;
+  new MutationObserver(records=>{
+   // Ignore attribute changes: normalizing adds classes and must not retrigger itself.
+   if(!records.some(record=>record.addedNodes.length))return;
+   if(queued)return;
+   queued=true;
+   queueMicrotask(()=>{queued=false;normalize()});
+  }).observe(dashboard,{childList:true,subtree:true});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
+ else start();
 })();
