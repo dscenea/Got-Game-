@@ -2093,7 +2093,7 @@ function showSport(){
  const name=getSport();if(!name)return;window.ggSelectSportContext(name);
  const h=main.querySelector('.gg-v71-heading');if(!h)return;
  currentSport=name;currentModule=null;
- const card=h.querySelector('h3');if(card)card.textContent=(data.sports||[]).length===1?'Panel de coordinación':name==='all'?'Todo el club':'Gestión de '+name;
+ const card=h.querySelector('h3');if(card)card.textContent=(data.sports||[]).length===1?'Panel de control':name==='all'?'Panel general':'Panel de control';
  const grid=main.querySelector('.gg-v71-grid');
  if(grid)grid.style.display='none';
  main.querySelectorAll('[data-module]').forEach(x=>x.remove());
@@ -2114,11 +2114,7 @@ function showSport(){
  extra.querySelectorAll('[data-v77-action]').forEach(b=>b.onclick=()=>{const k=b.dataset.v77Action;if(k==='community')window.ggOpenCommunity?.('posts');else window.ggView?.(k)});
 
  const multiBackId='ggV99SportBack';document.getElementById(multiBackId)?.remove();
- if((data.sports||[]).length>1){
-  const choose=document.createElement('button');choose.type='button';choose.id=multiBackId;
-  choose.className='gg-v99-sport-back';choose.textContent='‹ Todos los deportes';
-  choose.onclick=window.ggReturnToSports;h.parentNode.insertBefore(choose,h);
- }
+ // La navegación global y por deporte se realiza exclusivamente desde el selector superior.
  const back=document.getElementById('ggV71Switch');if(back)back.onclick=window.ggReturnToSports;
  window.ggApplyManagementIcons?.();
  window.ggApplyClubBackground?.(name==='all'?'':name);
