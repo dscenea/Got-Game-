@@ -1999,13 +1999,16 @@ let sport=null,section='home';
 const sports=()=>data.sports||[];
 const shield='<svg class="gg-v71-logo" viewBox="0 0 100 116" xmlns="http://www.w3.org/2000/svg"><path d="M50 3 94 22 90 80Q74 103 50 112 26 103 10 80L6 22Z" fill="#20c6b1" stroke="white" stroke-width="4"/><path d="M50 11 86 27 83 77Q67 97 50 104 33 97 17 77L14 27Z" fill="#202354"/><path d="M19 74 36 53 47 62 65 34 82 57V77Q64 95 50 102 32 94 19 77Z" fill="#6749aa"/><path d="M19 78Q51 59 82 78" fill="none" stroke="#20c6b1" stroke-width="5"/><text x="50" y="48" font-size="20" font-weight="900" fill="white" text-anchor="middle">EN</text><circle cx="50" cy="83" r="7" fill="#fff"/></svg>';
 function header(){return '<div class="gg-v71-header">'+shield+'<div><small>CLUB DEPORTIVO</small><h2>'+(data.club||'Ebro Norte')+'</h2><small>COORDINACIÓN</small></div></div>'}
+let welcomeReturningAtEntry=null;
 function draw(){
  dash.classList.add('gg-v71');
  if(sports().length===1&&!sport)sport=sports()[0];
  let html=section==='home'?header():'<button class="gg-v71-page-back" id="ggV75Home">← Volver a inicio</button>';
  if(section==='home'){
-  let returning=false;
-  try{const key='gg-club-welcome:'+String(data.club||'club').trim().toLowerCase();returning=localStorage.getItem(key)==='1';localStorage.setItem(key,'1');}catch(_e){}
+  if(welcomeReturningAtEntry===null){
+   try{const key='gg-club-welcome-v2:'+String(data.club||'club').trim().toLowerCase();welcomeReturningAtEntry=localStorage.getItem(key)==='1';localStorage.setItem(key,'1');}catch(_e){welcomeReturningAtEntry=false;}
+  }
+  const returning=welcomeReturningAtEntry;
   html+='<div class="gg-welcome-club" style="margin:14px 0 18px"><h2 style="font-size:clamp(21px,5vw,27px);line-height:1.2;margin:0 0 6px">'+(returning?'¡Bienvenido de nuevo!':'¡Bienvenido a tu club!')+'</h2><p style="margin:0;line-height:1.45;opacity:.72;font-size:14px">'+(returning?'Tu club está listo para seguir trabajando.':'Todo lo que necesitas para gestionar tu club, en un solo lugar.')+'</p></div>';
  }
  if(section==='home'&&!sport){
