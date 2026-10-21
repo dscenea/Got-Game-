@@ -6,3 +6,11 @@
 #dashboard .gg-new-calendar .gg-calendar-page-head [data-back]:focus-visible{
  outline:2px solid currentColor!important;outline-offset:3px!important;
 }
+
+/* Shared back control, applied only to headings explicitly normalized by shared-ui.js. */
+@media(max-width:1023px){
+ #dashboard .gg-shared-page-heading{display:flex;align-items:center;gap:12px;min-height:44px}
+ #dashboard .gg-shared-page-heading .gg-shared-back{position:static!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 40px!important;width:40px!important;min-width:40px!important;height:44px!important;min-height:44px!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:var(--club-dark,#171717)!important;line-height:1!important}
+ #dashboard .gg-shared-page-heading h1{margin:0!important;line-height:1.15}
+}
+#dashboard .gg-shared-page-heading .gg-shared-back:focus-visible{outline:2px solid currentColor!important;outline-offset:3px!important}
