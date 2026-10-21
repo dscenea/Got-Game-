@@ -1,0 +1,7 @@
+.gg-club-scope{margin:0 0 20px;display:flex;justify-content:flex-end}
+.gg-club-scope label{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:700;color:#555}
+.gg-club-scope select{font:inherit;font-weight:800;color:var(--club-accent,#171717);background:#fff;border:1px solid var(--club-border,#ccc);border-radius:12px;padding:11px 34px 11px 13px;max-width:100%;min-height:44px}
+.gg-all-club-entry{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;text-align:left;padding:20px;margin:22px 0;background:var(--club-accent,#171717);color:var(--club-accent-text,#fff);border:1px solid var(--club-secondary,#ffc107);border-radius:18px}
+.gg-all-club-entry strong{display:block;font-size:19px}.gg-all-club-entry small{display:block;margin-top:6px;opacity:.85}.gg-all-club-entry>span:last-child{font-size:25px}
+.gg-team-group-title{margin:25px 0 14px;font-size:20px}
+@media(max-width:600px){.gg-club-scope{justify-content:flex-start;margin-bottom:14px}.gg-club-scope label{width:100%;justify-content:space-between;gap:8px}.gg-club-scope select{max-width:72%;min-width:0}.gg-all-club-entry{padding:16px}.gg-all-club-entry strong{font-size:17px}}

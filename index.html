@@ -1210,6 +1210,7 @@ const teamRepository=GGTeamStore.createRepository(localStorage);
 function clubKey(){return data.club||'Club Deportivo Horizonte'}
 function clubSports(){return data.sports||['Baloncesto','Fútbol','Voleibol']}
 function teams(){return teamRepository.list(clubKey(),clubSports(),{demo:/Logrobasket|Ebro Norte|Horizonte/i.test(clubKey()),legacyIds:Object.keys(store[clubKey()]||{})})}
+window.ggScopedTeams=()=>teams().filter(t=>window.ggMatchesSportScope([t.sport]));
 function teamLabel(id){const t=teams().find(t=>t.id===id);return t?t.sport+' · '+t.name:id}
 // Expose only the minimal roster directory needed for family linking.
 window.ggLinkablePlayers=()=>teams().flatMap(t=>teamData(t.id).map(p=>{const id=JSON.stringify([t.id,String(p.id)]);let hash=2166136261;for(const c of clubKey()+id)hash=Math.imul(hash^c.charCodeAt(0),16777619);return {id,name:p.name,team:t.name,sport:t.sport,code:'GG-'+(hash>>>0).toString(16).padStart(8,'0').toUpperCase()}}));
@@ -1217,7 +1218,7 @@ window.ggStaffTeamAssignments=name=>teams().filter(t=>t.coach===name).map(t=>({i
 window.ggPublicationTeams=()=>teams().map(({id,name,sport})=>({id,name,sport}));
 window.ggCoachTeams=name=>{const staff=window.ggStaffList().find(p=>p.name===name&&p.role==='coach');return staff?teams().filter(t=>staff.sports.includes(t.sport)):[]};
 window.ggAssignCoachTeam=(name,id)=>{if(roleKey(selectedRole)!=='coord')throw Error('Solo coordinación puede asignar equipos.');const team=window.ggCoachTeams(name).find(t=>t.id===id);if(!team)throw Error('Selecciona un equipo de los deportes del entrenador/a.');return teamRepository.update(clubKey(),clubSports(),id,{name:team.name,sport:team.sport,coach:name})};
-window.ggOpenTeams=function(sport){window.ggSelectSportContext?.(sport||'all');window.ggView('teams');document.getElementById('ggV71Main').style.display='none';workspace.hidden=false;workspace.style.setProperty('display','block','important');dash.classList.add('gg-v83-workspace');window.scrollTo(0,0)};
+window.ggOpenTeams=function(sport){window.ggSelectSportContext?.(sport||window.ggCurrentSport());window.ggView('teams');document.getElementById('ggV71Main').style.display='none';workspace.hidden=false;workspace.style.setProperty('display','block','important');dash.classList.add('gg-v83-workspace');window.scrollTo(0,0)};
 window.ggEditTeam=function(id){const t=teams().find(t=>t.id===id);const sport=t?.sport||(window.ggCurrentSport?.()!=='all'?window.ggCurrentSport?.():'')||clubSports()[0];dialog.innerHTML='<h2>'+ (t?'Editar equipo':'Crear equipo')+'</h2><form id="ggTeamForm"><label>Nombre del equipo<input name="name" required maxlength="60" value="'+esc(t?.name||'')+'" placeholder="Ej. Cadete A"></label><label>Deporte<select name="sport" '+(t?'disabled':'')+'>'+clubSports().map(x=>'<option '+(x===sport?'selected':'')+'>'+esc(x)+'</option>').join('')+'</select></label><label>Entrenador/a<select name="coach"></select></label><button class="gg-button" type="button" id="ggTeamAddCoach">+ Añadir entrenador/a al personal</button><p class="gg-muted">Guardado en este navegador. La asignación no envía invitaciones ni concede permisos.</p><p id="ggTeamError" role="alert"></p><button class="gg-button selected" type="submit">Guardar equipo</button> <button class="gg-button" type="button" onclick="ggPlayerDialog.close()">Cancelar</button></form>';const coachSelect=dialog.querySelector('[name=coach]'),sportSelect=dialog.querySelector('[name=sport]');const drawCoaches=()=>{const previous=coachSelect.value||t?.coach||'';const coaches=window.ggStaffList().filter(p=>p.role==='coach'&&p.sports.includes(sportSelect.value));coachSelect.innerHTML='<option value="">Pendiente de asignar</option>'+coaches.map(p=>'<option value="'+esc(p.name)+'">'+esc(p.name)+'</option>').join('')+(t?.coach&&!coaches.some(p=>p.name===t.coach)?'<option value="'+esc(t.coach)+'">'+esc(t.coach)+' · asignación anterior</option>':'');coachSelect.value=[...coachSelect.options].some(o=>o.value===previous)?previous:''};drawCoaches();sportSelect.onchange=drawCoaches;dialog.querySelector('#ggTeamAddCoach').onclick=()=>window.ggAddStaff(drawCoaches);dialog.querySelector('form').onsubmit=e=>{e.preventDefault();const f=e.currentTarget;try{teams();const values={name:f.elements.name.value,sport:f.elements.sport.value,coach:f.elements.coach.value};if(t)teamRepository.update(clubKey(),clubSports(),id,values);else teamRepository.create(clubKey(),clubSports(),values);dialog.close();if(t)renderRoster();else window.ggView('teams')}catch(error){document.getElementById('ggTeamError').textContent=error.message}};dialog.showModal()};
 
 function demoPortrait(i){const skin=['#c98f68','#e3b58e','#b67956','#d6a47e'][i%4],hair=['#29231f','#58392a','#171717','#754b2e'][i%4],shirt=['#2b5f91','#a52a2a','#16867a','#703a90'][i%4];return 'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 110"><rect width="100" height="110" fill="#e9e9e9"/><path d="M4 110 Q10 74 50 74 Q90 74 96 110" fill="'+shirt+'"/><ellipse cx="50" cy="44" rx="24" ry="29" fill="'+skin+'"/><path d="M25 41Q20 9 52 12Q80 10 76 45Q68 32 61 27Q48 38 25 41" fill="'+hair+'"/><circle cx="41" cy="47" r="2" fill="#222"/><circle cx="59" cy="47" r="2" fill="#222"/><path d="M42 60Q50 65 58 60" stroke="#8a5348" stroke-width="2" fill="none"/></svg>')}
@@ -1225,12 +1226,19 @@ function avatar(p){if(p.photo)return esc(p.photo);return 'data:image/svg+xml,'+e
 const homeNodes=[...dash.children].filter(x=>!x.matches('.top,.coord-nav,#clubSettingsMenu,#clubSettingsEditor'));
 const workspace=document.createElement('section');workspace.id='ggWorkspace';workspace.hidden=true;dash.append(workspace);
 const dialog=document.createElement('dialog');dialog.id='ggPlayerDialog';document.body.append(dialog);
-window.ggView=function(view){if(clubSettingsSection)cancelClubSetting();closeClubSettings();homeNodes.forEach(x=>x.classList.toggle('gg-home-hidden',view!=='home'));workspace.hidden=view==='home';dash.querySelectorAll('.coord-nav button').forEach((b,i)=>b.classList.toggle('active',i===(view==='home'?0:view==='calendar'?2:1)));if(view==='teams')renderTeams();if(view==='calendar'){selectedTeam=null;renderWeek()} };
+window.ggView=function(view){if(view==='home'&&window.ggOpenCoordinationPanel){window.ggOpenCoordinationPanel(window.ggCurrentSport());return;}if(clubSettingsSection)cancelClubSetting();closeClubSettings();homeNodes.forEach(x=>x.classList.toggle('gg-home-hidden',view!=='home'));workspace.hidden=view==='home';dash.querySelectorAll('.coord-nav button').forEach((b,i)=>b.classList.toggle('active',i===(view==='home'?0:view==='calendar'?2:1)));if(view!=='home'){document.getElementById('ggV71Main')?.style.setProperty('display','none');workspace.style.setProperty('display','block','important');dash.classList.add('gg-v83-workspace');}if(view==='teams')renderTeams();if(view==='calendar'){selectedTeam=null;renderWeek()} };
 window.ggTeam=function(id){selectedTeam=id;renderRoster()};
-function renderTeams(){workspace.innerHTML='<button class="gg-v100-back" onclick="ggView(&quot;home&quot;)" aria-label="Volver al panel">‹ <span>Volver al panel</span></button><div class="gg-eyebrow">ÁREA DEPORTIVA</div><div class="gg-toolbar"><h1>Equipos</h1><button class="gg-button selected" onclick="ggEditTeam()">+ Crear equipo</button></div><p class="gg-muted">Plantillas, entrenadores y horarios. Los cambios se guardan en este navegador.</p><div class="gg-team-grid">'+teams().map(t=>'<button class="gg-team-card" onclick="ggTeam('+wzArg(t.id)+')"><span class="gg-team-symbol">'+icon('team')+'</span><b>'+esc(t.name)+'</b><small>'+esc(t.sport)+' · '+teamData(t.id).length+' jugadores</small><span class="gg-muted">'+esc(t.coach||'Entrenador/a pendiente')+'</span><div class="gg-muted">Abrir plantilla →</div></button>').join('')+'</div>'+(!teams().length?'<p class="gg-muted">Crea el primer equipo del club para empezar.</p>':'');ggSyncTeamLogos()}
+function renderTeams(){
+ const visible=window.ggScopedTeams(),scope=window.ggCurrentSport();
+ const card=t=>'<button class="gg-team-card" onclick="ggTeam('+wzArg(t.id)+')"><span class="gg-team-symbol">'+icon('team')+'</span><b>'+esc(t.name)+'</b><small>'+esc(t.sport)+' · '+teamData(t.id).length+' jugadores</small><span class="gg-muted">'+esc(t.coach||'Entrenador/a pendiente')+'</span><div class="gg-muted">Abrir plantilla →</div></button>';
+ const groups=scope==='all'?clubSports():[scope];
+ workspace.innerHTML='<button class="gg-v100-back" onclick="ggView(&quot;home&quot;)" aria-label="Volver al panel">‹ <span>Volver al panel</span></button><div class="gg-eyebrow">ÁREA DEPORTIVA</div><div class="gg-toolbar"><h1>Equipos</h1><button class="gg-button selected" onclick="ggEditTeam()">+ Crear equipo</button></div><p class="gg-muted">Plantillas, entrenadores y horarios. Los cambios se guardan en este navegador.</p>'+
+ groups.map(s=>{const rows=visible.filter(t=>t.sport===s);return (scope==='all'?'<h2 class="gg-team-group-title">'+esc(s)+'</h2>':'')+'<div class="gg-team-grid">'+rows.map(card).join('')+'</div>'+(!rows.length?'<p class="gg-muted">Todavía no hay equipos de '+esc(s)+'.</p>':'');}).join('');
+ ggSyncTeamLogos();window.ggRenderSportContext(workspace,'teams');
+}
 
 function attendance(p,type){const events=Object.entries(p.attendance).filter(([k])=>k.startsWith(type+':'));const count=events.filter(([,v])=>v==='yes').length;return '<span class="gg-attendance">'+count+'/'+events.length+'<span class="gg-bar"><i style="width:'+(events.length?count/events.length*100:0)+'%"></i></span></span>'}
-function renderRoster(){workspace.innerHTML='<button class="gg-v100-back" onclick="ggView(&quot;teams&quot;)" aria-label="Volver a equipos">‹ <span>Equipos</span></button><div class="gg-toolbar"><div><div class="gg-eyebrow">PLANTILLA · 2026 / 2027</div><h1>'+esc(teamLabel(selectedTeam))+'</h1></div><button class="gg-button" onclick="ggTeamWeek()">Horario semanal →</button></div><div class="gg-toolbar gg-roster-actions"><button class="gg-button selected" onclick="ggAddPlayer()">+ Añadir jugador</button><button class="gg-button" onclick="ggImportPlayers()">Importar Excel / CSV</button><button class="gg-button" onclick="ggEditTeam('+wzArg(selectedTeam)+')">Editar equipo</button><button class="gg-button" onclick="ggAddEvent()">+ Añadir actividad</button></div><div class="gg-table-scroll"><table class="gg-roster"><thead><tr><th>Nº</th><th>JUGADOR/A</th><th>INFO</th><th>ASISTENCIA</th></tr></thead><tbody>'+teamData(selectedTeam).map((p,i)=>'<tr><td data-label="Dorsal"><input class="gg-number" type="number" min="0" max="999" value="'+esc(p.number)+'" aria-label="Dorsal de '+esc(p.name)+'" onchange="ggNumber('+i+',this)"></td><td class="gg-roster-player"><button class="gg-player-link" onclick="ggProfile('+i+')"><img class="gg-avatar" src="'+avatar(p)+'" alt=""><span>'+esc(p.name)+'</span></button></td><td class="gg-roster-info"><button class="gg-info '+(/ejemplo/.test(p.allergies+p.needs)?'alert':'')+'" aria-label="Información importante de '+esc(p.name)+'" onclick="ggInfo('+i+')">i</button></td><td data-label="Asistencia" class="gg-roster-attendance"><div class="gg-att-compact"><span title="Entrenamientos">E '+attendance(p,'training')+'</span><span title="Partidos">P '+attendance(p,'match')+'</span></div></td></tr>').join('')+'</tbody></table></div><p class="gg-muted">E = entrenamientos · P = partidos. Pulsa la foto o el nombre para consultar la ficha.</p><p class="gg-save-note" id="ggRosterStatus" role="status"></p><section class="gg-inline-schedule" aria-label="Horario semanal del equipo"><h2>Horario semanal</h2><p class="gg-muted">Entrenamientos y partidos de este equipo, de lunes a domingo.</p><div class="gg-inline-week">'+['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'].map((day,i)=>{const items=events().filter(e=>e.team===selectedTeam&&e.day===i);return '<div class="gg-inline-day"><strong>'+day+'</strong>'+(items.length?items.map(e=>'<button type="button" class="gg-inline-event" onclick="ggEditScheduleEvent('+wzArg(e.id)+')"><b>'+time(e.hour)+'</b> · '+esc(e.type==='match'?'Partido':'Entrenamiento')+'<small>'+esc(schedulePlace(e))+'</small></button>').join(''):'<span class="gg-muted">Sin actividad</span>')+'</div>'}).join('')+'</div></section>';ggSyncTeamLogos()}
+function renderRoster(){workspace.innerHTML='<button class="gg-v100-back" onclick="ggView(&quot;teams&quot;)" aria-label="Volver a equipos">‹ <span>Equipos</span></button><div class="gg-toolbar"><div><div class="gg-eyebrow">PLANTILLA · 2026 / 2027</div><h1>'+esc(teamLabel(selectedTeam))+'</h1></div><button class="gg-button" onclick="ggTeamWeek()">Horario semanal →</button></div><div class="gg-toolbar gg-roster-actions"><button class="gg-button selected" onclick="ggAddPlayer()">+ Añadir jugador</button><button class="gg-button" onclick="ggImportPlayers()">Importar Excel / CSV</button><button class="gg-button" onclick="ggEditTeam('+wzArg(selectedTeam)+')">Editar equipo</button><button class="gg-button" onclick="ggAddEvent()">+ Añadir actividad</button></div><div class="gg-table-scroll"><table class="gg-roster"><thead><tr><th>Nº</th><th>JUGADOR/A</th><th>INFO</th><th>ASISTENCIA</th></tr></thead><tbody>'+teamData(selectedTeam).map((p,i)=>'<tr><td data-label="Dorsal"><input class="gg-number" type="number" min="0" max="999" value="'+esc(p.number)+'" aria-label="Dorsal de '+esc(p.name)+'" onchange="ggNumber('+i+',this)"></td><td class="gg-roster-player"><button class="gg-player-link" onclick="ggProfile('+i+')"><img class="gg-avatar" src="'+avatar(p)+'" alt=""><span>'+esc(p.name)+'</span></button></td><td class="gg-roster-info"><button class="gg-info '+(/ejemplo/.test(p.allergies+p.needs)?'alert':'')+'" aria-label="Información importante de '+esc(p.name)+'" onclick="ggInfo('+i+')">i</button></td><td data-label="Asistencia" class="gg-roster-attendance"><div class="gg-att-compact"><span title="Entrenamientos">E '+attendance(p,'training')+'</span><span title="Partidos">P '+attendance(p,'match')+'</span></div></td></tr>').join('')+'</tbody></table></div><p class="gg-muted">E = entrenamientos · P = partidos. Pulsa la foto o el nombre para consultar la ficha.</p><p class="gg-save-note" id="ggRosterStatus" role="status"></p><section class="gg-inline-schedule" aria-label="Horario semanal del equipo"><h2>Horario semanal</h2><p class="gg-muted">Entrenamientos y partidos de este equipo, de lunes a domingo.</p><div class="gg-inline-week">'+['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'].map((day,i)=>{const items=events().filter(e=>e.team===selectedTeam&&e.day===i);return '<div class="gg-inline-day"><strong>'+day+'</strong>'+(items.length?items.map(e=>'<button type="button" class="gg-inline-event" onclick="ggEditScheduleEvent('+wzArg(e.id)+')"><b>'+time(e.hour)+'</b> · '+esc(e.type==='match'?'Partido':'Entrenamiento')+'<small>'+esc(schedulePlace(e))+'</small></button>').join(''):'<span class="gg-muted">Sin actividad</span>')+'</div>'}).join('')+'</div></section>';ggSyncTeamLogos();window.ggRenderSportContext(workspace,'teams')}
 function ggSyncTeamLogos(){
  const url=data.logoDataUrl||(data.club==='Logrobasket'?'assets/club-logrobasket-crest.svg':'');
  const source=dash.querySelector('#ggV71Main .gg-v71-header .gg-v71-logo');
@@ -1264,9 +1272,10 @@ function openScheduleEditor(record,options={},afterSave){
  scheduleEditing=record;
  const roster=!!workspace.querySelector('.gg-roster');
  scheduleAfterSave=afterSave||options.afterSave||(()=>{if(!workspace.hidden){if(roster)renderRoster();else renderWeek();}});
- const chosenTeam=record?.team||selectedTeam||teams().find(t=>(data.facilities||[]).find(f=>f.name===options.place)?.sports?.includes(t.sport))?.id||teams()[0]?.id||'';
+ const editorTeams=record?teams():window.ggScopedTeams();
+ const chosenTeam=record?.team||selectedTeam||editorTeams.find(t=>(data.facilities||[]).find(f=>f.name===options.place)?.sports?.includes(t.sport))?.id||editorTeams[0]?.id||'';
  const option=(value,label,selected)=>'<option value="'+esc(value)+'" '+(value===selected?'selected':'')+'>'+esc(label)+'</option>';
- dialog.innerHTML='<div class="gg-eyebrow">HORARIO COMPARTIDO</div><h2>'+(record?'Editar actividad':'Asignar pista y horario')+'</h2><p>Los cambios se reflejan en instalaciones, calendario y equipos. Se guardan en este navegador.</p><form class="gg-v59-form" id="ggScheduleForm"><label>Actividad<select id="v59Type">'+[['training','Entrenamiento'],['match','Partido'],['other','Otra actividad']].map(([v,l])=>option(v,l,record?.type||'training')).join('')+'</select></label><label>Equipo<select id="v59Team" required>'+teams().map(t=>option(t.id,teamLabel(t.id),chosenTeam)).join('')+'</select></label><label>Fecha / primera sesión<input id="v59Date" type="date" required value="'+esc(record?.date||options.date||scheduleDate(new Date()))+'"></label><label>Hora<input id="v59Time" type="time" required value="'+time(record?.hour??18)+'"></label><label>Duración (minutos)<input id="v59Duration" type="number" min="15" max="360" step="5" required value="'+Math.round((record?.duration??1.5)*60)+'"></label><label>Instalación<select id="v59Place" required></select></label><label id="v59OtherPlace" hidden>Nombre de la instalación externa<input id="v59PlaceText" maxlength="100" placeholder="Instalación de un partido fuera"></label><label>Pista / sala<select id="v59Space"></select></label><label class="gg-schedule-check"><input type="checkbox" id="v59Repeat" '+(record?.recurring?'checked':'')+'> Repetir semanalmente</label><label id="v59UntilLabel">Hasta<input id="v59Until" type="date" value="'+esc(record?.until||'2027-06-30')+'"></label><p id="ggScheduleScope">'+(record?.recurring?'Estás modificando toda la serie semanal.':'')+'</p><p id="ggScheduleError" role="alert"></p><label class="gg-schedule-check" id="ggConflictLabel" hidden><input type="checkbox" id="ggAllowConflict"> Permitir este solapamiento</label><button class="gg-button selected" type="submit">Guardar horario</button> '+(record?'<button class="gg-button" type="button" id="ggDeleteSchedule">Eliminar actividad'+(record.recurring?' / serie':'')+'</button> ':'')+'<button class="gg-button" type="button" id="ggCancelSchedule">Cancelar</button></form>';
+ dialog.innerHTML='<div class="gg-eyebrow">HORARIO COMPARTIDO</div><h2>'+(record?'Editar actividad':'Asignar pista y horario')+'</h2><p>Los cambios se reflejan en instalaciones, calendario y equipos. Se guardan en este navegador.</p><form class="gg-v59-form" id="ggScheduleForm"><label>Actividad<select id="v59Type">'+[['training','Entrenamiento'],['match','Partido'],['other','Otra actividad']].map(([v,l])=>option(v,l,record?.type||'training')).join('')+'</select></label><label>Equipo<select id="v59Team" required>'+editorTeams.map(t=>option(t.id,teamLabel(t.id),chosenTeam)).join('')+'</select></label><label>Fecha / primera sesión<input id="v59Date" type="date" required value="'+esc(record?.date||options.date||scheduleDate(new Date()))+'"></label><label>Hora<input id="v59Time" type="time" required value="'+time(record?.hour??18)+'"></label><label>Duración (minutos)<input id="v59Duration" type="number" min="15" max="360" step="5" required value="'+Math.round((record?.duration??1.5)*60)+'"></label><label>Instalación<select id="v59Place" required></select></label><label id="v59OtherPlace" hidden>Nombre de la instalación externa<input id="v59PlaceText" maxlength="100" placeholder="Instalación de un partido fuera"></label><label>Pista / sala<select id="v59Space"></select></label><label class="gg-schedule-check"><input type="checkbox" id="v59Repeat" '+(record?.recurring?'checked':'')+'> Repetir semanalmente</label><label id="v59UntilLabel">Hasta<input id="v59Until" type="date" value="'+esc(record?.until||'2027-06-30')+'"></label><p id="ggScheduleScope">'+(record?.recurring?'Estás modificando toda la serie semanal.':'')+'</p><p id="ggScheduleError" role="alert"></p><label class="gg-schedule-check" id="ggConflictLabel" hidden><input type="checkbox" id="ggAllowConflict"> Permitir este solapamiento</label><button class="gg-button selected" type="submit">Guardar horario</button> '+(record?'<button class="gg-button" type="button" id="ggDeleteSchedule">Eliminar actividad'+(record.recurring?' / serie':'')+'</button> ':'')+'<button class="gg-button" type="button" id="ggCancelSchedule">Cancelar</button></form>';
  const team=dialog.querySelector('#v59Team'),place=dialog.querySelector('#v59Place'),space=dialog.querySelector('#v59Space');
  function spaces(selected){const f=(data.facilities||[]).find(f=>f.name===place.value),sport=teams().find(t=>t.id===team.value)?.sport;space.innerHTML=option('','Sin pista concreta','')+(f?.spaces||[]).filter(p=>!p.sports?.length||p.sports.includes(sport)).map(p=>option(String(p.id),p.name,String(selected||''))).join('');space.value=[...space.options].some(o=>o.value===String(selected||''))?String(selected||''):'';dialog.querySelector('#v59OtherPlace').hidden=place.value!=='other';}
  function places(selected){const sport=teams().find(t=>t.id===team.value)?.sport;const list=(data.facilities||[]).filter(f=>f.sports?.includes(sport));place.innerHTML=option('','Seleccionar instalación','')+list.map(f=>option(f.name,f.name,selected)).join('')+option('other','Otra instalación / partido fuera',selected);if(selected&&!list.some(f=>f.name===selected)&&selected!=='other'){place.value='other';dialog.querySelector('#v59PlaceText').value=selected;}else place.value=selected||'';spaces(record?.spaceId||options.spaceId);}
@@ -1323,15 +1332,19 @@ function renderWeek(){
  const start=monday(),end=new Date(start);end.setDate(end.getDate()+6);
  const fmt=d=>d.toLocaleDateString('es-ES',{day:'numeric',month:'short'});
  const days=Array.from({length:7},(_,i)=>{const d=new Date(start);d.setDate(d.getDate()+i);return d});
- const allEvents=events();
+ const scopeTeams=window.ggScopedTeams(),scopeIds=new Set(scopeTeams.map(t=>t.id));
+ if(selectedTeam&&!scopeIds.has(selectedTeam))selectedTeam=null;
+ if(ggFilterTeam&&!scopeIds.has(ggFilterTeam))ggFilterTeam='';
+ const allEvents=events().filter(e=>scopeIds.has(e.team));
  const facilities=[...new Set(allEvents.map(e=>e.place))];
+ if(ggFilterPlace&&!facilities.includes(ggFilterPlace))ggFilterPlace='';
  const selected=selectedTeam||ggFilterTeam;
  const all=allEvents.filter(e=>(!selected||e.team===selected)&&(!ggFilterPlace||e.place===ggFilterPlace)&&(ggFilterType==='all'||e.type===ggFilterType));
  const firstHour=Math.min(10,...all.map(e=>Math.floor(e.hour))),lastHour=Math.max(23,...all.map(e=>Math.ceil(e.hour+e.duration)));
  const opt=(value,label,current)=>'<option value="'+esc(value)+'" '+(current===value?'selected':'')+'>'+esc(label)+'</option>';
- const filters='<div class="gg-filter-bar"><label>Equipo<select onchange="ggSetWeekFilter(\'team\',this.value)">'+opt('','Todos los equipos',ggFilterTeam)+teams().map(t=>opt(t.id,teamLabel(t.id),selected)).join('')+'</select></label><label>Instalación<select onchange="ggSetWeekFilter(\'place\',this.value)">'+opt('','Todas las instalaciones',ggFilterPlace)+facilities.map(f=>opt(f,f,ggFilterPlace)).join('')+'</select></label><label>Actividad<select onchange="ggSetWeekFilter(\'type\',this.value)">'+[['all','Entrenamientos y partidos'],['training','Solo entrenamientos'],['match','Solo partidos']].map(([v,l])=>opt(v,l,ggFilterType)).join('')+'</select></label></div>';
+ const filters='<div class="gg-filter-bar"><label>Equipo<select onchange="ggSetWeekFilter(\'team\',this.value)">'+opt('','Todos los equipos',ggFilterTeam)+scopeTeams.map(t=>opt(t.id,teamLabel(t.id),selected)).join('')+'</select></label><label>Instalación<select onchange="ggSetWeekFilter(\'place\',this.value)">'+opt('','Todas las instalaciones',ggFilterPlace)+facilities.map(f=>opt(f,f,ggFilterPlace)).join('')+'</select></label><label>Actividad<select onchange="ggSetWeekFilter(\'type\',this.value)">'+[['all','Entrenamientos y partidos'],['training','Solo entrenamientos'],['match','Solo partidos']].map(([v,l])=>opt(v,l,ggFilterType)).join('')+'</select></label></div>';
  workspace.innerHTML=(selectedTeam?'<button class="gg-button" onclick="ggTeam('+wzArg(selectedTeam)+')">‹ Plantilla</button>':'')+
- '<div class="gg-eyebrow">PLANIFICACIÓN · '+esc(selectedTeam?teamLabel(selectedTeam):'TODO EL CLUB')+'</div><h1>Horario semanal</h1>'+
+ '<div class="gg-eyebrow">PLANIFICACIÓN · '+esc(selectedTeam?teamLabel(selectedTeam):window.ggSportScopeLabel().toLocaleUpperCase('es'))+'</div><h1>Horario semanal</h1>'+
  '<div class="gg-toolbar"><button class="gg-button" onclick="ggShiftWeek(-1)" aria-label="Semana anterior">‹</button><strong>'+fmt(start)+' — '+fmt(end)+'</strong><button class="gg-button" onclick="ggShiftWeek(1)" aria-label="Semana siguiente">›</button><button class="gg-button" onclick="ggThisWeek()">Esta semana</button></div>'+
  '<div class="gg-v59-tools"><button class="gg-button selected" onclick="ggAddEvent()">+ Añadir actividad</button><button class="gg-button" onclick="ggCalendarImport()">Importar calendario CSV</button><button class="gg-button" onclick="ggFederationInfo()">Sincronizar federación</button><button class="gg-button" onclick="ggOpenRefereeSettings()">Arbitrajes</button></div>'+filters+'<p class="gg-muted">Toda la semana de un vistazo. Pulsa una actividad para ver sus detalles.</p>'+
  '<div class="gg-week-scroll" aria-label="Horario de lunes a domingo"><div class="gg-week"><div class="gg-day-head"></div>'+
@@ -1344,6 +1357,7 @@ function renderWeek(){
  }).join('')+'</div>').join('')+'</div></div>'+
  '<div class="gg-team-legend">'+teams().filter(t=>all.some(e=>e.team===t.id)).map(t=>'<span style="'+ggTeamStyle(t.id)+'">'+esc(teamLabel(t.id))+'</span>').join('')+'</div>'+
  '<p class="gg-muted">Datos de demostración. Cada equipo tiene su propio color, también en los partidos.</p>';
+ window.ggRenderSportContext(workspace,'calendar');
 }window.ggEvent=function(team,date,type){dialog.innerHTML='<div class="gg-eyebrow">'+(type==='match'?'PARTIDO':'ENTRENAMIENTO')+' · '+date+'</div><h2>'+esc(teamLabel(team))+'</h2><p class="gg-muted">Abre la plantilla para registrar la asistencia desde la ficha de cada jugador.</p><button class="gg-button" onclick="document.getElementById(\'ggPlayerDialog\').close();ggTeam('+wzArg(team)+')">Ver plantilla →</button> <button class="gg-button" onclick="document.getElementById(\'ggPlayerDialog\').close()">Cerrar</button>';dialog.showModal()};
 window.ggProfile=function(id){selectedPlayer=id;const p=teamData(selectedTeam)[id];workspace.innerHTML='<button class="gg-button" onclick="ggTeam('+wzArg(selectedTeam)+')">‹ Plantilla</button><div class="gg-profile-hero"><img class="gg-avatar" src="'+avatar(p)+'" alt="Foto de '+esc(p.name)+'"><div><div class="gg-eyebrow">FICHA DEL JUGADOR/A</div><h1>'+esc(p.name)+'</h1><span class="gg-muted">'+esc(teamLabel(selectedTeam))+' · Dorsal '+esc(p.number)+'</span></div></div><p class="gg-muted">Datos de ejemplo · Vista de coordinación.</p><form id="ggPlayerForm" onsubmit="event.preventDefault();ggSaveProfile()"><div class="gg-profile-grid"><div class="gg-panel"><h2>Datos personales</h2><label for="ggName">Nombre y apellidos</label><input id="ggName" value="'+esc(p.name)+'" required maxlength="100"><label for="ggPhoto">Foto</label><input id="ggPhoto" type="file" accept="image/*" onchange="ggUploadPhoto(this)"><label for="ggDni">DNI / documento</label><input id="ggDni" value="'+esc(p.dni)+'" maxlength="30" placeholder="Sin registrar"><label for="ggBirth">Fecha de nacimiento</label><input id="ggBirth" type="date" value="'+esc(p.birth)+'"><label for="ggGuardians">Responsables autorizados</label><textarea id="ggGuardians" placeholder="Nombre y relación con el jugador">'+esc(p.guardians)+'</textarea></div><div class="gg-panel"><h2>Información importante</h2><label for="ggAllergies">Alergias</label><textarea id="ggAllergies">'+esc(p.allergies)+'</textarea><label for="ggNeeds">Necesidades especiales y apoyos</label><textarea id="ggNeeds">'+esc(p.needs)+'</textarea><h2>Trayectoria</h2><ul class="gg-history">'+p.history.split('\n').filter(Boolean).map(h=>'<li>'+esc(h)+'</li>').join('')+'</ul><label for="ggHistory">Temporadas, equipos y actividades</label><textarea id="ggHistory">'+esc(p.history)+'</textarea></div><div class="gg-panel"><h2>Asistencia</h2><p class="gg-muted">Semana actual del calendario · confirma la asistencia real.</p><div class="gg-att-list">'+events().filter(e=>e.team===selectedTeam).map(e=>{const key=e.type+':'+e.date;return '<div class="gg-att-row"><span><b>'+e.title+'</b><br>'+e.date+' · '+time(e.hour)+'</span><select aria-label="Asistencia '+e.title+' '+e.date+'" data-att-key="'+key+'">'+[['pending','Sin registrar'],['yes','Asiste'],['no','Ausencia'],['justified','Justificada']].map(([v,l])=>'<option value="'+v+'" '+((p.attendance[key]||'pending')===v?'selected':'')+'>'+l+'</option>').join('')+'</select></div>'}).join('')+'</div></div></div><div class="gg-toolbar"><button class="gg-button selected" type="submit">Guardar ficha</button><button type="button" class="gg-button" onclick="ggTeam('+wzArg(selectedTeam)+')">Volver a la plantilla</button></div><p class="gg-save-note" id="ggProfileStatus" role="status"></p></form>';window.ggAttachPlayerBilling?.(workspace,{id:JSON.stringify([selectedTeam,String(p.id)]),name:p.name,sport:teams().find(t=>t.id===selectedTeam)?.sport});};
 let pendingPhoto=null;
@@ -1876,53 +1890,8 @@ if(communityButton){
 })();
 </script>
 
-<style id="gg-sport-context-v66">
-#ggSportContext{margin:10px 0 20px;padding:12px 0}
-#ggSportContext .gg-sport-context-title{font-size:12px;font-weight:900;letter-spacing:2px;color:#1a4e97;margin:0 0 10px}
-#ggSportContext .gg-sport-context-scroll{display:flex;gap:9px;overflow-x:auto;padding:3px 1px 8px;scrollbar-width:thin}
-#ggSportContext button{flex:0 0 auto;min-width:84px;border:1px solid #ddd9ce;background:white;border-radius:16px;padding:10px 12px;display:flex;flex-direction:column;align-items:center;gap:5px;font-weight:800;font-size:12px;color:#15294c}
-#ggSportContext button[aria-pressed="true"]{background:#fff4cb;border:2px solid #ffc107;padding:9px 11px}
-#ggSportContext .gg-sport-context-icon{width:44px;height:44px;display:flex;align-items:center;justify-content:center}
-#ggSportContext .gg-sport-context-icon img{width:42px;height:42px;object-fit:contain}
-#dashboard #dashboardSportSelector{display:none!important}
-#ggWorkspace .gg-context-note{margin:12px 0;padding:12px;border-radius:12px;background:#fff6dc;color:#473b17}
-</style>
-<script id="gg-sport-context-v66-script">
-(function(){
-const dash=document.getElementById('dashboard'),nav=dash?.querySelector('.coord-nav'),workspace=document.getElementById('ggWorkspace');
-if(!dash||!nav||!workspace)return;
-const bar=document.createElement('section');bar.id='ggSportContext';bar.setAttribute('aria-label','Filtro de deportes');nav.insertAdjacentElement('afterend',bar);
-let selected='all',current='home';
-const sports=()=>Array.isArray(data.sports)?data.sports:[];
-function draw(){
- const values=sports();bar.hidden=values.length<2;
- if(bar.hidden)return;
- bar.replaceChildren();
- const heading=document.createElement('div');heading.className='gg-sport-context-title';heading.textContent='DEPORTES DEL CLUB';bar.append(heading);
- const scroll=document.createElement('div');scroll.className='gg-sport-context-scroll';bar.append(scroll);
- [['all','Todos'],...values.map(v=>[v,v])].forEach(([key,label])=>{
- const b=document.createElement('button');b.type='button';b.setAttribute('aria-pressed',String(selected===key));
- const icon=document.createElement('span');icon.className='gg-sport-context-icon';
- if(key==='all')icon.textContent='◎';else if(typeof ggSportIcon==='function')icon.innerHTML=ggSportIcon(key);else icon.textContent='●';
- const title=document.createElement('span');title.textContent=label;b.append(icon,title);
- b.onclick=()=>{selected=key;draw();if(current==='home'){if(key!=='all'&&typeof dashboardChooseSport==='function')dashboardChooseSport(key);else if(typeof renderDashboardSports==='function')renderDashboardSports()}else if(current==='teams'){renderFilteredTeams()}else if(current==='calendar'){window.ggView('calendar')}else if(current==='club'){window.ggOpenCommunity?.('posts')}};
- scroll.append(b);
- });
-}
-function renderFilteredTeams(){
- const grid=workspace.querySelector('.gg-team-grid');if(!grid)return;
- const cards=[...grid.children];
- cards.forEach(card=>{const small=card.querySelector('small')?.textContent||'';card.hidden=selected!=='all'&&!small.startsWith(selected+' ·')});
- let note=workspace.querySelector('#ggSportTeamsNotice');if(!note){note=document.createElement('p');note.id='ggSportTeamsNotice';note.className='gg-context-note';grid.before(note)}
- note.hidden=sports().length<2;note.textContent=selected==='all'?'Mostrando los equipos de todos los deportes.':'Mostrando únicamente los equipos de '+selected+'.';
-}
-const previous=window.ggView;
-window.ggView=function(view){current=view;previous(view);draw();if(view==='teams')renderFilteredTeams();if(view==='calendar'&&selected!=='all'){const select=workspace.querySelector('select[onchange*="ggSetWeekFilter"]');if(select){const options=[...select.options].filter(o=>o.value.startsWith(selected+' ·'));if(options.length){const hint=document.createElement('p');hint.className='gg-context-note';hint.textContent='Deporte seleccionado: '+selected+'. Elige un equipo para filtrar sus actividades.';select.closest('.gg-filter-bar')?.before(hint)}}}};
-const buttons=[...nav.querySelectorAll(':scope > button')];buttons.forEach((b,i)=>{if(i<5)b.addEventListener('click',()=>{current=['home','teams','calendar','messages','club'][i];draw();if(current==='teams')setTimeout(renderFilteredTeams,0)},true)});
-window.ggCurrentSport=()=>selected;window.ggSelectSportContext=value=>{selected=sports().includes(value)?value:'all'};
-draw();
-})();
-</script>
+<link rel="stylesheet" href="assets/sport-context.css?v=1">
+<script src="assets/sport-context.js?v=1"></script>
 
 
 <style id="gg-demo-access-v69">
@@ -1937,7 +1906,7 @@ b.onclick=function(){
  selectedRole='Coordinador/a';data={club:'Club Deportivo Ebro Norte',sports:['Baloncesto','Fútbol'],clubPalette:['#202354','#20c6b1'],roleColors:{coord:'#202354'},facilities:[{name:'Polideportivo Norte',sports:['Baloncesto'],spaces:[]},{name:'Campos de La Ribera',sports:['Fútbol'],spaces:[]}]};
  document.getElementById('clubSmall').textContent=data.club;
  go('dashboard');
- if(typeof window.ggView==='function')window.ggView('home');
+ if(typeof window.ggReturnToSports==='function')window.ggReturnToSports();
 };
 welcome.append(b);
 })();
@@ -1964,7 +1933,7 @@ function open(tab='posts'){
  document.getElementById('gcCreate').onclick=()=>{host.innerHTML='<form id="gcForm" class="gg-demo-card"><h3>Crear convocatoria</h3><input id="gcName" class="gg-demo-input" required placeholder="Nombre del evento"><select id="gcType"><option>Torneo</option><option>Amistoso</option></select><select id="gcSport"><option>Baloncesto</option><option>Fútbol</option></select><input id="gcCity" class="gg-demo-input" required placeholder="Localidad"><input id="gcDate" type="date" required class="gg-demo-input"><button class="gg-button selected">Publicar convocatoria</button><p class="gg-muted">Demo local: todavía no se envía a otros clubes.</p></form>';document.getElementById('gcForm').onsubmit=e=>{e.preventDefault();let v=id=>document.getElementById(id).value;entries.push({title:v('gcName'),type:v('gcType'),sport:v('gcSport'),city:v('gcCity'),date:v('gcDate')});save();document.getElementById('gcEvents').click()}};
  document.getElementById('gcFind').click();
  }else if(tab==='gallery'){window.ggGalleryMount(content)}else{window.ggCommunitySocial(content)};
-
+ window.ggRenderSportContext(area,'community');
 }
 const b=[...nav.querySelectorAll(':scope > button')].find(x=>x.textContent.trim()==='Comunidad');if(b)b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();open('posts')},true);
 window.ggOpenCommunity=open;
@@ -1982,7 +1951,7 @@ window.ggOpenCommunity=open;
 <script src="assets/community-publications.js?v=3"></script>
 <script src="assets/material-icons.js"></script>
 <script src="assets/resources-store.js?v=2"></script>
-<script src="assets/inventory-ui.js?v=3"></script>
+<script src="assets/inventory-ui.js?v=4"></script>
 <script src="assets/gallery-ui.js"></script>
 <script src="assets/backgrounds-store.js?v=2"></script>
 <script src="assets/backgrounds.js?v=4"></script>
@@ -2036,10 +2005,11 @@ function draw(){
  let html=section==='home'?header():'<button class="gg-v71-page-back" id="ggV75Home">← Volver a inicio</button>';
  if(section==='home'&&!sport){
  html+='<div class="gg-v71-grid"><div class="gg-v71-stat"><b>166</b><span>Jugadores · demo</span></div><div class="gg-v71-stat"><b>14</b><span>Entrenadores · demo</span></div><div class="gg-v71-stat"><b>241</b><span>Familias · demo</span></div><div class="gg-v71-stat"><b>8</b><span>Actividades · demo</span></div></div>';
+ html+='<button type="button" class="gg-all-club-entry" id="ggManageAllClub"><span><strong>Gestionar todo el club</strong><small>Todos los equipos, personas, calendario y material</small></span><span aria-hidden="true">→</span></button>';
  html+='<div class="gg-v71-heading"><h3>ELIGE UN DEPORTE</h3></div><div class="gg-v71-sports">'+sports().map((name,i)=>'<button class="gg-v71-sport" data-sport="'+name+'"><span class="gg-v71-alert">'+(i+1)+'</span><span class="gg-v71-symbol">'+(name==='Baloncesto'?'🏀':name==='Fútbol'?'⚽':'🏐')+'</span><strong>'+name+'</strong><small>Gestionar deporte →</small></button>').join('')+'</div>';
  html+='<div class="gg-v71-heading"><h3>Actividad reciente del club</h3></div><div class="gg-v71-card"><b>Solicitudes pendientes</b><p>Revisa los avisos de cada deporte desde sus tarjetas.</p></div>';
  }else if(section==='home'){
- html+='<div class="gg-v71-heading"><h3>Gestiona '+sport+'</h3><button class="gg-v71-back" id="ggV71Switch">Cambiar deporte</button></div>';
+ html+='<div class="gg-v71-heading"><h3>Gestiona '+(sport==='all'?'todo el club':sport)+'</h3><button class="gg-v71-back" id="ggV71Switch">Cambiar deporte</button></div>';
  html+='<div class="gg-v71-grid"><div class="gg-v71-stat"><b>3</b><span>Avisos · demo</span></div><div class="gg-v71-stat"><b>2</b><span>Solicitudes · demo</span></div></div>';
  ['Equipos y categorías','Jugadores y familias','Entrenadores','Instalaciones y horarios','Calendario y actividades','Publicaciones y comunidad'].forEach((name,i)=>html+='<button class="gg-v71-card" data-module="'+i+'" style="display:block;width:100%;text-align:left;font-weight:800">'+name+' →</button>');
  }else{
@@ -2050,6 +2020,7 @@ function draw(){
  if(section==='community')html+='<div class="gg-v71-card"><b>Comunidad del club</b><p>Publicaciones, red de clubes y redes sociales.</p><button class="gg-v71-back" id="ggV71Community">Abrir Comunidad</button></div>';
  }
  main.innerHTML=html;
+ const allClub=document.getElementById('ggManageAllClub');if(allClub)allClub.onclick=()=>window.ggOpenCoordinationPanel('all');
  const homeBack=document.getElementById('ggV75Home');if(homeBack)homeBack.onclick=()=>{section='home';draw();window.scrollTo(0,0)};
  bottom.innerHTML=[['home','house','Inicio'],['people','users','Personas'],['calendar','calendar','Calendario'],['community','message','Comunidad'],['settings','settings','Club']].map(([id,icon,label])=>'<button data-section="'+id+'" class="'+(section===id?'active':'')+'"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+({house:'<path d="m3 10 9-7 9 7v11H3z"/><path d="M9 21v-8h6v8"/>',users:'<circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3"/><path d="M17 6a3 3 0 0 1 0 6m1 3c2 1 3 3 3 6"/>',calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v5m10-5v5M3 11h18"/>',message:'<path d="M4 4h16v13H9l-5 4z"/><path d="M8 9h8m-8 4h6"/>',settings:'<circle cx="12" cy="12" r="3"/><path d="M10 2h4l1 3 3 1 3-1 2 4-3 2v3l3 2-2 4-3-1-3 1-1 3h-4l-1-3-3-1-3 1-2-4 3-2v-3L1 9l2-4 3 1 3-1z"/>'}[icon])+'</svg>'+label+'</button>').join('');
  bottom.querySelectorAll('[data-section]').forEach(b=>b.onclick=()=>{section=b.dataset.section;if(section==='home'&&sports().length>1)sport=null;draw();window.scrollTo(0,0)});
@@ -2063,11 +2034,11 @@ function draw(){
  const community=document.getElementById('ggV71Community');if(community)community.onclick=()=>window.ggOpenCommunity?.('posts');
  window.ggApplyClubBackground?.(section==='home'?(sport||''):'');
 }
-window.ggRenderClubHome=function(){
- section='home';sport=sports().length===1?sports()[0]:null;
+window.ggRenderClubHome=function(context=null){
+ section='home';sport=sports().length===1?sports()[0]:context;
  const workspace=document.getElementById('ggWorkspace');
  if(workspace){workspace.hidden=true;workspace.style.removeProperty('display')}
- dash.classList.remove('gg-v83-workspace','gg-subscreen');main.style.removeProperty('display');
+ dash.classList.remove('gg-v83-workspace','gg-subscreen');main.classList.remove('gg-home-hidden');main.style.removeProperty('display');
  draw();window.scrollTo(0,0);
 };
 const oldGo=go;
@@ -2105,18 +2076,24 @@ function paintSports(){
  main.querySelectorAll('.gg-v71-sport').forEach(b=>{
  const name=b.dataset.sport,el=b.querySelector('.gg-v71-symbol');
  if(el)el.innerHTML=icon(name);
- b.addEventListener('click',()=>{currentSport=name;currentModule=null;setTimeout(showSport,0)});
+ b.onclick=()=>window.ggOpenCoordinationPanel(name);
  });
 }
 window.ggReturnToSports=function(){
- currentSport=null;currentModule=null;dashboardSelectedSport=null;
+ currentSport=null;currentModule=null;dashboardSelectedSport=null;window.ggSelectSportContext('all');
  window.ggRenderClubHome();paintSports();if((data.sports||[]).length===1)showSport();
 };
+window.ggOpenCoordinationPanel=function(value=window.ggCurrentSport()){
+ window.ggSelectSportContext(value);currentSport=window.ggCurrentSport();currentModule=null;
+ window.ggRenderClubHome(currentSport);paintSports();showSport();
+ document.querySelectorAll('.gg-v71-bottom [data-section]').forEach(b=>b.classList.toggle('active',b.dataset.section==='home'));
+};
+window.ggOpenScopedFacilities=()=>showModule(3,()=>window.ggOpenCoordinationPanel(window.ggCurrentSport()));
 function showSport(){
- const name=getSport();if(!name)return;
+ const name=getSport();if(!name)return;window.ggSelectSportContext(name);
  const h=main.querySelector('.gg-v71-heading');if(!h)return;
  currentSport=name;currentModule=null;
- const card=h.querySelector('h3');if(card)card.textContent=(data.sports||[]).length===1?'Panel de coordinación':'Gestión de '+name;
+ const card=h.querySelector('h3');if(card)card.textContent=(data.sports||[]).length===1?'Panel de coordinación':name==='all'?'Todo el club':'Gestión de '+name;
  const grid=main.querySelector('.gg-v71-grid');
  if(grid)grid.style.display='none';
  main.querySelectorAll('[data-module]').forEach(x=>x.remove());
@@ -2130,8 +2107,9 @@ function showSport(){
  const oldExtra=main.querySelector('#ggV77Extras');if(oldExtra)oldExtra.remove();
  const extra=document.createElement('div');extra.id='ggV77Extras';
  const multi=(data.sports||[]).length>1;
- const counts=name==='Baloncesto'?{teams:4,coaches:7,players:82}:{teams:5,coaches:7,players:84};
- extra.innerHTML='<div class="gg-v77-stats"><div><strong>'+counts.teams+'</strong><span>Equipos</span></div><div><strong>'+counts.coaches+'</strong><span>Entrenadores</span></div><div><strong>'+counts.players+'</strong><span>Jugadores</span></div></div><h3>'+(multi?'Tablón de '+name:'Tablón del club')+'</h3><div class="gg-v77-feed"><article><small>PRÓXIMOS EVENTOS · DEMO</small><b>Planificación semanal</b><p>Consulta los próximos entrenamientos y partidos del club.</p><button data-v77-action="calendar">Ver calendario →</button></article><article><small>COORDINACIÓN · DEMO</small><b>Revisión de asistencia</b><p>Comprueba las confirmaciones y las ausencias comunicadas por las familias.</p><button data-v77-action="teams">Ver equipos →</button></article><article><small>COMUNIDAD · DEMO</small><b>Noticias y convocatorias</b><p>Publica novedades y encuentra clubes para organizar amistosos o torneos.</p><button data-v77-action="community">Abrir comunidad →</button></article></div>';
+ const scopedTeams=window.ggScopedTeams();
+ const counts={teams:scopedTeams.length,coaches:window.ggStaffList().filter(p=>p.role==='coach'&&window.ggMatchesSportScope(p.sports)).length,players:window.ggLinkablePlayers().filter(p=>window.ggMatchesSportScope([p.sport])).length};
+ extra.innerHTML='<div class="gg-v77-stats"><div><strong>'+counts.teams+'</strong><span>Equipos</span></div><div><strong>'+counts.coaches+'</strong><span>Entrenadores</span></div><div><strong>'+counts.players+'</strong><span>Jugadores</span></div></div><h3>'+(multi&&name!=='all'?'Tablón de '+name:'Tablón del club')+'</h3><div class="gg-v77-feed"><article><small>PRÓXIMOS EVENTOS · DEMO</small><b>Planificación semanal</b><p>Consulta los próximos entrenamientos y partidos del club.</p><button data-v77-action="calendar">Ver calendario →</button></article><article><small>COORDINACIÓN · DEMO</small><b>Revisión de asistencia</b><p>Comprueba las confirmaciones y las ausencias comunicadas por las familias.</p><button data-v77-action="teams">Ver equipos →</button></article><article><small>COMUNIDAD · DEMO</small><b>Noticias y convocatorias</b><p>Publica novedades y encuentra clubes para organizar amistosos o torneos.</p><button data-v77-action="community">Abrir comunidad →</button></article></div>';
  g.insertAdjacentElement('afterend',extra);
  extra.querySelectorAll('[data-v77-action]').forEach(b=>b.onclick=()=>{const k=b.dataset.v77Action;if(k==='community')window.ggOpenCommunity?.('posts');else window.ggView?.(k)});
 
@@ -2143,7 +2121,8 @@ function showSport(){
  }
  const back=document.getElementById('ggV71Switch');if(back)back.onclick=window.ggReturnToSports;
  window.ggApplyManagementIcons?.();
- window.ggApplyClubBackground?.(name);
+ window.ggApplyClubBackground?.(name==='all'?'':name);
+ window.ggRenderSportContext(main,'home');
 
 }
 function showModule(i,returnToPanel){
@@ -2156,12 +2135,12 @@ function showModule(i,returnToPanel){
  const body=main.querySelector('#ggV72ModuleContent');
  const links={0:[['Ver plantillas y equipos','teams'],['Consultar horarios','calendar']],1:[['Ver jugadores y familias','people'],['Ver equipos','teams']],2:[['Ver equipos y entrenadores','teams'],['Directorio de entrenadores','people']],3:[['Consultar calendario de instalaciones','calendar']],4:[['Abrir calendario','calendar']],5:[['Publicaciones','posts'],['Red de clubes','clubs'],['Redes sociales','social']]};
  const description={0:'Plantillas, asistencia y fichas de los equipos.',2:'Personal técnico y asignaciones de los equipos.',3:'Instalaciones, pistas y disponibilidad.',4:'Entrenamientos, partidos y actividades.',5:'Publicaciones, colaboración entre clubes y redes sociales.'};
- body.innerHTML='<h3>'+title+' · '+name+'</h3><p>'+description[i]+'</p><div class="gg-v82-actions">'+(links[i]||[]).map(([label,key])=>'<button type="button" data-v82-open="'+key+'">'+label+' →</button>').join('')+'</div>';
+ body.innerHTML='<h3>'+title+' · '+wzEsc(window.ggSportScopeLabel())+'</h3><p>'+description[i]+'</p><div class="gg-v82-actions">'+(links[i]||[]).map(([label,key])=>'<button type="button" data-v82-open="'+key+'">'+label+' →</button>').join('')+'</div>';
  if(i===3){
-  const facilities=(data.facilities||[]).filter(f=>(f.sports||[]).includes(name));
+  const facilities=(data.facilities||[]).filter(f=>window.ggMatchesSportScope(f.sports));
   const list=document.createElement('div');list.className='gg-facility-list';
   if(!facilities.length){const empty=document.createElement('p');empty.textContent='Todavía no hay instalaciones asignadas a '+name+'.';list.append(empty);}
-  facilities.forEach(f=>{const card=document.createElement('article');card.className='gg-v71-card';card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-label','Gestionar '+f.name);card.style.cursor='pointer';const open=()=>window.ggOpenFacility(f.name,()=>showModule(3,restore));card.onclick=open;card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}};const heading=document.createElement('h3');heading.textContent=f.name;card.append(heading);if(f.address){const address=document.createElement('p');address.textContent=f.address;card.append(address);}const spaces=document.createElement('p');spaces.textContent=(f.spaces||[]).filter(p=>(p.sports||[]).includes(name)).map(p=>p.name).join(' · ')||'Sin pistas o salas asignadas';card.append(spaces);list.append(card);});
+  facilities.forEach(f=>{const card=document.createElement('article');card.className='gg-v71-card';card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-label','Gestionar '+f.name);card.style.cursor='pointer';const open=()=>window.ggOpenFacility(f.name,()=>showModule(3,restore));card.onclick=open;card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}};const heading=document.createElement('h3');heading.textContent=f.name;card.append(heading);if(f.address){const address=document.createElement('p');address.textContent=f.address;card.append(address);}const spaces=document.createElement('p');spaces.textContent=(f.spaces||[]).filter(p=>window.ggMatchesSportScope(p.sports)).map(p=>p.name).join(' · ')||'Sin pistas o salas asignadas';card.append(spaces);list.append(card);});
   body.querySelector('.gg-v82-actions').before(list);
   if(!selectedRole||roleKey(selectedRole)==='coord'){
    const manage=document.createElement('button');manage.type='button';manage.className='gg-button';manage.textContent='Añadir / gestionar instalaciones';
@@ -2178,7 +2157,7 @@ function showModule(i,returnToPanel){
   window.scrollTo(0,0);return;
  }
  if(key==='people'){restore();document.querySelector('#ggV71Bottom [data-section="people"]')?.click();return}if(['posts','clubs','social'].includes(key)){window.ggOpenCommunity?.(key);return}
- });window.scrollTo(0,0);
+ });window.ggRenderSportContext(main,i===3?'facilities':'home');window.scrollTo(0,0);
 }
 
 const observer=new MutationObserver(()=>{if(!dash.classList.contains('gg-v71'))return;paintSports();if(getSport()&&main.querySelector('[data-module]'))showSport()});
@@ -2405,7 +2384,7 @@ function openAccessManagement(person,onBack){
  workspace.querySelector('#ggAccessSearch').oninput=draw;workspace.querySelector('#ggAccessFilter').onchange=draw;draw();if(person){workspace.querySelector('#ggAccessSearch').value=person[0];draw();edit(users.findIndex(u=>u[0]===person[0]))}else window.scrollTo(0,0);
 }
 function open(key){
- if(key==='home'){reset();active('home');return}
+ if(key==='home'){window.ggOpenCoordinationPanel(window.ggCurrentSport());active('home');return}
  if(key==='settings'){
  reset();active('settings');
  dash.classList.add('gg-v83-workspace');workspace.hidden=false;
@@ -2418,7 +2397,7 @@ function open(key){
 
  groups.lastElementChild.querySelector('.gg-v84-settings-grid').insertAdjacentHTML('beforeend','<button type="button" id="ggClubLogoutV88" class="gg-v88-logout"><strong>Cerrar sesión</strong><small>Volver a la pantalla de acceso</small><span aria-hidden="true">→</span></button>');
  workspace.querySelector('#ggClubLogoutV88').onclick=()=>{if(typeof clubLogout==='function')clubLogout();};
- backButton();
+ backButton();window.ggRenderSportContext(workspace,'settings');
  workspace.querySelectorAll('[data-club-setting]').forEach(b=>b.onclick=()=>{const id=b.dataset.clubSetting;if(id==='backgrounds'){window.ggOpenBackgroundSettings();return}if(id==='payments'){window.ggOpenEconomy();return}const btn=[...document.querySelectorAll('#clubSettingsMenu button')].find(x=>x.getAttribute('onclick')?.includes("'"+id+"'"));if(btn)btn.click();else{const fallback=document.querySelector('.coord-settings-btn');fallback?.click();}});
  
  window.scrollTo(0,0);return
@@ -2433,12 +2412,14 @@ function open(key){
  backButton();
  const families=[['Laura Martínez Ruiz','Madre / tutora legal','familia','Baloncesto · Martín García · Alevín A'],['Javier Pérez Gil','Padre / tutor legal','familia','Fútbol · Lucas Ruiz · Alevín A'],['Ana López Sáenz','Madre / tutora legal','familia','Baloncesto · Hugo Pérez · Alevín A / Fútbol · Infantil']];
  const clean=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- let selectedPeopleFilter='all';const renderPeople=filter=>{selectedPeopleFilter=filter;workspace.querySelector('#ggAddClubStaff').hidden=filter==='familia';workspace.querySelector('#ggAddClubFamily').hidden=filter==='personal';workspace.querySelector('#ggClubCoordSettings').hidden=filter==='familia';workspace.querySelector('#ggClubCoordPanel').hidden=filter==='familia';const query=(workspace.querySelector('#ggV86Search')?.value||'').trim().toLocaleLowerCase('es');const people=[...familyPeople(),...window.ggStaffPeople()];const filtered=people.filter(p=>(filter==='all'||p[2]===filter||(filter==='personal'&&p[2]!=='familia'))&&p.join(' ').toLocaleLowerCase('es').includes(query));workspace.querySelector('#ggV85PeopleList').innerHTML=(filtered.length?'':'<p>No hay personas que coincidan con la búsqueda.</p>')+filtered.map((p,i)=>'<article class="gg-v85-person"><div><div class="gg-person-heading"><strong>'+clean(p[0])+'</strong><button type="button" class="gg-profile-button" data-person-profile="'+i+'">Perfil</button></div><small>'+clean(p[1])+' · '+clean(p[3])+'</small></div><div class="gg-person-actions"><button type="button" data-person-message="'+clean(p[0])+'">Mensaje →</button></div></article>').join('');workspace.querySelectorAll('[data-person-profile]').forEach(b=>b.onclick=()=>openPersonProfile(filtered[Number(b.dataset.personProfile)]));workspace.querySelectorAll('[data-person-permissions]').forEach(b=>b.onclick=()=>{const previous=[...workspace.childNodes],scroll=window.scrollY;openAccessManagement(filtered[Number(b.dataset.personPermissions)],()=>{workspace.replaceChildren(...previous);window.scrollTo(0,scroll)})});workspace.querySelectorAll('[data-person-message]').forEach(b=>b.onclick=()=>{const who=b.dataset.personMessage;const box=document.createElement('div');box.className='gg-v85-compose';box.innerHTML='<h2>Mensaje a '+clean(who)+'</h2><p>Vista de demostración: no se enviarán mensajes reales.</p><textarea placeholder="Escribe tu mensaje..." rows="4"></textarea><button type="button" data-close-compose>Cancelar</button><button type="button" data-save-compose>Guardar borrador</button><p role="status"></p>';workspace.querySelector('.gg-v85-compose')?.remove();workspace.append(box);box.querySelector('[data-close-compose]').onclick=()=>box.remove();box.querySelector('[data-save-compose]').onclick=()=>{box.querySelector('[role=status]').textContent=box.querySelector('textarea').value.trim()?'Borrador de demostración preparado. No se ha enviado.':'Escribe un mensaje primero.'};box.scrollIntoView({block:'nearest'})})};
+ let selectedPeopleFilter='all';const renderPeople=filter=>{selectedPeopleFilter=filter;workspace.querySelector('#ggAddClubStaff').hidden=filter==='familia';workspace.querySelector('#ggAddClubFamily').hidden=filter==='personal';workspace.querySelector('#ggClubCoordSettings').hidden=filter==='familia';workspace.querySelector('#ggClubCoordPanel').hidden=filter==='familia';const query=(workspace.querySelector('#ggV86Search')?.value||'').trim().toLocaleLowerCase('es');const people=[...familyPeople(),...window.ggStaffPeople()];const filtered=people.filter(p=>(window.ggCurrentSport()==='all'||p[3].includes(window.ggCurrentSport())||(p[2]==='familia'&&familyLinks.list(data.club,p[0]).some(link=>link.status==='approved'&&window.ggLinkablePlayers().some(player=>player.id===link.player&&player.sport===window.ggCurrentSport()))))&&(filter==='all'||p[2]===filter||(filter==='personal'&&p[2]!=='familia'))&&p.join(' ').toLocaleLowerCase('es').includes(query));workspace.querySelector('#ggV85PeopleList').innerHTML=(filtered.length?'':'<p>No hay personas que coincidan con la búsqueda.</p>')+filtered.map((p,i)=>'<article class="gg-v85-person"><div><div class="gg-person-heading"><strong>'+clean(p[0])+'</strong><button type="button" class="gg-profile-button" data-person-profile="'+i+'">Perfil</button></div><small>'+clean(p[1])+' · '+clean(p[3])+'</small></div><div class="gg-person-actions"><button type="button" data-person-message="'+clean(p[0])+'">Mensaje →</button></div></article>').join('');workspace.querySelectorAll('[data-person-profile]').forEach(b=>b.onclick=()=>openPersonProfile(filtered[Number(b.dataset.personProfile)]));workspace.querySelectorAll('[data-person-permissions]').forEach(b=>b.onclick=()=>{const previous=[...workspace.childNodes],scroll=window.scrollY;openAccessManagement(filtered[Number(b.dataset.personPermissions)],()=>{workspace.replaceChildren(...previous);window.scrollTo(0,scroll)})});workspace.querySelectorAll('[data-person-message]').forEach(b=>b.onclick=()=>{const who=b.dataset.personMessage;const box=document.createElement('div');box.className='gg-v85-compose';box.innerHTML='<h2>Mensaje a '+clean(who)+'</h2><p>Vista de demostración: no se enviarán mensajes reales.</p><textarea placeholder="Escribe tu mensaje..." rows="4"></textarea><button type="button" data-close-compose>Cancelar</button><button type="button" data-save-compose>Guardar borrador</button><p role="status"></p>';workspace.querySelector('.gg-v85-compose')?.remove();workspace.append(box);box.querySelector('[data-close-compose]').onclick=()=>box.remove();box.querySelector('[data-save-compose]').onclick=()=>{box.querySelector('[role=status]').textContent=box.querySelector('textarea').value.trim()?'Borrador de demostración preparado. No se ha enviado.':'Escribe un mensaje primero.'};box.scrollIntoView({block:'nearest'})})};
  workspace.querySelectorAll('[data-person-filter]').forEach(b=>b.onclick=()=>{workspace.querySelectorAll('[data-person-filter]').forEach(x=>x.classList.toggle('active',x===b));renderPeople(b.dataset.personFilter)});workspace.querySelector('#ggV86Search').addEventListener('input',()=>renderPeople(selectedPeopleFilter));workspace.querySelector('#ggAddClubFamily').onclick=()=>addFamily(()=>renderPeople(selectedPeopleFilter));workspace.querySelector('#ggAddClubStaff').onclick=()=>window.ggAddStaff(()=>renderPeople(selectedPeopleFilter));workspace.querySelector('#ggClubCoordSettings').onclick=()=>{const panel=workspace.querySelector('#ggClubCoordPanel');panel.innerHTML='<div data-coord-config></div><div class="gg-toolbar"><button class="gg-button" data-add-coord>Añadir coordinador/a</button><button class="gg-button" data-access>Gestionar permisos</button></div>';window.ggModuleSettings(panel.querySelector('[data-coord-config]'),'coord');panel.querySelector('[data-add-coord]').onclick=()=>window.ggAddStaff(()=>renderPeople(selectedPeopleFilter),'coord');panel.querySelector('[data-access]').onclick=()=>openAccessManagement(null,()=>open('people'));};renderPeople('all');
  }else if(key==='teams'){window.ggView?.('teams');backButton()}
  active(key==='teams'?'people':key);
+ window.ggRenderSportContext(workspace,key);
  window.scrollTo(0,0);
 }
+window.ggOpenSection=open;
 bottom.addEventListener('click',e=>{
  const button=e.target.closest('[data-section]');if(!button)return;
  e.preventDefault();e.stopImmediatePropagation();open(button.dataset.section);
@@ -2588,8 +2569,7 @@ function safeTeams(e){
  const isTeamsLink=button.matches('[data-v77-action="teams"]')||button.matches('[data-v72-key="teams"]');
  const isCoachesModule=module&&[...module.querySelectorAll('.gg-v71-module')].indexOf(button)===1;if(isCoachesModule){e.preventDefault();e.stopImmediatePropagation();dash.querySelector('.gg-v71-bottom [data-section=people]')?.click();document.querySelector('[data-person-filter=personal]')?.click();return}if(!isTeamsModule&&!isTeamsLink)return;
  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
- const title=main.querySelector('.gg-v71-heading h3')?.textContent||'';
- const sport=(data.sports||[]).find(s=>title.includes(s))||(data.sports||[])[0]||'Baloncesto';
+ const sport=window.ggCurrentSport();
  window.ggOpenTeams(sport);
 }
 document.addEventListener('click',safeTeams,true);
