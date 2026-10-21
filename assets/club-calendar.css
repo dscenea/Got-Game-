@@ -8,4 +8,4 @@
 .gg-new-calendar .gg-calendar-page-head [data-back]{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;width:38px!important;height:44px!important;color:var(--gg-agenda-color,#202650)!important;font-size:36px!important}
 .gg-new-calendar .gg-calendar-scope{margin:0 0 18px;color:#777;font-size:14px}
 .gg-new-calendar nav,.gg-new-calendar .gg-calendar-days,.gg-new-calendar .gg-calendar-year,.gg-new-calendar>h3,.gg-new-calendar>p:not(.gg-calendar-scope),.gg-new-calendar>article,.gg-new-calendar>[data-add],.gg-new-calendar>form{position:relative}
-#dashboard.gg-v71 .gg-v71-bottom button[data-section="calendar"].active{background:var(--gg-nav-active-bg,#ffbf00)!important;color:var(--gg-nav-active-fg,#111)!important;border-radius:16px!important}
+#dashboard.gg-v71 .gg-v71-bottom button[data-section="calendar"].active{background:var(--gg-calendar-nav-secondary,var(--club-secondary,#ffffff))!important;color:var(--gg-calendar-nav-foreground,#111)!important;border-radius:16px!important}
