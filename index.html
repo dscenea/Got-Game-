@@ -1261,6 +1261,8 @@ function ggDemoEvents(){const start=new Date(2026,8,7);return teams().filter(t=>
 const scheduleRepository=GGScheduleStore.createRepository(localStorage);
 const scheduleDate=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 function scheduleRecords(){return scheduleRepository.records(clubKey(),ggDemoEvents());}
+// Shared read-only schedule adapter for the modular calendar. One repository, one demo seed source.
+window.ggSharedCalendarSchedules=function(){const teamById=new Map(teams().map(t=>[String(t.id),t]));return scheduleRecords().map(e=>({...e,sport:teamById.get(String(e.team))?.sport||'all',teamName:teamById.get(String(e.team))?.name||teamLabel(e.team)}));};
 function events(){return GGScheduleStore.expand(scheduleRecords(),scheduleDate(monday()));}
 function schedulePlace(e){const f=(data.facilities||[]).find(f=>f.name===e.place);const space=f?.spaces?.find(p=>String(p.id)===String(e.spaceId));return e.place+(space?' · '+space.name:e.spaceName?' · '+e.spaceName:'');}
 function canManageSchedule(){return !selectedRole||roleKey(selectedRole)==='coord';}
