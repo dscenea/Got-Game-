@@ -43,3 +43,12 @@ Realizar pruebas de navegación en navegador real, documentar incidencias concre
 **Pendiente de verificar visualmente:** al abrir cada vista, la flecha se alinea con el título, la pestaña inferior seleccionada corresponde a la vista y los retornos mantienen el contexto deportivo. Las capturas y pruebas reales siguen siendo necesarias.
 
 **Precaución:** no se han eliminado renderizadores heredados de Equipos o Instalaciones porque no hay cobertura suficiente para garantizar que el cambio no afecte a los dos clubes de prueba.
+
+## Equipos e instalaciones — revisión de arquitectura
+
+- **Datos:** `GGTeamStore` mantiene el catálogo de equipos; `GGScheduleStore` conserva las actividades y conflictos; las instalaciones y pistas se guardan dentro de la configuración del club. Estos son tres ámbitos distintos, pero vinculados mediante ID de equipo, nombre de instalación e ID de pista.
+- **Reutilización implementada:** `assets/club-selectors.js` introduce selectores puros para localizar equipo, instalación, pista, deporte y actividades por instalación. El adaptador del calendario, la descripción de pista y la ocupación semanal de instalaciones ya consultan esas funciones compartidas.
+- **Riesgo de identidad:** las instalaciones se vinculan por nombre, no por ID estable. Renombrar una instalación podría desvincular eventos anteriores; **no** cambiar este modelo sin migración de datos.
+- **Riesgo de almacenamiento:** los equipos y horarios utilizan repositorios propios, pero las instalaciones siguen persistiendo en la configuración del club. No fusionar estos almacenes de forma improvisada.
+- **Pruebas pendientes:** comprobar que la ficha de Alevín A muestra los mismos horarios que Lobete y Calendario; repetir para fútbol en Ebro Norte; modificar una actividad, comprobar la pista y el calendario; verificar avisos de conflicto.
+- **Siguiente refactor:** separar el editor de horarios y los componentes de instalaciones del HTML principal, conservando sus APIs públicas y añadiendo pruebas automatizadas de identidad y conflictos.
