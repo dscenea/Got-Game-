@@ -1909,6 +1909,13 @@ b.onclick=function(){
  if(typeof window.ggReturnToSports==='function')window.ggReturnToSports();
 };
 welcome.append(b);
+// Keep the single-sport demo entry available independently of later dashboard enhancements.
+const single=document.createElement('button');single.type='button';single.className='gg-demo-shortcut';single.id='ggLogrobasketQuickAccess';single.textContent='Acceso rápido · Logrobasket (1 deporte)';
+single.onclick=function(){
+ selectedRole='Coordinador/a';data={club:'Logrobasket',sports:['Baloncesto'],clubPalette:['#a20f16','#ffffff','#171717'],roleColors:{coord:'#a20f16'},facilities:[{name:'Polideportivo Lobete',sports:['Baloncesto'],spaces:[]}]};
+ document.getElementById('clubSmall').textContent=data.club;go('dashboard');
+};
+welcome.append(single);
 })();
 </script>
 
@@ -2168,7 +2175,7 @@ const observer=new MutationObserver(()=>{if(!dash.classList.contains('gg-v71'))r
 // Disabled: painting the demo inside a mutation callback could recursively repaint and freeze Safari.
 const originalGo=go;
 go=function(id){originalGo(id);if(id==='dashboard'){currentSport=(data.sports||[]).length===1?data.sports[0]:null;currentModule=null;setTimeout(()=>{paintSports();if(currentSport)showSport()},0)}};
-if(welcome){
+if(welcome&&!document.getElementById('ggLogrobasketQuickAccess')){
  const btn=document.createElement('button');btn.className='gg-demo-shortcut';btn.type='button';btn.textContent='Acceso rápido · Logrobasket (1 deporte)';
  btn.onclick=()=>{selectedRole='Coordinador/a';data={club:'Logrobasket',sports:['Baloncesto'],clubPalette:['#a20f16','#ffffff','#171717'],roleColors:{coord:'#a20f16'},facilities:[{name:'Polideportivo Lobete',sports:['Baloncesto'],spaces:[]}]};document.getElementById('clubSmall').textContent=data.club;go('dashboard')};
  welcome.append(btn);
