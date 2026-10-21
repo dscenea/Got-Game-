@@ -1304,13 +1304,7 @@ window.ggOpenFacility=function(name,onReturn){
  const sheet=document.createElement('dialog');sheet.className='gg-facility-sheet';sheet.setAttribute('aria-label',name);document.body.append(sheet);let offset=0;
  const escape=esc;
  function saveFacility(next){const snapshot=Object.fromEntries(persistedKeys.filter(k=>data[k]!==undefined).map(k=>[k,data[k]]));snapshot.facilities=(data.facilities||[]).map(f=>f===facility?next:f);localStorage.setItem('gg-club-settings:'+data.club,JSON.stringify(snapshot));Object.assign(facility,next);}
- function ggWelcomeMarkup(){
- const key='gg-welcome-seen:'+String(data.club||'club').trim().toLowerCase();
- let seen=false;
- try{seen=localStorage.getItem(key)==='1';localStorage.setItem(key,'1')}catch(e){}
- return '<div class="gg-welcome-club" style="margin:14px 0 18px"><h2 style="font-size:clamp(21px,5vw,27px);line-height:1.2;margin:0 0 6px">'+(seen?'¡Bienvenido de nuevo!':'¡Bienvenido a tu club!')+'</h2><p style="margin:0;line-height:1.45;opacity:.72;font-size:14px">'+(seen?'Tu club está listo para seguir trabajando.':'Todo lo que necesitas para gestionar tu club, en un solo lugar.')+'</p></div>';
-}
-function draw(){
+ function draw(){
   const start=monday();start.setDate(start.getDate()+offset*7);const days=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
   const all=GGScheduleStore.expand(scheduleRecords(),scheduleDate(start)).filter(e=>e.place===name).sort((a,b)=>a.day-b.day||a.hour-b.hour);
   sheet.innerHTML='<button class="gg-button" type="button" data-close aria-label="Volver a instalaciones">‹ Volver</button><div class="gg-eyebrow">INSTALACIÓN · PISTAS Y HORARIOS</div><h2>'+escape(name)+'</h2>'+(facility.address?'<p>'+escape(facility.address)+'</p>':'')+'<h3>Pistas, salas y campos</h3><div class="gg-facility-spaces">'+((facility.spaces||[]).map(p=>'<article><strong>'+escape(p.name)+'</strong><small>'+escape((p.sports||[]).join(' · '))+'</small>'+(canManageSchedule()?'<button class="gg-button" type="button" data-book="'+escape(p.id)+'">Asignar horario a un equipo</button>':'')+'</article>').join('')||'<p>Añade la primera pista o sala para organizar sus horarios.</p>')+'</div>'+(canManageSchedule()?'<form id="ggNewSpaceForm"><label>Nueva pista / sala<input name="space" required maxlength="70" placeholder="Ej. Pista central"></label><button class="gg-button" type="submit">+ Añadir pista / sala</button><p role="alert" id="ggSpaceError"></p></form>':'')+'<h3>Ocupación semanal</h3><div class="gg-toolbar"><button class="gg-button" type="button" data-week="-1" aria-label="Semana anterior">‹</button><strong>Semana del '+start.toLocaleDateString('es-ES',{day:'numeric',month:'short'})+'</strong><button class="gg-button" type="button" data-week="1" aria-label="Semana siguiente">›</button></div>'+(canManageSchedule()?'<button class="gg-button selected" type="button" id="ggFacilityAdd">+ Asignar pista y horario</button>':'')+'<p class="gg-muted">'+(canManageSchedule()?'Pulsa una actividad para editarla. ':'')+'El horario es el mismo que aparece en Calendario y Equipos.</p><div class="gg-facility-week">'+days.map((day,i)=>'<section><h4>'+day+'</h4>'+(all.filter(e=>e.day===i).map(e=>'<button type="button" class="gg-facility-booking" data-event="'+escape(e.id)+'"><strong>'+time(e.hour)+'–'+time(e.hour+e.duration)+'</strong><span>'+escape(teamLabel(e.team))+'</span><small>'+escape(schedulePlace(e))+' · '+escape(e.title||'Actividad')+'</small></button>').join('')||'<p class="gg-muted">Sin reservas</p>')+'</section>').join('')+'</div>';
@@ -2005,6 +1999,12 @@ let sport=null,section='home';
 const sports=()=>data.sports||[];
 const shield='<svg class="gg-v71-logo" viewBox="0 0 100 116" xmlns="http://www.w3.org/2000/svg"><path d="M50 3 94 22 90 80Q74 103 50 112 26 103 10 80L6 22Z" fill="#20c6b1" stroke="white" stroke-width="4"/><path d="M50 11 86 27 83 77Q67 97 50 104 33 97 17 77L14 27Z" fill="#202354"/><path d="M19 74 36 53 47 62 65 34 82 57V77Q64 95 50 102 32 94 19 77Z" fill="#6749aa"/><path d="M19 78Q51 59 82 78" fill="none" stroke="#20c6b1" stroke-width="5"/><text x="50" y="48" font-size="20" font-weight="900" fill="white" text-anchor="middle">EN</text><circle cx="50" cy="83" r="7" fill="#fff"/></svg>';
 function header(){return '<div class="gg-v71-header">'+shield+'<div><small>CLUB DEPORTIVO</small><h2>'+(data.club||'Ebro Norte')+'</h2><small>COORDINACIÓN</small></div></div>'}
+function ggWelcomeMarkup(){
+ const key='gg-welcome-seen:'+String(data.club||'club').trim().toLowerCase();
+ let seen=false;
+ try{seen=localStorage.getItem(key)==='1';localStorage.setItem(key,'1')}catch(e){}
+ return '<div class="gg-welcome-club" style="margin:14px 0 18px"><h2 style="font-size:clamp(21px,5vw,27px);line-height:1.2;margin:0 0 6px">'+(seen?'¡Bienvenido de nuevo!':'¡Bienvenido a tu club!')+'</h2><p style="margin:0;line-height:1.45;opacity:.72;font-size:14px">'+(seen?'Tu club está listo para seguir trabajando.':'Todo lo que necesitas para gestionar tu club, en un solo lugar.')+'</p></div>';
+}
 function draw(){
  dash.classList.add('gg-v71');
  if(sports().length===1&&!sport)sport=sports()[0];
