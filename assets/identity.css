@@ -37,7 +37,7 @@
 .gg-v92-symbol:has([data-gg-approved="Balonmano"]){--gg-sport-mask:url("icons/sport-balonmano-clean.svg?v=2")}
 .gg-v92-symbol:has([data-gg-approved="Tenis"]){--gg-sport-mask:url("icons/sport-tenis-clean.svg")}
 .gg-v92-symbol:has([data-gg-approved="Pádel"]){--gg-sport-mask:url("icons/sport-padel-clean.svg")}
-.gg-v92-symbol:has([data-gg-approved="Atletismo"]){--gg-sport-mask:url("icons/sport-atletismo-clean.svg?v=2")}
+.gg-v92-symbol:has([data-gg-approved="Atletismo"]){--gg-sport-mask:url("icons/sport-atletismo-clean.svg?v=3")}
 .gg-v92-symbol:has([data-gg-approved="Natación"]){--gg-sport-mask:url("icons/sport-natacion-clean.svg")}
 #dashboardSportSelector .gg-v92-symbol:has(.gg-approved-icon){position:relative;background:#171717!important}
 :is(#wzSports,.gg-v71-sports) .gg-v92-symbol:has(.gg-approved-icon){position:relative;background:transparent!important}
@@ -49,8 +49,6 @@
 #wzSports .wz-choice:not(.wz-add-sport)::before,#wzSports .wz-choice:not(.wz-add-sport)::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none}
 #wzSports .wz-choice:not(.wz-add-sport)::before{background:#ffc107;clip-path:polygon(78% 100%,100% 76%,100% 100%)}
 #wzSports .wz-choice:not(.wz-add-sport)::after{background:#2b2b2b;clip-path:polygon(45% 100%,100% 45%,100% 64%,64% 100%)}
-#wzSports .wz-choice:nth-child(even):not(.wz-add-sport)::before{clip-path:polygon(100% 25%,100% 44%,87% 34%)}
-#wzSports .wz-choice:nth-child(3n):not(.wz-add-sport)::after{background:#363636;clip-path:polygon(66% 100%,100% 60%,100% 82%,84% 100%)}
 #wzSports .wz-choice>*{position:relative;z-index:1}
 #wzSports .wz-choice:focus-visible{outline:3px solid #ffc107;outline-offset:3px}
 #wzSports .wz-add-sport{grid-column:1 / -1;min-height:64px;flex-direction:row;align-items:center;justify-content:center;gap:12px;background:#f7f4ea;color:#171717;border-color:#171717}
