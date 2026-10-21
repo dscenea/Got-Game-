@@ -2003,6 +2003,11 @@ function draw(){
  dash.classList.add('gg-v71');
  if(sports().length===1&&!sport)sport=sports()[0];
  let html=section==='home'?header():'<button class="gg-v71-page-back" id="ggV75Home">← Volver a inicio</button>';
+ if(section==='home'){
+  let returning=false;
+  try{const key='gg-club-welcome:'+String(data.club||'club').trim().toLowerCase();returning=localStorage.getItem(key)==='1';localStorage.setItem(key,'1');}catch(_e){}
+  html+='<div class="gg-welcome-club" style="margin:14px 0 18px"><h2 style="font-size:clamp(21px,5vw,27px);line-height:1.2;margin:0 0 6px">'+(returning?'¡Bienvenido de nuevo!':'¡Bienvenido a tu club!')+'</h2><p style="margin:0;line-height:1.45;opacity:.72;font-size:14px">'+(returning?'Tu club está listo para seguir trabajando.':'Todo lo que necesitas para gestionar tu club, en un solo lugar.')+'</p></div>';
+ }
  if(section==='home'&&!sport){
  html+='<div class="gg-v71-grid"><div class="gg-v71-stat"><b>166</b><span>Jugadores · demo</span></div><div class="gg-v71-stat"><b>14</b><span>Entrenadores · demo</span></div><div class="gg-v71-stat"><b>241</b><span>Familias · demo</span></div><div class="gg-v71-stat"><b>8</b><span>Actividades · demo</span></div></div>';
  html+='<button type="button" class="gg-all-club-entry" id="ggManageAllClub"><span><strong>Gestionar todo el club</strong><small>Todos los equipos, personas, calendario y material</small></span><span aria-hidden="true">→</span></button>';
