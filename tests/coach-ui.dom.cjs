@@ -46,3 +46,20 @@ test('attendance buttons are exclusive, resettable, bulk selectable and save the
  event.type='match';window.testAttendance();assert.equal(q('[data-count]').textContent,'0 de 2 asisten');assert.equal(document.querySelectorAll('[aria-pressed="true"]').length,0);
  players[0].attendance['session-key']='pending';event.type='training';window.testAttendance();assert.equal(q('[data-player]').value,'pending','explicit pending attendance must survive reopening');
 });
+test('route handles resize, bend and survive undo without invoking trash or duplicating',()=>{
+ const {window,document}=dom(),context=vm.createContext({window,document,confirm:()=>true});load(context,'tactical-board.js');let saved;
+ window.GGTacticalBoard.edit({sport:'Baloncesto',view:'full',objects:[{id:'p',kind:'pass',color:'#2055a4',label:'',x:10,y:40,x2:30,y2:40}]},b=>saved=b);
+ const q=s=>document.querySelector(s),canvas=q('.gt-board-canvas');canvas.getBoundingClientRect=()=>({left:0,top:0,width:1000,height:650});
+ q('[data-element]').value='0';q('[data-element]').onchange({target:q('[data-element]')});
+ function drag(handle,from,to){canvas.onpointerdown({target:canvas.querySelector('[data-handle="'+handle+'"] circle'),clientX:from[0],clientY:from[1],pointerId:1});canvas.onpointermove({clientX:to[0],clientY:to[1],pointerId:1});assert.equal(q('[data-trash]').hidden,true);canvas.onpointerup({pointerId:1});canvas.onclick({target:canvas});}
+ drag('end',[300,260],[900,260]);assert.ok(canvas.querySelectorAll('[data-handle]').length>3);drag('0',[260,260],[260,100]);q('[data-path-mode]').value='zigzag';q('[data-path-mode]').onchange({target:q('[data-path-mode]')});q('[data-use]').onclick();assert.equal(saved.objects.length,1);assert.equal(saved.objects[0].x2,90);assert.ok(saved.objects[0].points[0].y<40);assert.equal(saved.objects[0].pathMode,'zigzag');q('[data-undo]').onclick();q('[data-use]').onclick();assert.equal(saved.objects[0].pathMode,undefined);
+});
+test('pencil and stroke eraser preserve icons, support cancel and undo, and serialize the actual stroke',()=>{
+ const {window,document}=dom(),context=vm.createContext({window,document,confirm:()=>true});load(context,'tactical-board.js');let saved;
+ window.GGTacticalBoard.edit({sport:'Baloncesto',view:'full',objects:[{id:'a',kind:'attack',color:'#2055a4',label:'1',x:20,y:20}]},b=>saved=b);
+ const q=s=>document.querySelector(s),canvas=q('.gt-board-canvas');canvas.getBoundingClientRect=()=>({left:0,top:0,width:1000,height:650});
+ function tool(value){q('[data-tool]').value=value;q('[data-tool]').onchange({target:q('[data-tool]')});}function event(x,y){return {target:canvas,clientX:x,clientY:y,pointerId:3,button:0};}
+ tool('ink');canvas.onpointerdown(event(100,100));canvas.onpointermove(event(300,300));canvas.onpointerup(event(400,200));canvas.onclick(event(400,200));q('[data-use]').onclick();assert.equal(saved.objects.length,2);assert.equal(saved.objects[1].kind,'ink');assert.ok(saved.objects[1].inkPoints.length>=3);
+ tool('erase');canvas.onpointerdown(event(200,200));canvas.onpointerup(event(200,200));assert.equal(canvas.querySelectorAll('[data-object]').length,1);q('[data-undo]').onclick();assert.equal(canvas.querySelectorAll('[data-object]').length,2);
+ canvas.onpointerdown(event(200,200));canvas.onpointercancel();q('[data-use]').onclick();assert.equal(saved.objects.length,2);assert.equal(saved.objects[0].kind,'attack');
+});
