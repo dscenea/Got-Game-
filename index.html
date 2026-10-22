@@ -1851,8 +1851,8 @@ if(communityButton){
 })();
 </script>
 
-<link rel="stylesheet" href="assets/sport-context.css?v=1">
-<script src="assets/sport-context.js?v=1"></script>
+<link rel="stylesheet" href="assets/sport-context.css?v=2">
+<script src="assets/sport-context.js?v=2"></script>
 
 
 <style id="gg-demo-access-v69">
@@ -1971,7 +1971,7 @@ function header(){return '<div class="gg-v71-header">'+shield+'<div><small>CLUB 
 let welcomeReturningAtEntry=null;
 function draw(){
  dash.classList.add('gg-v71');
- if(sports().length===1&&!sport)sport=sports()[0];
+ if(!sport)sport=window.ggCurrentSport?.()||(sports().length===1?sports()[0]:'all');
  let html=section==='home'?header():'<button class="gg-v71-page-back" id="ggV75Home">← Volver a inicio</button>';
  if(section==='home'){
   if(welcomeReturningAtEntry===null){
@@ -1980,12 +1980,7 @@ function draw(){
   const returning=welcomeReturningAtEntry;
   html+='<div class="gg-welcome-club" style="margin:14px 0 18px"><h2 style="font-size:clamp(21px,5vw,27px);line-height:1.2;margin:0 0 6px">'+(returning?'¡Bienvenido de nuevo!':'¡Bienvenido a tu club!')+'</h2><p style="margin:0;line-height:1.45;opacity:.72;font-size:14px">'+(returning?'Tu club está listo para seguir trabajando.':'Todo lo que necesitas para gestionar tu club, en un solo lugar.')+'</p></div>';
  }
- if(section==='home'&&!sport){
- html+='<div class="gg-v71-grid"><div class="gg-v71-stat"><b>166</b><span>Jugadores · demo</span></div><div class="gg-v71-stat"><b>14</b><span>Entrenadores · demo</span></div><div class="gg-v71-stat"><b>241</b><span>Familias · demo</span></div><div class="gg-v71-stat"><b>8</b><span>Actividades · demo</span></div></div>';
- html+='<button type="button" class="gg-all-club-entry" id="ggManageAllClub"><span><strong>Gestionar todo el club</strong><small>Todos los equipos, personas, calendario y material</small></span><span aria-hidden="true">→</span></button>';
- html+='<div class="gg-v71-heading"><h3>ELIGE UN DEPORTE</h3></div><div class="gg-v71-sports">'+sports().map((name,i)=>'<button class="gg-v71-sport" data-sport="'+name+'"><span class="gg-v71-alert">'+(i+1)+'</span><span class="gg-v71-symbol">'+(name==='Baloncesto'?'🏀':name==='Fútbol'?'⚽':'🏐')+'</span><strong>'+name+'</strong><small>Gestionar deporte →</small></button>').join('')+'</div>';
- html+='<div class="gg-v71-heading"><h3>Actividad reciente del club</h3></div><div class="gg-v71-card"><b>Solicitudes pendientes</b><p>Revisa los avisos de cada deporte desde sus tarjetas.</p></div>';
- }else if(section==='home'){
+ if(section==='home'){
  html+='<div class="gg-v71-heading"><h3>Gestiona '+(sport==='all'?'todo el club':sport)+'</h3><button class="gg-v71-back" id="ggV71Switch">Cambiar deporte</button></div>';
  html+='<div class="gg-v71-grid"><div class="gg-v71-stat"><b>3</b><span>Avisos · demo</span></div><div class="gg-v71-stat"><b>2</b><span>Solicitudes · demo</span></div></div>';
  ['Equipos y categorías','Jugadores y familias','Entrenadores','Instalaciones y horarios','Calendario y actividades','Publicaciones y comunidad'].forEach((name,i)=>html+='<button class="gg-v71-card" data-module="'+i+'" style="display:block;width:100%;text-align:left;font-weight:800">'+name+' →</button>');
@@ -2012,7 +2007,7 @@ function draw(){
  window.ggApplyClubBackground?.(section==='home'?(sport||''):'');
 }
 window.ggRenderClubHome=function(context=null){
- section='home';sport=sports().length===1?sports()[0]:context;
+ section='home';sport=sports().length===1?sports()[0]:(context||window.ggCurrentSport?.()||'all');
  const workspace=document.getElementById('ggWorkspace');
  if(workspace){workspace.hidden=true;workspace.style.removeProperty('display')}
  dash.classList.remove('gg-v83-workspace','gg-subscreen');main.classList.remove('gg-home-hidden');main.style.removeProperty('display');
@@ -2057,8 +2052,7 @@ function paintSports(){
  });
 }
 window.ggReturnToSports=function(){
- currentSport=null;currentModule=null;dashboardSelectedSport=null;window.ggSelectSportContext('all');
- window.ggRenderClubHome();paintSports();if((data.sports||[]).length===1)showSport();
+ window.ggOpenCoordinationPanel('all');
 };
 window.ggOpenCoordinationPanel=function(value=window.ggCurrentSport()){
  window.ggSelectSportContext(value);currentSport=window.ggCurrentSport();currentModule=null;
@@ -2136,7 +2130,7 @@ function showModule(i,returnToPanel){
 const observer=new MutationObserver(()=>{if(!dash.classList.contains('gg-v71'))return;paintSports();if(getSport()&&main.querySelector('[data-module]'))showSport()});
 // Disabled: painting the demo inside a mutation callback could recursively repaint and freeze Safari.
 const originalGo=go;
-go=function(id){originalGo(id);if(id==='dashboard'){currentSport=(data.sports||[]).length===1?data.sports[0]:null;currentModule=null;setTimeout(()=>{paintSports();if(currentSport)showSport()},0)}};
+go=function(id){originalGo(id);if(id==='dashboard'){currentSport=window.ggCurrentSport();currentModule=null;setTimeout(()=>window.ggOpenCoordinationPanel(window.ggCurrentSport()),0)}};
 if(welcome&&!document.getElementById('ggLogrobasketQuickAccess')){
  const btn=document.createElement('button');btn.className='gg-demo-shortcut';btn.type='button';btn.textContent='Acceso rápido · Logrobasket (1 deporte)';
  btn.onclick=()=>{selectedRole='Coordinador/a';data={club:'Logrobasket',sports:['Baloncesto'],clubPalette:['#a20f16','#ffffff','#171717'],roleColors:{coord:'#a20f16'},facilities:[{name:'Polideportivo Lobete',sports:['Baloncesto'],spaces:[]}]};document.getElementById('clubSmall').textContent=data.club;go('dashboard')};
