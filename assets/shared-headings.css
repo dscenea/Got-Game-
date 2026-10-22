@@ -39,7 +39,7 @@
 
 /* Section shell: heading on the club background, working area on white. */
 #dashboard.gg-v71.gg-v83-workspace #ggWorkspace.gg-page-shell{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0 0 120px!important}
-#dashboard #ggV71Main.gg-page-shell{background:transparent!important}
+#dashboard #ggV71Main.gg-page-shell{background:transparent!important;padding:0 0 120px!important}
 #dashboard .gg-page-header{padding:0 0 18px;margin:0;background:transparent;color:#171717}
 #dashboard .gg-page-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:44px;margin:0 0 6px}
 #dashboard .gg-page-nav .gg-club-scope{position:static!important;max-width:100%;margin:0 0 0 auto}
