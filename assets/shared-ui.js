@@ -19,7 +19,7 @@
    if(!back.classList.contains('gg-home-back')){
     back.classList.add('gg-home-back');back.type='button';
     back.setAttribute('aria-label','Volver al inicio');back.title='Volver al inicio';
-    const arrow=document.createElement('span');arrow.className='gg-home-back-arrow';arrow.setAttribute('aria-hidden','true');arrow.textContent='‹';
+    const arrow=document.createElement('span');arrow.className='gg-home-back-arrow';arrow.setAttribute('aria-hidden','true');arrow.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="m14 6-6 6 6 6"/></svg>';
     const label=document.createElement('span');label.className='gg-home-back-label';label.textContent='Inicio';
     back.replaceChildren(arrow,label);
    }

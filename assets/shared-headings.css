@@ -18,8 +18,17 @@
 /* One unobtrusive home return in desktop and compact layouts. */
 #dashboard button.gg-home-back,#dashboard .gg-shared-page-heading button.gg-home-back,#dashboard .gg-new-calendar .gg-calendar-page-head button.gg-home-back{appearance:none!important;display:inline-flex!important;align-items:center!important;justify-content:flex-start!important;gap:8px!important;flex:0 0 auto!important;width:auto!important;min-width:0!important;height:44px!important;min-height:44px!important;margin:0 0 12px!important;padding:0 4px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#171717!important;font:600 14px/1.2 Arial,sans-serif!important;cursor:pointer}
 #dashboard button.gg-home-back::before,#dashboard .gg-new-calendar .gg-calendar-page-head button.gg-home-back::before{content:none!important;display:none!important}
-#dashboard button.gg-home-back .gg-home-back-arrow{display:block!important;font:400 32px/1 Arial,sans-serif!important}
+#dashboard button.gg-home-back .gg-home-back-arrow{display:inline-flex!important;align-items:center;justify-content:center;width:20px;height:20px;flex:none}
+#dashboard button.gg-home-back .gg-home-back-arrow svg{display:block;width:20px!important;height:20px!important;stroke:currentColor}
 #dashboard button.gg-home-back .gg-home-back-label{display:block!important;font:600 14px/1.2 Arial,sans-serif!important}
 #dashboard .gg-home-heading{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:0!important}
 #dashboard button.gg-home-back:focus-visible{outline:2px solid #171717!important;outline-offset:3px!important}
 #dashboard button.gg-home-back:hover .gg-home-back-label{text-decoration:underline;text-underline-offset:3px}
+
+/* Desktop scope shares the home-control row instead of reserving a whole row. */
+@media(min-width:1024px) and (hover:hover) and (pointer:fine){
+ #dashboard.gg-v71.gg-v83-workspace #ggWorkspace:has(.gg-home-back){position:relative;padding-top:8px!important}
+ #ggWorkspace:has(.gg-home-back)>.gg-club-scope{position:absolute;top:8px;right:16px;max-width:calc(100% - 130px);margin:0;z-index:1}
+ #ggWorkspace:has(.gg-home-back)>.gg-club-scope label{white-space:nowrap}
+ #dashboard #ggWorkspace button.gg-home-back{gap:5px!important;margin-bottom:4px!important;padding-left:0!important}
+}
