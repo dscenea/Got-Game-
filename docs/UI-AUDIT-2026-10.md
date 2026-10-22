@@ -52,3 +52,9 @@ Realizar pruebas de navegación en navegador real, documentar incidencias concre
 - **Riesgo de almacenamiento:** los equipos y horarios utilizan repositorios propios, pero las instalaciones siguen persistiendo en la configuración del club. No fusionar estos almacenes de forma improvisada.
 - **Pruebas pendientes:** comprobar que la ficha de Alevín A muestra los mismos horarios que Lobete y Calendario; repetir para fútbol en Ebro Norte; modificar una actividad, comprobar la pista y el calendario; verificar avisos de conflicto.
 - **Siguiente refactor:** separar el editor de horarios y los componentes de instalaciones del HTML principal, conservando sus APIs públicas y añadiendo pruebas automatizadas de identidad y conflictos.
+
+## Extracción del editor de horarios
+- Editor y manejadores `ggAddEvent`, `ggEditScheduleEvent` y `ggSaveEvent` trasladados a `assets/schedule-editor.js` mediante inyección explícita de dependencias del espacio de coordinación. Se mantienen los nombres de las funciones públicas y el almacenamiento existente.
+- La carga del módulo se realiza antes de la inicialización del espacio de coordinación.
+- Pruebas repetibles en `tests/architecture-smoke.js`: separación de deportes, resolución de pista y equipo, consulta compartida de horarios y conflictos de ocupación.
+- Pruebas ejecutadas de forma aislada sobre los módulos reales: cuatro equipos de dos deportes, asociación de pista y detección de solapamiento correctas. Falta ejecutar los recorridos completos en Safari.
