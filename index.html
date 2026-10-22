@@ -1781,7 +1781,7 @@ function community(tab='posts'){
  oldView('teams');
  dash.classList.add('gg-subscreen');
  area.hidden=false;
- area.innerHTML='<div class="gg-eyebrow">COMUNIDAD</div><h1>Comunidad</h1><p class="gg-muted">Toda la actividad y las conexiones de tu club.</p><div class="gg-community-tabs" id="ggCommunityTabs"></div><div id="ggCommunityContent"></div>';
+ area.innerHTML='<h1>Comunidad</h1><p class="gg-muted">Toda la actividad y las conexiones de tu club.</p><div class="gg-community-tabs" id="ggCommunityTabs"></div><div id="ggCommunityContent"></div>';
  const tabs=area.querySelector('#ggCommunityTabs'),content=area.querySelector('#ggCommunityContent');
  [['posts','Publicaciones'],['network','Red de clubes'],['social','Redes sociales'],['inbox','Buzón de entrada']].forEach(([key,label])=>{
  const b=document.createElement('button');b.type='button';b.textContent=label;b.className=key===tab?'active':'';b.onclick=()=>community(key);tabs.append(b);
