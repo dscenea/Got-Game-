@@ -9,7 +9,7 @@ const load=(context,path)=>vm.runInContext(fs.readFileSync(require.resolve('../a
 test('court clicks keep their target through pointerup; symbols, two-point lines, drag and undo retain coordinates',()=>{
  const {window,document}=dom(),context=vm.createContext({window,document,confirm:()=>true});load(context,'tactical-board.js');let saved;
  window.GGTacticalBoard.edit({sport:'Baloncesto',view:'full',objects:[]},b=>saved=b);
- const q=s=>document.querySelector(s),canvas=q('.gt-board-canvas');canvas.getBoundingClientRect=()=>({left:10,top:20,width:1000,height:650});
+ const q=s=>document.querySelector(s),canvas=q('.gt-board-canvas');canvas.getBoundingClientRect=()=>({left:10,top:20,width:1000,height:650});q('[data-trash]').getBoundingClientRect=()=>({left:900,right:1010,top:500,bottom:620});
  function tool(value){q('[data-tool]').value=value;q('[data-tool]').onchange({target:q('[data-tool]')});}
  function tap(x,y){const target=canvas.querySelector('svg>rect'),e={target,clientX:10+x*10,clientY:20+y*6.5,pointerId:1};canvas.onpointerdown(e);canvas.onpointerup(e);assert.equal(target.parentNode,canvas.querySelector('svg'),'SVG target must survive until click');canvas.onclick(e);}
  tool('attack');tap(25,30);tap(75,60);assert.equal(canvas.querySelectorAll('[data-object]').length,2);
@@ -17,6 +17,21 @@ test('court clicks keep their target through pointerup; symbols, two-point lines
  q('[data-undo]').onclick();assert.equal(canvas.querySelectorAll('[data-object]').length,2);q('[data-redo]').onclick();
  tool('select');canvas.onpointerdown({target:canvas.querySelector('[data-object="0"] circle'),clientX:260,clientY:215,pointerId:1});canvas.onpointermove({clientX:360,clientY:280});canvas.onpointerup();
  q('[data-use]').onclick();assert.equal(saved.objects[0].x,35);assert.equal(saved.objects[0].y,40);assert.equal(saved.objects[1].label,'2');assert.equal(saved.objects[2].x,20);assert.equal(saved.objects[2].x2,80);
+});
+test('existing objects drag in drawing mode without cloning; trash deletes once, undo restores, cancel keeps the original and coaches show E',()=>{
+ const {window,document}=dom(),context=vm.createContext({window,document,confirm:()=>true});load(context,'tactical-board.js');let saved;
+ window.GGTacticalBoard.edit({sport:'Fútbol',view:'half',objects:[{id:'coach',kind:'coach',x:20,y:20,color:'#2055a4',label:'7'}]},b=>saved=b);
+ const q=s=>document.querySelector(s),canvas=q('.gt-board-canvas'),trash=q('[data-trash]');canvas.getBoundingClientRect=()=>({left:0,top:0,width:1000,height:650});trash.getBoundingClientRect=()=>({left:850,right:990,top:500,bottom:640});
+ assert.equal(canvas.querySelector('[data-object] text').textContent,'E');assert.equal(trash.hidden,true);
+ q('[data-tool]').value='coach';q('[data-tool]').onchange({target:q('[data-tool]')});
+ function down(){canvas.onpointerdown({target:canvas.querySelector('[data-object] circle'),clientX:200,clientY:130,pointerId:2,button:0});}
+ function move(x,y){canvas.onpointermove({clientX:x,clientY:y,pointerId:2});}
+ function up(x,y){canvas.onpointerup({clientX:x,clientY:y,pointerId:2});canvas.onclick({target:canvas,clientX:x,clientY:y});}
+ down();move(400,260);assert.equal(trash.hidden,false);up(400,260);assert.equal(canvas.querySelectorAll('[data-object]').length,1);assert.equal(trash.hidden,true);
+ q('[data-undo]').onclick();down();move(920,560);assert.equal(trash.classList.contains('is-over'),true);up(920,560);assert.equal(canvas.querySelectorAll('[data-object]').length,0);
+ q('[data-undo]').onclick();assert.equal(canvas.querySelectorAll('[data-object]').length,1);q('[data-use]').onclick();assert.equal(saved.objects[0].x,20);assert.equal(saved.objects[0].y,20);
+ down();move(920,560);canvas.onpointercancel();assert.equal(trash.hidden,true);assert.equal(canvas.querySelectorAll('[data-object]').length,1);q('[data-use]').onclick();assert.equal(saved.objects[0].x,20);
+ const target=canvas.querySelector('svg>rect'),e={target,clientX:600,clientY:300,pointerId:3,button:0};canvas.onpointerdown(e);canvas.onpointerup(e);canvas.onclick(e);q('[data-use]').onclick();assert.equal(saved.objects.length,2);assert.equal(saved.objects[1].label,'E');assert.equal(canvas.querySelector('[data-object="1"] text').textContent,'E');
 });
 test('attendance buttons are exclusive, resettable, bulk selectable and save the same player/status payload',()=>{
  const {window,document}=dom(),event={id:'s1',date:'2026-10-23',type:'training',teamName:'Alevín',hour:18,duration:1},players=[{id:'a',name:'Jugador A',number:4,attendance:{}},{id:'b',name:'Jugador B',number:5,attendance:{}}];let payload;
