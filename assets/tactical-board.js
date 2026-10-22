@@ -1,0 +1,81 @@
+/* Code-native, editable 2D boards. Coordinates are percentages, independent of device size. */
+(function(root){
+ 'use strict';
+ const kinds=['attack','defense','coach','ball','cone','hoop','goal','text','move','pass','dribble','shot','zone'];
+ const lines=['move','pass','dribble','shot','zone'];
+ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const clone=v=>JSON.parse(JSON.stringify(v));
+ function validate(input,sport){
+  if(!input||input.sport!==sport||!['full','half','blank'].includes(input.view)||!Array.isArray(input.objects)||input.objects.length>150)throw Error('Pizarra no válida (máximo 150 elementos).');
+  const ids=new Set(),objects=input.objects.map((o,i)=>{const id=String(o.id||'item-'+i);if(!/^[\w-]{1,80}$/.test(id)||ids.has(id)||!kinds.includes(o.kind)||!/^#[\da-f]{6}$/i.test(o.color)||String(o.label||'').length>18)throw Error('Hay un elemento de pizarra no válido.');if(o.angle!==undefined&&(!Number.isFinite(o.angle)||o.angle<0||o.angle>=360))throw Error('Giro no válido.');ids.add(id);const row={id,kind:o.kind,color:o.color,label:String(o.label||''),angle:o.angle||0};for(const p of ['x','y',...(lines.includes(o.kind)?['x2','y2']:[])]){if(!Number.isFinite(o[p])||o[p]<0||o[p]>100)throw Error('Posición fuera de la pizarra.');row[p]=o[p];}return row;});return {sport,view:input.view,objects};
+ }
+ function surface(sport,view){
+  if(view==='blank'||!['Baloncesto','Fútbol','Voleibol'].includes(sport))return '<rect width="1000" height="650" fill="#faf9f5"/>';
+  const basket=sport==='Baloncesto',volley=sport==='Voleibol',color=basket?'#f5dfb7':volley?'#d9edf2':'#e1efdf';
+  let geometry='';
+  if(basket&&view==='full')geometry='<rect x="80" y="100" width="840" height="450"/><path d="M500 100v450M80 251h174v148H80M920 251H746v148h174M110 301v48m780-48v48"/><circle cx="500" cy="325" r="54"/><circle cx="254" cy="325" r="54"/><circle cx="746" cy="325" r="54"/><circle cx="125" cy="325" r="8"/><circle cx="875" cy="325" r="8"/><path d="M80 124h62a203 203 0 0 1 0 402H80M920 124h-62a203 203 0 0 0 0 402h62"/>';
+  else if(basket)geometry='<rect x="200" y="45" width="600" height="560"/><path d="M402 605V373h196v232M470 570h60M232 605v-80a270 270 0 0 1 536 0v80"/><circle cx="500" cy="373" r="72"/><circle cx="500" cy="553" r="11"/>';
+  else if(volley&&view==='full')geometry='<rect x="80" y="115" width="840" height="420"/><path d="M500 95v460M360 115v420M640 115v420"/><path d="M492 115v420m16-420v420" stroke-dasharray="7 7"/>';
+  else if(volley)geometry='<rect x="230" y="55" width="540" height="540"/><path d="M210 55h580M230 235h540"/><path d="M230 65h540" stroke-dasharray="7 7"/>';
+  else if(view==='full')geometry='<rect x="80" y="53" width="840" height="544"/><path d="M500 53v544M80 164h132v322H80M920 164H788v322h132M80 252h44v146H80M920 252h-44v146h44"/><circle cx="500" cy="325" r="73"/><circle cx="168" cy="325" r="3"/><circle cx="832" cy="325" r="3"/><path d="M80 295H60v60h20m840-60h20v60h-20"/>';
+  else geometry='<rect x="160" y="60" width="680" height="525"/><path d="M300 60v165h400V60M408 60v55h184V60M463 60V40h74v20"/><circle cx="500" cy="170" r="3"/><path d="M430 225a91 91 0 0 0 140 0M410 585a90 90 0 0 1 180 0"/>';
+  return '<rect width="1000" height="650" fill="'+color+'"/><g fill="none" stroke="#657365" stroke-width="3">'+geometry+'</g>';
+ }
+ function object(o,index,selected,sport){
+  const x=o.x*10,y=o.y*6.5,c=esc(o.color),label=esc(o.label),attrs=' data-object="'+index+'"';let art='';
+  if(lines.includes(o.kind)){
+   const endX=o.x2*10,endY=o.y2*6.5,dx=endX-x,dy=endY-y,d=Math.hypot(dx,dy)||1,ux=dx/d,uy=dy/d;
+   if(o.kind==='zone')art='<rect x="'+Math.min(x,endX)+'" y="'+Math.min(y,endY)+'" width="'+Math.abs(dx)+'" height="'+Math.abs(dy)+'" fill="'+c+'" fill-opacity=".14" stroke="'+c+'" stroke-dasharray="7 5"/>';
+   else{
+    let path='M'+x+' '+y+'L'+endX+' '+endY;
+    if(o.kind==='dribble'){const n=Math.max(2,Math.ceil(d/15));path='M'+x+' '+y;for(let i=1;i<n;i++){const z=(i%2?5:-5);path+='L'+(x+dx*i/n-uy*z)+' '+(y+dy*i/n+ux*z);}path+='L'+endX+' '+endY;}
+    art='<path d="'+path+'" fill="none" stroke="'+c+'" stroke-width="4" '+(o.kind==='pass'?'stroke-dasharray="12 9"':'')+'/>';
+    if(o.kind==='shot')art+='<path d="M'+(x-uy*7)+' '+(y+ux*7)+'L'+(endX-uy*7)+' '+(endY+ux*7)+'" fill="none" stroke="'+c+'" stroke-width="3"/>';
+    art+='<path d="M'+endX+' '+endY+'L'+(endX-ux*16-uy*8)+' '+(endY-uy*16+ux*8)+'L'+(endX-ux*16+uy*8)+' '+(endY-uy*16-ux*8)+'Z" fill="'+c+'"/>';
+   }
+   art='<path d="M'+x+' '+y+'L'+endX+' '+endY+'" stroke="transparent" stroke-width="24"/>'+art;
+  }else{
+   if(o.kind==='attack'||o.kind==='defense'||o.kind==='coach'){art=o.kind==='defense'?'<rect x="-22" y="-22" width="44" height="44" rx="5" fill="'+c+'" stroke="#fff" stroke-width="3"/>':'<circle r="23" fill="'+c+'" stroke="#fff" stroke-width="3"/>';art+='<text text-anchor="middle" dominant-baseline="central" font-size="18" font-weight="700" fill="#fff">'+(label||(o.kind==='defense'?'X':o.kind==='coach'?'E':'1'))+'</text>';if(o.kind==='defense')art+='<path d="M-6 -28l12 -12m0 12-12-12" stroke="'+c+'" stroke-width="3"/>';
+   }else if(o.kind==='ball'){art='<circle r="13" fill="'+(sport==='Baloncesto'?'#edb66f':'#fff')+'" stroke="#171717" stroke-width="3"/>';art+=sport==='Fútbol'?'<path d="m0-7 7 5-3 8h-8l-3-8ZM0-7v-6M7-2l6-2M4 6l4 5M-4 6l-4 5M-7-2l-6-2" fill="none" stroke="#171717" stroke-width="2"/>':sport==='Voleibol'?'<path d="M-12-3Q0-7 9 9M-3-12Q7 0 12 3M-9 9Q-7 0 3-12" fill="none" stroke="#171717" stroke-width="2"/>':'<path d="M-13 0h26M0-13v26M-9-9q18 9 0 18M9-9q-18 9 0 18" fill="none" stroke="#171717" stroke-width="2"/>';}
+   else if(o.kind==='cone')art='<path d="M0-20-15 14h30ZM-20 16h40v6h-40Z" fill="'+c+'" stroke="#333" stroke-width="2"/>';
+   else if(o.kind==='hoop')art='<ellipse rx="24" ry="13" fill="none" stroke="'+c+'" stroke-width="6"/>';
+   else if(o.kind==='goal')art='<path d="M-28 20v-40h56v40M-28-12h56M-28-4h56M-28 4h56M-28 12h56M-18-20v40M-6-20v40M6-20v40M18-20v40" fill="none" stroke="'+c+'" stroke-width="3"/>';
+   else art='<text text-anchor="middle" font-size="22" font-weight="650" fill="'+c+'">'+(label||'Texto')+'</text>';
+   art='<g transform="translate('+x+' '+y+') rotate('+(o.angle||0)+')">'+art+'</g>';
+  }
+  return '<g'+attrs+'>'+art+(selected?'<circle cx="'+x+'" cy="'+y+'" r="31" fill="none" stroke="#111" stroke-width="3" stroke-dasharray="5 5"/>':'')+'</g>';
+ }
+ function svg(board,selected=-1){return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650" role="img" aria-label="Pizarra de '+esc(board.sport)+'" font-family="Arial,sans-serif">'+surface(board.sport,board.view)+board.objects.map((o,i)=>object(o,i,i===selected,board.sport)).join('')+'</svg>';}
+ function edit(initial,onSave){
+  let board=validate(initial,initial.sport),selected=-1,tool='select',pending=null,drag=null,changed=false;
+  const undo=[],redo=[],modal=document.createElement('dialog');modal.className='gt-board-dialog';
+  const labels={select:'Seleccionar / mover',attack:'Atacante',defense:'Defensor',coach:'Entrenador',ball:'Balón',cone:'Cono',hoop:'Aro',goal:'Portería',text:'Texto',move:'Desplazamiento',pass:'Pase',dribble:'Bote / conducción',shot:'Tiro',zone:'Zona'};
+  modal.innerHTML='<header><h2>Pizarra · '+esc(board.sport)+'</h2><button type="button" data-cancel>Cerrar</button></header><div class="gt-board-tools"><label>Superficie<select data-view><option value="full">Completa</option><option value="half">Media pista / campo</option><option value="blank">Espacio libre</option></select></label><label>Herramienta<select data-tool>'+Object.entries(labels).map(([v,l])=>'<option value="'+v+'">'+l+'</option>').join('')+'</select></label><label>Color<input type="color" data-color value="#2055a4"></label><label>Número / texto<input data-label maxlength="18" value="1"></label><button type="button" data-style>Aplicar a seleccionado</button></div><div class="gt-board-canvas" tabindex="0" aria-label="Pizarra editable. Selecciona un elemento para moverlo con las flechas del teclado."></div><p role="status" data-board-status></p><div class="gt-board-actions"><button type="button" data-undo>Deshacer</button><button type="button" data-redo>Rehacer</button><button type="button" data-remove>Eliminar seleccionado</button><button type="button" data-duplicate>Duplicar seleccionado</button><button type="button" data-rotate>Girar 45°</button><label>Elemento<select data-element aria-label="Seleccionar elemento"></select></label><button type="button" data-center>Añadir al centro</button><button type="button" data-clear>Vaciar</button><button type="button" data-png>Descargar PNG</button><button type="button" data-use>Usar pizarra</button></div><small>Elige un icono y toca la pista para colocarlo. Para flechas o zonas, toca inicio y final. Selecciona para arrastrar. Defensa: cuadrado; ataque: círculo. Los trazados tienen una leyenda en Herramienta.</small>';
+  document.body.append(modal);const canvas=modal.querySelector('.gt-board-canvas'),status=modal.querySelector('[data-board-status]'),q=s=>modal.querySelector(s);q('[data-view]').value=board.view;
+  const remember=()=>{undo.push(clone(board));if(undo.length>60)undo.shift();redo.length=0;changed=true;};
+  function draw(){canvas.innerHTML=svg(board,selected);q('[data-undo]').disabled=!undo.length;q('[data-redo]').disabled=!redo.length;q('[data-remove]').disabled=selected<0;q('[data-duplicate]').disabled=selected<0;q('[data-rotate]').disabled=selected<0||lines.includes(board.objects[selected]?.kind);q('[data-element]').innerHTML='<option value="-1">Ninguno</option>'+board.objects.map((o,i)=>'<option value="'+i+'" '+(selected===i?'selected':'')+'>'+(i+1)+'. '+labels[o.kind]+' '+esc(o.label)+'</option>').join('');}
+  q('[data-element]').onchange=e=>{selected=Number(e.target.value);tool='select';q('[data-tool]').value='select';pending=null;draw();hint();};
+  q('[data-rotate]').onclick=()=>{if(selected<0||lines.includes(board.objects[selected].kind))return;remember();board.objects[selected].angle=((board.objects[selected].angle||0)+45)%360;draw();};
+  q('[data-duplicate]').onclick=()=>{if(selected<0||board.objects.length>=150)return;remember();const o=clone(board.objects[selected]);o.id='o-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);o.x=Math.min(100,o.x+3);o.y=Math.min(100,o.y+3);if(lines.includes(o.kind)){o.x2=Math.min(100,o.x2+3);o.y2=Math.min(100,o.y2+3);}board.objects.push(o);selected=board.objects.length-1;draw();};
+  q('[data-center]').onclick=()=>{if(board.objects.length>=150)return;remember();const kind=tool==='select'?'attack':tool;board.objects.push({id:'o-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),kind,color:q('[data-color]').value,label:q('[data-label]').value,x:50,y:50,...(lines.includes(kind)?{x2:70,y2:60}:{})});selected=board.objects.length-1;pending=null;draw();};
+  function point(e){const rect=canvas.getBoundingClientRect();return {x:Math.max(0,Math.min(100,(e.clientX-rect.left)/rect.width*100)),y:Math.max(0,Math.min(100,(e.clientY-rect.top)/rect.height*100))};}
+  function hint(){status.textContent=pending?'Toca el punto final.':tool==='select'?'Selecciona y arrastra un elemento, o muévelo con las flechas del teclado.':'Toca la pista para colocar: '+labels[tool]+'.';}
+  q('[data-tool]').onchange=e=>{tool=e.target.value;pending=null;selected=-1;draw();hint();};
+  q('[data-view]').onchange=e=>{remember();board.view=e.target.value;pending=null;draw();status.textContent='Superficie cambiada. Las posiciones se conservan; puedes ajustarlas.';};
+  canvas.onpointerdown=e=>{if(tool!=='select')return;const item=e.target.closest('[data-object]');selected=item?Number(item.dataset.object):-1;if(selected>=0){drag={point:point(e),original:clone(board.objects[selected]),before:clone(board),moved:false};canvas.setPointerCapture?.(e.pointerId);}draw();};
+  canvas.onpointermove=e=>{if(!drag)return;const p=point(e),dx=p.x-drag.point.x,dy=p.y-drag.point.y;if(Math.abs(dx)+Math.abs(dy)<.4&&!drag.moved)return;drag.moved=true;const o={...drag.original},clamp=v=>Math.max(0,Math.min(100,v));o.x=clamp(o.x+dx);o.y=clamp(o.y+dy);if(lines.includes(o.kind)){o.x2=clamp(o.x2+dx);o.y2=clamp(o.y2+dy);}board.objects[selected]=o;draw();};
+  canvas.onpointerup=()=>{if(drag?.moved){undo.push(drag.before);if(undo.length>60)undo.shift();redo.length=0;changed=true;}drag=null;draw();};
+  canvas.onpointercancel=()=>{if(drag){board=drag.before;drag=null;draw();}};
+  canvas.onclick=e=>{if(tool==='select')return;if(board.objects.length>=150){status.textContent='Máximo de 150 elementos.';return;}const p=point(e);if(lines.includes(tool)&&!pending){pending=p;hint();return;}remember();const o={id:'o-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),kind:tool,color:q('[data-color]').value,label:q('[data-label]').value,...(pending||p)};if(pending){o.x2=p.x;o.y2=p.y;pending=null;}board.objects.push(o);if(['attack','defense'].includes(tool)&&/^\d{1,2}$/.test(o.label))q('[data-label]').value=String(Number(o.label)+1);selected=board.objects.length-1;draw();hint();};
+  canvas.onkeydown=e=>{if(selected<0||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Delete','Backspace'].includes(e.key))return;e.preventDefault();if(['Delete','Backspace'].includes(e.key)){remove();return;}remember();const o=board.objects[selected],dx=(e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0)*(e.shiftKey?5:1),dy=(e.key==='ArrowDown'?1:e.key==='ArrowUp'?-1:0)*(e.shiftKey?5:1);for(const k of ['x',...(lines.includes(o.kind)?['x2']:[])])o[k]=Math.max(0,Math.min(100,o[k]+dx));for(const k of ['y',...(lines.includes(o.kind)?['y2']:[])])o[k]=Math.max(0,Math.min(100,o[k]+dy));draw();};
+  q('[data-style]').onclick=()=>{if(selected<0){status.textContent='Selecciona primero un elemento.';return;}remember();Object.assign(board.objects[selected],{color:q('[data-color]').value,label:q('[data-label]').value});draw();};
+  function remove(){if(selected<0)return;remember();board.objects.splice(selected,1);selected=-1;draw();}q('[data-remove]').onclick=remove;
+  q('[data-clear]').onclick=()=>{if(!board.objects.length)return;remember();board.objects=[];selected=-1;pending=null;draw();};
+  for(const [name,from,to] of [['undo',undo,redo],['redo',redo,undo]])q('[data-'+name+']').onclick=()=>{if(!from.length)return;to.push(clone(board));board=from.pop();q('[data-view]').value=board.view;selected=-1;pending=null;changed=true;draw();};
+  function cancel(){if(!changed||confirm('¿Cerrar sin incorporar los cambios de la pizarra?'))modal.close();}q('[data-cancel]').onclick=cancel;modal.addEventListener('cancel',e=>{e.preventDefault();cancel();});modal.addEventListener('close',()=>modal.remove(),{once:true});
+  q('[data-use]').onclick=()=>{if(pending){status.textContent='Completa el trazado o cambia de herramienta para descartarlo.';return;}try{onSave(validate(board,board.sport));modal.close();}catch(error){status.textContent=error.message;}};
+  q('[data-png]').onclick=async()=>{let url;try{url=URL.createObjectURL(new Blob([svg(board)],{type:'image/svg+xml'}));const img=new Image();img.src=url;await img.decode();const output=document.createElement('canvas');output.width=1600;output.height=1040;output.getContext('2d').drawImage(img,0,0,1600,1040);const blob=await new Promise(r=>output.toBlob(r,'image/png'));if(!blob)throw Error('No se pudo crear la imagen.');const download=URL.createObjectURL(blob),a=document.createElement('a');a.href=download;a.download='ejercicio-'+board.sport.toLocaleLowerCase('es')+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(download),10000);status.textContent='Imagen preparada para descargar.';}catch(error){status.textContent='No se pudo exportar la pizarra: '+error.message;}finally{if(url)URL.revokeObjectURL(url);}};
+  draw();hint();modal.showModal();
+ }
+ root.GGTacticalBoard={validate,svg,edit,kinds};
+})(typeof window!=='undefined'?window:globalThis);
