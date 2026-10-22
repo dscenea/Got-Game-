@@ -18,6 +18,12 @@
 .gg-scope-icon>.gg-v92-symbol,.gg-scope-icon>.gg-custom-sport-initial{width:32px!important;height:32px!important;min-width:32px!important;min-height:32px!important;border-radius:9px!important;font-size:17px!important;overflow:hidden}
 .gg-scope-icon img{display:block;width:32px!important;height:32px!important;max-width:100%!important;object-fit:contain}
 .gg-scope-icon>svg{width:23px;height:23px}
+/* Use the current clean sport silhouettes in neutral ink throughout the picker. */
+#dashboard .gg-club-scope .gg-scope-icon{color:#171717}
+#dashboard .gg-club-scope .gg-v92-symbol:has(.gg-approved-icon){position:relative;background:transparent!important;padding:0!important;border-radius:0!important;box-shadow:none!important}
+#dashboard .gg-club-scope .gg-v92-symbol:has(.gg-approved-icon)::after{content:"";position:absolute;inset:4px;background:currentColor;mask:var(--gg-sport-mask) center / contain no-repeat;-webkit-mask:var(--gg-sport-mask) center / contain no-repeat;pointer-events:none}
+#dashboard .gg-club-scope .gg-approved-icon{visibility:hidden}
+#dashboard .gg-club-scope .gg-custom-sport-initial{background:transparent!important;color:#171717!important}
 .gg-scope-options{position:absolute;top:calc(100% + 8px);right:0;z-index:40;width:260px;max-width:calc(100vw - 32px);max-height:min(60dvh,360px);overflow:auto;padding:6px;border:1px solid var(--club-border,#ddd);border-radius:14px;background:#fff;box-shadow:0 12px 35px #0002}
 #dashboard .gg-scope-options button{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:8px 10px;border:0;border-radius:9px;background:#fff;color:#171717;font:inherit;font-size:14px;font-weight:600;line-height:1.3;text-align:left;cursor:pointer}
 #dashboard .gg-scope-options button[aria-pressed=true],#dashboard .gg-scope-options button:hover{background:var(--club-wash,#f4f1e9)}
