@@ -13,9 +13,38 @@
    else button.removeAttribute('aria-current');
   });
  }
+ function pageShell(root,isModule=false){
+  if(!root)return;
+  const existing=root.querySelector(':scope > .gg-page-header');
+  if(existing){
+   const scope=root.querySelector(':scope > .gg-club-scope');
+   if(scope)existing.querySelector('.gg-page-nav').append(scope);
+   return;
+  }
+  const back=root.querySelector(isModule?':scope > .gg-module-unified-head #ggV72Back':'.gg-v83-back[aria-label="Volver al inicio"],.gg-calendar-page-head [data-back],#ggV97Back,.gg-v100-back[aria-label="Volver al panel"],.gr-page > .gr-heading [data-back]');
+  const title=root.querySelector('h1');
+  if(!back||!title){root.classList.remove('gg-page-shell');return;}
+  const oldHeading=title.closest('.gg-calendar-page-head,.gg-section-heading,.gr-heading,.gg-v84-club-head,.gg-module-unified-head');
+  const header=document.createElement('header');header.className='gg-page-header';
+  const nav=document.createElement('div');nav.className='gg-page-nav';
+  back.dataset.pageBack='';nav.append(back);
+  const scope=root.querySelector(':scope > .gg-club-scope');if(scope)nav.append(scope);
+  header.append(nav,title);
+  if(oldHeading){
+   // Keep useful introductory copy; discard only the superseded heading furniture.
+   const description=oldHeading.querySelector('p');if(description)header.append(description);
+   oldHeading.remove();
+  }
+  root.querySelectorAll(':scope > .gg-eyebrow,:scope > .gg-module-unified-eyebrow').forEach(el=>el.remove());
+  const content=document.createElement('div');content.className='gg-page-content';
+  content.append(...root.childNodes);
+  root.replaceChildren(header,content);root.classList.add('gg-page-shell');
+ }
  function normalize(){
+  pageShell(document.getElementById('ggWorkspace'));
+  pageShell(document.getElementById('ggV71Main'),true);
   // Only root-level home controls: preserve returns to teams, profiles and subviews.
-  document.querySelectorAll('#ggWorkspace .gg-v83-back[aria-label="Volver al inicio"],#ggWorkspace .gg-calendar-page-head [data-back],#ggV71Main #ggV75Home').forEach(back=>{
+  document.querySelectorAll('#dashboard [data-page-back],#ggWorkspace .gg-v83-back[aria-label="Volver al inicio"],#ggWorkspace .gg-calendar-page-head [data-back],#ggV71Main #ggV75Home').forEach(back=>{
    if(!back.classList.contains('gg-home-back')){
     back.classList.add('gg-home-back');back.type='button';
     back.setAttribute('aria-label','Volver al inicio');back.title='Volver al inicio';

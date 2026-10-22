@@ -3,7 +3,7 @@
  function align(){
   if(!window.matchMedia('(max-width:1023px)').matches)return;
   const root=document.getElementById('ggWorkspace');
-  if(!root||root.hidden||root.querySelector('.gg-section-heading'))return;
+  if(!root||root.hidden||root.querySelector('.gg-section-heading,.gg-page-header'))return;
   const title=root.querySelector('h1');
   const back=root.querySelector('.gg-v83-back,.gg-access-back,.gg-v100-back,.gg-v96-back,.gg-subscreen-back,#ggV97Back');
   if(!title||!back)return;
