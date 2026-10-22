@@ -14,6 +14,17 @@
   });
  }
  function normalize(){
+  // Only root-level home controls: preserve returns to teams, profiles and subviews.
+  document.querySelectorAll('#ggWorkspace .gg-v83-back[aria-label="Volver al inicio"],#ggWorkspace .gg-calendar-page-head [data-back],#ggV71Main #ggV75Home').forEach(back=>{
+   if(!back.classList.contains('gg-home-back')){
+    back.classList.add('gg-home-back');back.type='button';
+    back.setAttribute('aria-label','Volver al inicio');back.title='Volver al inicio';
+    const arrow=document.createElement('span');arrow.className='gg-home-back-arrow';arrow.setAttribute('aria-hidden','true');arrow.textContent='‹';
+    const label=document.createElement('span');label.className='gg-home-back-label';label.textContent='Inicio';
+    back.replaceChildren(arrow,label);
+   }
+   back.closest('.gg-section-heading,.gg-calendar-page-head')?.classList.add('gg-home-heading');
+  });
   document.querySelectorAll(headings.join(',')).forEach(head=>{
    head.classList.add('gg-shared-page-heading');
    const back=head.querySelector('button[aria-label*="Volver"],button[data-back],button.gg-v71-page-back');
