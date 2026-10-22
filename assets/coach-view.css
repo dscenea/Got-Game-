@@ -11,3 +11,35 @@
 @media(min-width:1024px) and (max-width:1350px){.gc-week{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:1023px){#coachDashboard.screen.active{padding:20px 18px calc(110px + env(safe-area-inset-bottom))!important}.gc-sidebar nav{position:fixed;inset:auto 0 0;flex-direction:row;justify-content:space-around;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:var(--club-dark);border-radius:20px 20px 0 0}.gc-sidebar nav button{flex:1;justify-content:center;flex-direction:column;gap:6px!important;padding:10px 4px!important;font-size:12px!important}.gc-brand,.gc-account{display:none!important}.gc-week{grid-template-columns:repeat(2,minmax(0,1fr))}.gc-topline{flex-wrap:wrap}.gc-topline label{flex-wrap:wrap}.gc-event{align-items:flex-start;gap:14px;flex-wrap:wrap}.gc-event>button{margin-left:auto}.gc-panel{padding:18px}.gc-roster{grid-template-columns:1fr}.gc-mobile-exit{font-size:13px!important}.gc-main .gc-hero{padding:24px}}
 @media(max-width:380px){.gc-week,.gc-team-grid{grid-template-columns:1fr}.gc-attendance label{flex-wrap:wrap}.gc-attendance select{width:100%}}
+/* Keep the original artwork visible and uncropped in both navigation layouts. */
+#coachDashboard .gc-brand{display:flex;justify-content:center;align-items:center;width:100%;min-height:144px;padding:10px 0 24px;margin-bottom:12px}
+#coachDashboard .gc-brand img{display:block;width:156px;height:120px;max-width:100%;object-fit:contain;filter:none;background:transparent;border:0;border-radius:0}
+#coachDashboard .gc-identity-row{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 12px;min-width:0}
+#coachDashboard .gc-page-club{display:flex;align-items:center;gap:12px;min-width:0}
+#coachDashboard .gc-page-club>div{min-width:0}
+#coachDashboard .gc-page-club strong{display:block;font-size:17px;line-height:1.3;font-weight:750;word-break:normal}
+#coachDashboard .gc-page-club small{display:block;font-size:12px;line-height:1.4;opacity:.75;margin-top:3px}
+#coachDashboard .gc-club-mark{display:grid;place-items:center;width:48px;height:54px;flex:none;background:transparent;color:inherit;font-size:22px;font-weight:800}
+#coachDashboard .gc-club-mark img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;background:transparent;border:0;border-radius:0;filter:none}
+#coachDashboard .gc-hero-identity{display:flex;align-items:center;gap:26px;position:relative;z-index:1}
+#coachDashboard .gc-hero .gc-club-mark{width:112px;height:124px;font-size:38px;filter:drop-shadow(0 3px 8px #0003)}
+#coachDashboard .gc-hero-copy{min-width:0;flex:1}
+#coachDashboard .gc-hero-copy p{font-size:17px;font-weight:650}
+#coachDashboard .gc-team-count{display:inline-block;margin-top:14px;font-size:13px;background:#ffffff20;padding:8px 12px;border-radius:10px}
+#coachDashboard .gc-topline label,#coachDashboard .gc-sport-label{margin-left:auto}
+@media(min-width:1024px){#coachDashboard .gc-mobile-brand{display:none}}
+@media(max-width:1023px){
+ #coachDashboard .gc-sidebar>.gc-brand{display:none!important}
+ #coachDashboard .gc-identity-row{background:var(--club-dark);color:#fff;padding:12px 14px;border-radius:16px;gap:12px;margin-bottom:16px}
+ #coachDashboard .gc-page-club{gap:10px;flex:1}
+ #coachDashboard .gc-page-club strong{font-size:14px}
+ #coachDashboard .gc-page-club small{font-size:11px}
+ #coachDashboard .gc-page-club .gc-club-mark{width:42px;height:48px}
+ #coachDashboard .gc-mobile-brand{display:flex;align-items:center;justify-content:center;flex:none;width:82px;height:64px;min-height:44px;padding:0;border:0;background:transparent}
+ #coachDashboard .gc-mobile-brand img{display:block;width:82px;height:64px;object-fit:contain;filter:none}
+ #coachDashboard .gc-hero-identity{gap:18px}
+ #coachDashboard .gc-hero .gc-club-mark{width:80px;height:92px}
+ #coachDashboard .gc-hero h2{font-size:26px!important}
+ #coachDashboard .gc-hero-copy p{font-size:15px}
+}
+@media(max-width:380px){#coachDashboard .gc-hero-identity{gap:12px}#coachDashboard .gc-hero .gc-club-mark{width:66px;height:78px}#coachDashboard .gc-mobile-brand,#coachDashboard .gc-mobile-brand img{width:68px}}
