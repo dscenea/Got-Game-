@@ -22,6 +22,10 @@
 #dashboard button.gg-home-back .gg-home-back-arrow svg{display:block;width:20px!important;height:20px!important;stroke:currentColor}
 #dashboard button.gg-home-back .gg-home-back-label{display:block!important;font:600 14px/1.2 Arial,sans-serif!important}
 #dashboard .gg-home-heading{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:0!important}
+/* Root sections share the same title metrics, including the calendar wrapper. */
+#ggWorkspace>h1,#ggWorkspace .gg-home-heading h1{font-family:inherit!important;font-size:clamp(26px,5vw,40px)!important;font-weight:700!important;line-height:1.15!important;letter-spacing:normal!important;margin:10px 0!important}
+#ggWorkspace .gg-home-heading{margin:0!important;padding:0!important}
+#ggWorkspace .gg-new-calendar{max-width:none!important;width:100%;margin:0!important}
 #dashboard button.gg-home-back:focus-visible{outline:2px solid #171717!important;outline-offset:3px!important}
 #dashboard button.gg-home-back:hover .gg-home-back-label{text-decoration:underline;text-underline-offset:3px}
 
