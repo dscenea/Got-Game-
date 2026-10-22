@@ -58,3 +58,10 @@ Realizar pruebas de navegación en navegador real, documentar incidencias concre
 - La carga del módulo se realiza antes de la inicialización del espacio de coordinación.
 - Pruebas repetibles en `tests/architecture-smoke.js`: separación de deportes, resolución de pista y equipo, consulta compartida de horarios y conflictos de ocupación.
 - Pruebas ejecutadas de forma aislada sobre los módulos reales: cuatro equipos de dos deportes, asociación de pista y detección de solapamiento correctas. Falta ejecutar los recorridos completos en Safari.
+
+## Tercera fase: extracción de vistas de Equipos e Instalaciones
+- `assets/teams-view.js`: renderizador del listado de equipos extraído con dependencias explícitas. Se conserva `renderTeams()` en el espacio de coordinación y las acciones de plantilla, edición y filtros.
+- `assets/facilities-view.js`: detalle de instalación, gestión de pistas y ocupación semanal extraídos. Se conserva la API pública `window.ggOpenFacility(name,onReturn)`.
+- Se conservan `GGTeamStore`, `GGScheduleStore`, la configuración actual de instalaciones y los IDs existentes.
+- Los tres módulos `teams-view.js`, `facilities-view.js` y `schedule-editor.js` superan análisis sintáctico. **Pendiente**: validar funcionalmente en navegador los diálogos, navegación, formularios y cambios de horario en ambos clubes.
+- La extracción no elimina todavía las demás generaciones heredadas de vistas del archivo principal. No hacerlo hasta identificar cuáles están activas en cada ruta.
