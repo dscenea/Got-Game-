@@ -29,7 +29,7 @@
   summary.setAttribute('aria-label','Ámbito del club: '+selectedText);summary.append(icon(selected));
   const text=document.createElement('span');text.className='gg-scope-text';text.textContent=selectedText;
   const chevron=document.createElement('span');chevron.className='gg-scope-chevron';chevron.setAttribute('aria-hidden','true');chevron.textContent='⌄';summary.append(text,chevron);
-  const buttons=values.map(([value,label])=>{const b=document.createElement('button');b.type='button';b.dataset.scope=value;b.setAttribute('aria-pressed',String(value===selected));
+  const buttons=values.map(([value,label])=>{const b=document.createElement('button');b.type='button';b.dataset.scope=value;b.setAttribute('aria-label',label);b.setAttribute('aria-pressed',String(value===selected));
    const name=document.createElement('span');name.textContent=label;b.append(icon(value),name);
    const tick=document.createElement('span');tick.className='gg-scope-tick';tick.setAttribute('aria-hidden','true');tick.textContent=value===selected?'✓':'';b.append(tick);
    b.onclick=()=>{picker.open=false;window.ggChangeSportScope(value);queueMicrotask(()=>document.querySelector('.gg-scope-picker summary')?.focus())};list.append(b);return b;
