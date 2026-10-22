@@ -65,3 +65,13 @@ Realizar pruebas de navegación en navegador real, documentar incidencias concre
 - Se conservan `GGTeamStore`, `GGScheduleStore`, la configuración actual de instalaciones y los IDs existentes.
 - Los tres módulos `teams-view.js`, `facilities-view.js` y `schedule-editor.js` superan análisis sintáctico. **Pendiente**: validar funcionalmente en navegador los diálogos, navegación, formularios y cambios de horario en ambos clubes.
 - La extracción no elimina todavía las demás generaciones heredadas de vistas del archivo principal. No hacerlo hasta identificar cuáles están activas en cada ruta.
+
+## Horario integrado en la ficha del equipo — 22 octubre
+- Se reutiliza `gg-inline-schedule`, ahora después de la plantilla. No hay un segundo horario ni otro almacén.
+- `renderInlineSchedule()` muestra siete días con fechas, inicio/fin, duración, tipo y recurrencia. Permite cambiar de semana y añadir en una fecha concreta con el editor compartido.
+- Las acciones usan manejadores con acceso al contexto del equipo; se elimina la referencia a `selectedTeam` desde atributos HTML, donde no estaba disponible por estar dentro de una clausura.
+- Las acciones de edición y alta se muestran únicamente cuando `canManageSchedule()` lo permite. El editor conserva su comprobación de permisos.
+- Diseño adaptable con colores del club: siete columnas en pantallas grandes, cuatro en tamaños intermedios y dos o una en móvil.
+- Validación ejecutada: 46 pruebas Node, 7 comprobaciones de arquitectura y sintaxis de los 27 scripts integrados. La separación por deportes y el repositorio compartido conservan las pruebas existentes.
+- `tests/inline-schedule.browser.cjs` prepara la integración del componente real y el editor en Chromium, con clubes de uno/dos deportes y anchos de 375/1440 px. **No ejecutada con éxito en este entorno**: falta Chromium y la descarga no proporciona un archivo válido. No se ha probado Safari ni el recorrido completo de los clubes en un navegador real.
+- Los cambios siguen guardándose en este navegador; no implican sincronización entre dispositivos o cuentas.
