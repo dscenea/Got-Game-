@@ -147,3 +147,9 @@ Realizar pruebas de navegación en navegador real, documentar incidencias concre
 - Logrobasket añade Cadete A (Marta) y Junior (Elena), para probar pista estándar además del mini. Ebro Norte incluye ahora Voleibol: un Cadete con Sofía Romero Díaz y Pabellón de Vóley Norte. Se actualizan los textos del acceso de prueba.
 - Ampliación aditiva de catálogos y personal guardados: no cambia asignaciones, nombres, plantillas, eventos ni sesiones existentes. La prueba de entrenador incorpora vóley aunque conserve ajustes antiguos del club.
 - Comprobaciones: 80 pruebas Node y 13 DOM; las nuevas pruebas cubren migración sin duplicados, conservación de cambios, separación por deporte y escudo en el semicírculo.
+
+## Triple estándar y edición de recorridos (23 octubre)
+- Se corrige el arco frontal de baloncesto: construcción métrica común a pista completa y media pista, círculo de radio 6,75 m centrado en el aro a 1,575 m del fondo, unido a las rectas a 0,90 m de las bandas. Se evita el arco aproximado que acercaba el frontal al círculo de tiro libre. Referencia: FIBA Official Basketball Rules 2026 v1.1, artículo 2.5.4, https://assets.fiba.basketball/image/upload/documents-corporate-fiba-official-rules-2026-v1-1.pdf . El minibasket conserva el trazado aportado por el usuario.
+- Desplazamiento, pase, conducción y tiro: giro del recorrido completo mediante asa arrastrable y botones ±15°, conservando longitudes, curvas, zigzag y todos los puntos. El giro se bloquea si sacaría puntos de la pizarra, sin deformarlos ni borrarlos.
+- Añadir punto divide el tramo más largo conservando los puntos visibles y los existentes (máximo 24 intermedios). Los extremos y puntos intermedios siguen siendo arrastrables y accesibles por teclado.
+- Validación: 81 pruebas Node y 14 DOM, con rotación de los cuatro recorridos, adición de puntos, conservación de distancias, límites, deshacer, cancelación y guardado; revisión PNG en ambas vistas. Safari y móvil físico pendientes.

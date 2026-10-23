@@ -77,3 +77,17 @@ test('defenders rotate about their centre with touch handles and buttons, withou
  q('[data-court]').value='mini';q('[data-court]').onchange({target:q('[data-court]')});q('[data-use]').onclick();assert.equal(saved.threePoint,true);
  const roundTrip=window.GGTacticalBoard.validate(JSON.parse(JSON.stringify({...saved,objects:[{...saved.objects[0],angle:127}]})),'Baloncesto');assert.equal(roundTrip.objects[0].angle,127);assert.match(window.GGTacticalBoard.svg(roundTrip),/rotate\(127\)/);
 });
+test('movement, passing, dribbling and shooting rotate as editable routes with extra points, undo and cancellation',()=>{
+ for(const kind of ['move','pass','dribble','shot']){
+  const {window,document}=dom(),context=vm.createContext({window,document,confirm:()=>true});load(context,'tactical-board.js');let saved;
+  window.GGTacticalBoard.edit({sport:'Baloncesto',view:'half',objects:[{id:'r',kind,x:30,y:50,x2:70,y2:50,color:'#172c49',label:''}]},b=>saved=b);
+  const q=s=>document.querySelector(s),canvas=q('.gt-board-canvas');canvas.getBoundingClientRect=()=>({left:0,top:0,width:1000,height:650});const select=()=>{q('[data-element]').value='0';q('[data-element]').onchange({target:q('[data-element]')});};select();
+  const before=canvas.querySelectorAll('[data-handle]').length;q('[data-add-point]').onclick();assert.ok(canvas.querySelectorAll('[data-handle]').length>before);assert.equal(q('[data-rotate]').disabled,false);
+  canvas.onpointerdown({target:q('[data-rotation-handle] circle'),clientX:500,clientY:265,pointerId:1});canvas.onpointermove({clientX:560,clientY:325,pointerId:1});assert.equal(q('[data-trash]').hidden,true);canvas.onpointerup({pointerId:1});canvas.onclick({target:canvas});q('[data-use]').onclick();
+  assert.equal(saved.objects.length,1);assert.ok(Math.abs(saved.objects[0].x-50)<1e-8);assert.ok(Math.abs(saved.objects[0].x2-50)<1e-8);assert.ok(saved.objects[0].points.length>=2);
+  q('[data-undo]').onclick();select();q('[data-use]').onclick();assert.equal(saved.objects[0].x,30);assert.equal(saved.objects[0].y,50);
+  canvas.onpointerdown({target:q('[data-rotation-handle] circle'),clientX:500,clientY:265,pointerId:2});canvas.onpointermove({clientX:560,clientY:325,pointerId:2});canvas.onpointercancel();q('[data-use]').onclick();assert.equal(saved.objects[0].x,30);
+  q('[data-rotate]').onclick();q('[data-use]').onclick();assert.notEqual(saved.objects[0].x,30);assert.equal(saved.objects.length,1);q('[data-undo]').onclick();select();q('[data-rotate-back]').onclick();q('[data-use]').onclick();assert.ok(saved.objects[0].y>50);
+  const validated=window.GGTacticalBoard.validate(JSON.parse(JSON.stringify(saved)),'Baloncesto');assert.ok(validated.objects[0].points.length>=2);assert.doesNotMatch(window.GGTacticalBoard.svg(validated),/NaN|Infinity/);
+ }
+});
