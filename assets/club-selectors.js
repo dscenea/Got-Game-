@@ -10,5 +10,12 @@
  function decorateEvent(event,teams,facilities){const team=teamForEvent(event,teams),facility=facilityForEvent(event,facilities),space=spaceForEvent(event,facilities);return {...event,sport:team?.sport||'all',teamName:team?.name||String(event.team||''),facilityName:facility?.name||event.place||'',spaceName:space?.name||event.spaceName||''};}
  function forSport(teams,sport){return sport==='all'||!sport?[...(teams||[])]: (teams||[]).filter(t=>t.sport===sport);}
  function forFacility(events,name){return (events||[]).filter(e=>e.place===name);}
- root.GGClubSelectors={teamForEvent,facilityForEvent,spaceForEvent,decorateEvent,forSport,forFacility};
+ function basketballFormat(team){
+  if(team?.sport!=='Baloncesto')return null;
+  if(['mini','standard'].includes(team.basketFormat))return team.basketFormat;
+  const name=String(team.name||team.teamName||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  return /\b(?:alevin(?:es|as)?|benjamin(?:es|as)?|pre[\s-]?benjamin(?:es|as)?|mini(?:basket)?)\b/i.test(name)?'mini':'standard';
+ }
+ function teamSportLabel(team){return basketballFormat(team)==='mini'?'Baloncesto · Minibasket':String(team?.sport||'');}
+ root.GGClubSelectors={teamForEvent,facilityForEvent,spaceForEvent,decorateEvent,forSport,forFacility,basketballFormat,teamSportLabel};
 })(typeof window!=='undefined'?window:globalThis);

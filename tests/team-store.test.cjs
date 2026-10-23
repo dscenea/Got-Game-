@@ -13,3 +13,6 @@ test('named demo clubs gain senior basketball and one volleyball team without re
  const sports=['Baloncesto','Fútbol','Voleibol'],ebro=r.list('Club Deportivo Ebro Norte',sports,{demo:true});assert.equal(ebro.filter(t=>t.sport==='Voleibol').length,1);assert.equal(ebro.find(t=>t.sport==='Voleibol').coach,'Sofía Romero Díaz');assert.equal(r.list('Club Deportivo Ebro Norte',['Fútbol'],{demo:true}).length,1);
  const fresh=GGTeamStore.createRepository(memory()).list('Club Deportivo Ebro Norte',sports,{demo:true});assert.equal(fresh.filter(t=>t.sport==='Voleibol').length,1);
 });
+test('basketball format persists and coach reassignment preserves it without altering sport or team ID',()=>{
+ const s=memory(),r=GGTeamStore.createRepository(s),sports=['Baloncesto','Fútbol'];r.list('C',sports);const t=r.create('C',sports,{name:'Escuela azul',sport:'Baloncesto',coach:'Marta',basketFormat:'mini'});r.update('C',sports,t.id,{name:'Escuela azul',sport:'Baloncesto',coach:'Elena'});const saved=GGTeamStore.createRepository(s).list('C',sports)[0];assert.equal(saved.basketFormat,'mini');assert.equal(saved.id,t.id);assert.equal(saved.sport,'Baloncesto');assert.throws(()=>r.update('C',sports,t.id,{...saved,basketFormat:'invalid'}),/modalidad/);
+});

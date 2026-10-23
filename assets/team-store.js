@@ -28,7 +28,8 @@ function createRepository(storage){
   if(!sports.includes(sport))throw Error('Selecciona un deporte configurado en este club.');
   if(coach.length>80)throw Error('El nombre del entrenador no puede superar los 80 caracteres.');
   if((state[club]||[]).some(t=>t.id!==id&&t.sport===sport&&fold(t.name)===fold(name)))throw Error('Ya existe un equipo con ese nombre en este deporte.');
-  return {name,coach,sport};
+  if(input.basketFormat!==undefined&&!['auto','mini','standard'].includes(input.basketFormat))throw Error('Selecciona una modalidad de baloncesto válida.');
+  return {name,coach,sport,...(sport==='Baloncesto'&&input.basketFormat!==undefined?{basketFormat:input.basketFormat}:{})};
  }
  return {
   list:ensure,

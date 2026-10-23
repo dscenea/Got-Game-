@@ -155,3 +155,10 @@ Realizar pruebas de navegación en navegador real, documentar incidencias concre
 - Validación: 81 pruebas Node y 14 DOM, con rotación de los cuatro recorridos, adición de puntos, conservación de distancias, límites, deshacer, cancelación y guardado; revisión PNG en ambas vistas. Safari y móvil físico pendientes.
 
 - Prueba real en Chrome: giro por botón y arrastre, deformación de punto intermedio y recuento de elementos sin duplicados. Área de pulsación de las asas ampliada con relleno transparente y ajuste adicional para puntero táctil.
+
+## Identidad de las tarjetas y modalidad minibasket (23 octubre)
+- Las tarjetas de entrenador en Inicio y Mis equipos muestran el escudo configurado del club junto al nombre; tamaño adaptado por CSS a móvil y escritorio, con alternativa de iniciales si falta o falla la imagen.
+- Minibasket se clasifica como modalidad dentro de Baloncesto, sin crear otro deporte ni alterar filtros, equipos, plantillas o calendarios. Alevín, benjamín y prebenjamín se detectan automáticamente por el nombre; infantil, cadete, junior y senior mantienen pista grande.
+- Coordinación puede elegir Automática, Minibasket o Baloncesto · pista grande al crear/editar un equipo. La preferencia persiste sin cambiar su ID y se conserva al reasignar entrenadores.
+- Selector común de modalidad reutilizado por tarjetas de coordinación/entrenador y por la propuesta de pista en nuevos ejercicios de sesión. Los dibujos existentes conservan su propia pista.
+- Validación: 84 pruebas Node y 15 DOM, más arquitectura. Se cubren inferencia, modalidades explícitas, separación por deporte, persistencia y escudos por club.

@@ -52,3 +52,5 @@
  #coachDashboard .gc-hero-copy p{font-size:15px}
 }
 @media(max-width:380px){#coachDashboard .gc-hero-identity{gap:12px}#coachDashboard .gc-hero .gc-club-mark{width:66px;height:78px}#coachDashboard .gc-mobile-brand,#coachDashboard .gc-mobile-brand img{width:68px}}
+
+#coachDashboard .gc-team-heading{display:flex;align-items:center;gap:14px;margin-bottom:14px}#coachDashboard .gc-team-heading>div{min-width:0}#coachDashboard .gc-team-heading .gc-club-mark{width:52px;height:58px}#coachDashboard .gc-team-heading h3{margin:7px 0 0;overflow-wrap:break-word}#coachDashboard .gc-team-heading .gc-tag{white-space:normal;line-height:1.4}@media(max-width:540px){#coachDashboard .gc-team-heading{gap:12px}#coachDashboard .gc-team-heading .gc-club-mark{width:44px;height:50px}}
