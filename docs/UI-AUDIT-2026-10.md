@@ -128,3 +128,9 @@ Realizar pruebas de navegación en navegador real, documentar incidencias concre
 - Asistencia con tres botones visibles por jugador: Asiste, Ausencia y Justificada. La elección es exclusiva, lleva una marca de verificación y usa el color principal del club con su texto de contraste. En pantallas estrechas las tres opciones quedan debajo del nombre, con áreas táctiles de al menos 44 px.
 - Se conserva Marcar todos, el guardado explícito y el contrato de datos compartido con coordinación. Borrar marca recupera Sin registrar; los partidos sin registrar no se convierten en asistentes y una marca pendiente guardada no se sobrescribe al reabrir.
 - Validación: 66 pruebas de datos y permisos, más dos integraciones DOM (`GG_DOM_MODULE=/ruta/a/linkedom node --test tests/coach-ui.dom.cjs`) para la secuencia pointerdown/pointerup/click, coordenadas, flechas, arrastre, deshacer/rehacer, selección exclusiva, borrado, marcado masivo y payload guardado. Sin prueba de Safari ni dispositivo móvil físico.
+
+## Comprobación de pistas y escáner en Chrome (23 octubre)
+- Exportación PNG descargada y revisada: parquet, escudo central, minibasket sin triple, atacantes, defensores y recorrido visibles. La pizarra se ha guardado en una copia de ejercicio de sesión.
+- Foto de prueba impresa girada: giro de 90°, mejora de contraste, lectura real en español y copia revisada al bloc de notas con calentamiento, parte principal y vuelta a la calma.
+- Ajustes de pista y tamaño agrupados en un desplegable para dejar más espacio de dibujo.
+- 75 pruebas Node y 12 de interacción DOM. Safari y dispositivos móviles físicos no probados.
