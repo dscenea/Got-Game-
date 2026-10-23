@@ -153,3 +153,5 @@ Realizar pruebas de navegación en navegador real, documentar incidencias concre
 - Desplazamiento, pase, conducción y tiro: giro del recorrido completo mediante asa arrastrable y botones ±15°, conservando longitudes, curvas, zigzag y todos los puntos. El giro se bloquea si sacaría puntos de la pizarra, sin deformarlos ni borrarlos.
 - Añadir punto divide el tramo más largo conservando los puntos visibles y los existentes (máximo 24 intermedios). Los extremos y puntos intermedios siguen siendo arrastrables y accesibles por teclado.
 - Validación: 81 pruebas Node y 14 DOM, con rotación de los cuatro recorridos, adición de puntos, conservación de distancias, límites, deshacer, cancelación y guardado; revisión PNG en ambas vistas. Safari y móvil físico pendientes.
+
+- Prueba real en Chrome: giro por botón y arrastre, deformación de punto intermedio y recuento de elementos sin duplicados. Área de pulsación de las asas ampliada con relleno transparente y ajuste adicional para puntero táctil.
