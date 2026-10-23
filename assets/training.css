@@ -11,3 +11,5 @@
 @media print{body:has(.gt-print)>:not(.gt-print){display:none!important}.gt-print{display:block!important;color:#111;font:12px/1.5 Arial,sans-serif}.gt-print h1{font-size:22px}.gt-print h2{font-size:18px;margin:20px 0 10px}.gt-print article{break-inside:avoid;border-top:1px solid #ddd;padding:14px 0;min-height:150px}.gt-print article>div{float:left;width:40%;margin:0 18px 10px 0}.gt-print article::after{content:"";display:block;clear:both}.gt-print svg{display:block;width:100%}.gt-print p{white-space:pre-wrap}@page{size:A4;margin:15mm}}
 
 .gt-board-appearance{margin-bottom:14px;border:1px solid var(--club-border,#ddd);border-radius:10px;background:var(--club-wash,#f8f8f6)}.gt-board-appearance summary{padding:11px 13px;min-height:44px;box-sizing:border-box;cursor:pointer;font-weight:650}.gt-board-appearance>.gt-board-tools{padding:12px;margin:0}
+
+.gt-board-canvas [data-rotation-handle]{cursor:grab}.gt-board-canvas [data-rotation-handle]:focus-visible{outline:2px solid var(--club-accent,#171717)}

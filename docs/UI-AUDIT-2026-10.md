@@ -134,3 +134,10 @@ Realizar pruebas de navegación en navegador real, documentar incidencias concre
 - Foto de prueba impresa girada: giro de 90°, mejora de contraste, lectura real en español y copia revisada al bloc de notas con calentamiento, parte principal y vuelta a la calma.
 - Ajustes de pista y tamaño agrupados en un desplegable para dejar más espacio de dibujo.
 - 75 pruebas Node y 12 de interacción DOM. Safari y dispositivos móviles físicos no probados.
+
+## Minibasket según referencia y orientación de defensores (23 octubre)
+- Adaptación del esquema aportado por el usuario: proporción 26 × 14 m, tablero a 1,2 m, tiro libre a 4 m del tablero, zona de 4,9 m y triple poligonal. Pista completa y media pista comparten geometría métrica; parquet, colores y escudo conservados.
+- Las nuevas pistas mini y el selector Minibasket activan el triple. Se respeta la preferencia explícita de ocultarlo en pizarras guardadas; se puede activar en Personalizar → Línea de triple.
+- Defensa: asa de giro arrastrable alrededor del propio centro y botones ±15°. Número legible al girar, controles de teclado ±5°, deshacer/rehacer, cancelación y guardado sin duplicar ni desplazar el defensor.
+- Campo estándar de baloncesto preservado; prueba de regresión compara el SVG completo con la versión anterior para completa/media pista con y sin triple.
+- Validación: 77 pruebas Node y 13 DOM; renderizado PNG de mini completo y media pista revisado. Pruebas físicas de móvil y Safari pendientes.
