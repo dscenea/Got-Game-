@@ -141,3 +141,9 @@ Realizar pruebas de navegación en navegador real, documentar incidencias concre
 - Defensa: asa de giro arrastrable alrededor del propio centro y botones ±15°. Número legible al girar, controles de teclado ±5°, deshacer/rehacer, cancelación y guardado sin duplicar ni desplazar el defensor.
 - Campo estándar de baloncesto preservado; prueba de regresión compara el SVG completo con la versión anterior para completa/media pista con y sin triple.
 - Validación: 77 pruebas Node y 13 DOM; renderizado PNG de mini completo y media pista revisado. Pruebas físicas de móvil y Safari pendientes.
+
+## Escudo en media pista y ampliación de clubes de prueba (23 octubre)
+- Escudo de baloncesto en media pista situado dentro del semicírculo de la línea central y reducido para encajar. Se añade el semicírculo en la media pista estándar; el resto de sus líneas y la pista completa permanecen idénticos. Mini usa su propia proporción métrica.
+- Logrobasket añade Cadete A (Marta) y Junior (Elena), para probar pista estándar además del mini. Ebro Norte incluye ahora Voleibol: un Cadete con Sofía Romero Díaz y Pabellón de Vóley Norte. Se actualizan los textos del acceso de prueba.
+- Ampliación aditiva de catálogos y personal guardados: no cambia asignaciones, nombres, plantillas, eventos ni sesiones existentes. La prueba de entrenador incorpora vóley aunque conserve ajustes antiguos del club.
+- Comprobaciones: 80 pruebas Node y 13 DOM; las nuevas pruebas cubren migración sin duplicados, conservación de cambios, separación por deporte y escudo en el semicírculo.

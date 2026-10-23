@@ -12,7 +12,11 @@ test('mini reference uses metric 26 by 14 geometry and the same end markings in 
  assert.equal((full.match(/data-mini-triple/g)||[]).length,2);assert.equal((half.match(/data-mini-triple/g)||[]).length,1);
  assert.doesNotMatch(B.svg({...mini,threePoint:false}),/data-mini-triple/,'explicit saved preference can still hide the triple');
 });
-test('standard basketball courts remain byte-for-byte identical to the previous release',()=>{
+test('standard basketball markings remain identical apart from the requested half-court centre semicircle',()=>{
  const hash=require('node:crypto').createHash,expected=['6e7fcac996337dce34540a2226896e79e343754e339f0788ecd3a8c7a1ddc3f5','197c7efe09f09f22b9d6667eaf94a3c3c8038a1b34c2d45cb67dbd34fa6a07ca','7ea84345297b1861c21143b0039109f5e3849c7c7a72cfc41ddf07fb82714c2c','642dbc2116a746c565e095d3b35015568b0b8456716c67f5f415979fc0aa2e78'];let i=0;
- for(const view of ['full','half'])for(const threePoint of [true,false])assert.equal(hash('sha256').update(B.svg({sport:'Baloncesto',view,court:'standard',threePoint,objects:[]})).digest('hex'),expected[i++]);
+ for(const view of ['full','half'])for(const threePoint of [true,false])assert.equal(hash('sha256').update(B.svg({sport:'Baloncesto',view,court:'standard',threePoint,objects:[]}).replace('<path data-half-center="true" d="M428 45a72 72 0 0 0 144 0"/>','')).digest('hex'),expected[i++]);
+});
+test('basketball half-court crest is inside the centre semicircle in mini and standard courts',()=>{
+ for(const court of ['mini','standard']){const board={...B.defaults('Baloncesto',{logo:'assets/club-logrobasket-crest.svg'}),court,view:'half'},svg=B.svg(board),tag=svg.match(/<image data-center-logo[^>]+/)[0],y=Number(tag.match(/ y="([^"]+)"/)[1]),height=Number(tag.match(/ height="([^"]+)"/)[1]);assert.ok(y>=45&&y+height<126);assert.ok(height<90);if(court==='standard')assert.match(svg,/data-half-center/);}
+ const full=B.svg({...B.defaults('Baloncesto',{logo:'assets/club-logrobasket-crest.svg'}),view:'full'});assert.match(full,/x="455" y="280" width="90" height="90"/);
 });

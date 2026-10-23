@@ -9,9 +9,16 @@ function createRepository(storage){
  function commit(club,teams){const next={...state,[club]:teams};storage.setItem(key,JSON.stringify(next));state=next;return teams}
  function ensure(club,sports,options={}){
   if(!Array.isArray(state[club])){
-   const seed=options.demo?sports.flatMap(sport=>['Alevín A','Infantil'].map(name=>({id:sport+' · '+name,name,sport,coach:'',demo:true}))):[];
+   const seed=options.demo?sports.flatMap(sport=>(club==='Club Deportivo Ebro Norte'&&sport==='Voleibol'?[]:['Alevín A','Infantil']).map(name=>({id:sport+' · '+name,name,sport,coach:'',demo:true}))):[];
    for(const id of options.legacyIds||[]){const sport=sports.find(s=>id.startsWith(s+' · '));if(sport&&!seed.some(t=>t.id===id))seed.push({id,sport,name:id.slice(sport.length+3),coach:'',demo:true})}
    commit(club,seed);
+  }
+  // Extend named test clubs once; keep edited names, IDs, assignments and rosters.
+  if(options.demo){
+   const extra=club==='Logrobasket'?[['Baloncesto','Cadete A','Marta Fernández Díaz'],['Baloncesto','Junior','Elena García Pérez']]:club==='Club Deportivo Ebro Norte'?[['Voleibol','Cadete','Sofía Romero Díaz']]:[];
+   const rows=[...state[club]];
+   for(const [sport,name,coach] of extra){const id=sport+' · '+name;if(sports.includes(sport)&&!rows.some(t=>t.id===id||t.sport===sport&&fold(t.name)===fold(name)))rows.push({id,name,sport,coach,demo:true});}
+   if(rows.length!==state[club].length)commit(club,rows);
   }
   return state[club].filter(t=>sports.includes(t.sport)).map(t=>({...t}));
  }
