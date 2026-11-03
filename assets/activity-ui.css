@@ -4,3 +4,5 @@
 
 select[data-gg-picker-native][hidden]{display:none!important}
 .gg-mini-team-activity{display:flex;align-items:center;gap:9px;border-left:3px solid var(--team-color);padding-left:9px}.gg-mini-team-activity .gg-activity-icon{width:26px;height:26px}.gg-mini-team-activity .gg-activity-icon svg{width:21px;height:21px}.gg-new-calendar>[data-add]{background:var(--club-accent,#171717)!important;color:var(--club-accent-text,#fff)!important}.gg-new-calendar .gg-calendar-day-dot{display:flex!important;align-items:center;justify-content:center;gap:1px}#dashboard .gg-new-calendar .gg-calendar-days .gg-calendar-day-dot{display:flex!important}
+
+#ggScheduleForm [hidden]{display:none!important}
