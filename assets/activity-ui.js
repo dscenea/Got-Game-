@@ -19,4 +19,36 @@
  function teamSelect(select,teams){return enhanceSelect(select,o=>{const t=teams().find(t=>String(t.id)===o.value);return (t?dot(t):'')+'<span>'+esc(o.textContent)+'</span>';});}
  function typeSelect(select){return enhanceSelect(select,o=>icon({activityKind:o.value})+'<span>'+esc(o.textContent)+'</span>');}
  root.GGActivityUI={esc,label,icon,color,style,dot,teamSelect,typeSelect};
+
+ // Keep colour markers attached to names; shrink only when a whole word exceeds its line.
+ function fitTeamNames(container=document){
+  if(typeof root.getComputedStyle!=='function')return;
+  container.querySelectorAll('.gg-team-card>b,.gc-team-heading h3').forEach(heading=>{
+   const dot=heading.querySelector(':scope > .gg-team-dot');if(!dot)return;
+   let text=heading.querySelector(':scope > .gg-team-name-text');
+   if(!text){
+    const name=[...heading.childNodes].filter(n=>n!==dot).map(n=>n.textContent).join('').trim();
+    text=document.createElement('span');text.className='gg-team-name-text';
+    name.split(/\s+/).filter(Boolean).forEach((word,i)=>{if(i)text.append(document.createTextNode(' '));const span=document.createElement('span');span.className='gg-team-name-word';span.textContent=word;text.append(span);});
+    heading.replaceChildren(dot,text);heading.classList.add('gg-team-name');nameObserver?.observe(heading);
+   }
+   if(!heading.getBoundingClientRect().width)return;
+   heading.style.fontSize='';
+   const available=text.getBoundingClientRect().width,base=parseFloat(root.getComputedStyle(heading).fontSize);
+   const widest=Math.max(0,...[...text.children].map(word=>word.getBoundingClientRect().width));
+   if(available>0&&widest>available&&base>0)heading.style.fontSize=Math.max(1,Math.floor(base*available/widest*10)/10)+'px';
+  });
+ }
+ let nameObserver=null;
+ root.GGActivityUI.fitTeamNames=fitTeamNames;
+ if(typeof document!=='undefined'&&typeof root.ResizeObserver==='function'){
+  let queued=false;
+  const schedule=()=>{if(queued)return;queued=true;root.requestAnimationFrame(()=>{queued=false;fitTeamNames();});};
+  nameObserver=new root.ResizeObserver(schedule);
+  new MutationObserver(schedule).observe(document.documentElement,{childList:true,subtree:true});
+  root.addEventListener('resize',schedule);
+  document.fonts?.ready.then(schedule);
+  schedule();
+ }
+
 })(typeof window!=='undefined'?window:globalThis);

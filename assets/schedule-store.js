@@ -2,8 +2,8 @@
 (function(root){
 'use strict';
 const DAY=86400000;
-const activityKinds=[{value:'training',label:'Entrenamiento',type:'training'},{value:'friendly',label:'Partido amistoso',type:'match'},{value:'league',label:'Partido de liga',type:'match'},{value:'tournament',label:'Torneo',type:'match'},{value:'match',label:'Partido',type:'match'},{value:'other',label:'Otra actividad',type:'other'},{value:'meeting',label:'Reunión',type:'other'},{value:'holiday',label:'Vacaciones',type:'other'},{value:'incident',label:'Incidencia',type:'other'}];
-function kindOf(event){const value=event?.activityKind||event?.type||'other',aliases={'Entrenamiento':'training','Partido':'match','Amistoso':'friendly','Partido amistoso':'friendly','Partido de liga':'league','Liga':'league','Torneo':'tournament','Reunión':'meeting','Vacaciones':'holiday','Incidencia':'incident','Evento':'other'};return activityKinds.some(k=>k.value===value)?value:aliases[value]||'other';}
+const activityKinds=[{value:'training',label:'Entrenamiento',type:'training'},{value:'friendly',label:'Partido amistoso',type:'match'},{value:'league',label:'Partido de liga',type:'match'},{value:'tournament',label:'Torneo',type:'match'},{value:'other',label:'Otra actividad',type:'other'},{value:'meeting',label:'Reunión',type:'other'},{value:'holiday',label:'Vacaciones',type:'other'},{value:'incident',label:'Incidencia',type:'other'}];
+function kindOf(event){const value=event?.activityKind||event?.type||'other',aliases={'Entrenamiento':'training','Partido':'match','Amistoso':'friendly','Partido amistoso':'friendly','Partido de liga':'league','Liga':'league','Torneo':'tournament','Reunión':'meeting','Vacaciones':'holiday','Incidencia':'incident','Evento':'other'};const kind=aliases[value]||value;return kind==='match'?'league':activityKinds.some(k=>k.value===kind)?kind:'other';}
 const activityInfo=event=>activityKinds.find(k=>k.value===kindOf(event));
 function stamp(value){if(!/^\d{4}-\d{2}-\d{2}$/.test(value||''))return NaN;const n=Date.parse(value+'T00:00:00Z');return Number.isFinite(n)&&new Date(n).toISOString().slice(0,10)===value?n:NaN;}
 const date=n=>new Date(n).toISOString().slice(0,10);
@@ -19,13 +19,13 @@ function overlaps(a,b){
 function conflicts(rows,candidate){return rows.filter(e=>e.id!==candidate.id&&overlaps(e,candidate)&&(e.team===candidate.team||(e.place===candidate.place&&(!e.spaceId||!candidate.spaceId||String(e.spaceId)===String(candidate.spaceId)))));}
 function createRepository(storage){
  const key='gg-events-v59';let rows=[];
- try{const saved=JSON.parse(storage.getItem(key)||'[]');if(Array.isArray(saved))rows=saved.map((e,i)=>({...e,id:e.id||'legacy-'+i}));}catch{}
+ try{const saved=JSON.parse(storage.getItem(key)||'[]');if(Array.isArray(saved))rows=saved.map((e,i)=>({...e,...(e.activityKind==='match'?{activityKind:'league'}:{}),id:e.id||'legacy-'+i}));}catch{}
  const clone=rows=>rows.map(e=>({...e}));
  function commit(next){storage.setItem(key,JSON.stringify(next));rows=next;}
  function records(club,seeds=[]){
   if(rows.some(e=>!e.club))commit(rows.map(e=>e.club?e:{...e,club}));
   const local=rows.filter(e=>e.club===club),overridden=new Set(local.map(e=>e.id));
-  return clone([...seeds.filter(e=>!overridden.has(e.id)),...local.filter(e=>!e.deleted)]);
+  return clone([...seeds.filter(e=>!overridden.has(e.id)),...local.filter(e=>!e.deleted)]).map(e=>kindOf(e)==='league'&&e.title==='Partido'?{...e,title:'Partido de liga'}:e);
  }
  function validate(e){
   if(e.activityKind!==undefined&&(!activityKinds.some(k=>k.value===e.activityKind)||activityInfo(e).type!==e.type))throw Error('Revisa el tipo de actividad.');
@@ -41,3 +41,4 @@ function createRepository(storage){
 }
 root.GGScheduleStore={createRepository,expand,conflicts,overlaps,activityKinds,kindOf,activityInfo};
 })(typeof window!=='undefined'?window:globalThis);
+

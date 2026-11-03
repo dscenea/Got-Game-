@@ -23,6 +23,8 @@ function createRepository(storage){
    for(const [sport,name,coach] of extra){const id=sport+' · '+name;if(sports.includes(sport)&&!rows.some(t=>t.id===id||t.sport===sport&&fold(t.name)===fold(name)))rows.push({id,name,sport,coach,demo:true});}
    if(rows.length!==state[club].length)commit(club,rows);
   }
+  if(options.demo&&club==='Logrobasket'&&sports.includes('Baloncesto')&&!state[club].some(t=>t.id==='frb-team-622-2056'))commit(club,[...state[club],{id:'frb-team-622-2056',name:'LOGROBASKET',sport:'Baloncesto',basketFormat:'standard',coach:'Marta Fernández Díaz',demo:false}]);
+  const detached=state[club].map(t=>{if(!t.externalCalendar)return t;const {externalCalendar,...rest}=t;return rest;});if(detached.some((t,i)=>t!==state[club][i]))commit(club,detached);
   const used=new Set(state[club].filter(t=>validColor(t.color)).map(t=>t.color.toLowerCase()));
   const colored=state[club].map((t,i)=>{if(validColor(t.color))return t;const color=colors.find(c=>!used.has(c))||colors[i%colors.length];used.add(color);return {...t,color};});
   if(colored.some((t,i)=>t!==state[club][i]))commit(club,colored);
@@ -46,3 +48,4 @@ function createRepository(storage){
 }
 root.GGTeamStore={createRepository,colors,validColor,colorFor};
 })(typeof window!=='undefined'?window:globalThis);
+

@@ -6,3 +6,13 @@ select[data-gg-picker-native][hidden]{display:none!important}
 .gg-mini-team-activity{display:flex;align-items:center;gap:9px;border-left:3px solid var(--team-color);padding-left:9px}.gg-mini-team-activity .gg-activity-icon{width:26px;height:26px}.gg-mini-team-activity .gg-activity-icon svg{width:21px;height:21px}.gg-new-calendar>[data-add]{background:var(--club-accent,#171717)!important;color:var(--club-accent-text,#fff)!important}.gg-new-calendar .gg-calendar-day-dot{display:flex!important;align-items:center;justify-content:center;gap:1px}#dashboard .gg-new-calendar .gg-calendar-days .gg-calendar-day-dot{display:flex!important}
 
 #ggScheduleForm [hidden]{display:none!important}
+/* Space team identity text consistently on coordinator and coach cards. */
+#ggWorkspace .gg-team-card>b>.gg-team-dot,#coachDashboard .gc-team h3>.gg-team-dot{margin-inline-end:8px;vertical-align:baseline}
+#ggWorkspace .gg-team-card>small,#ggWorkspace .gg-team-card>span.gg-muted{display:block;line-height:1.5}
+#ggWorkspace .gg-team-card>span.gg-muted{margin-top:6px}
+
+/* Team names wrap at spaces; markers stay beside the first line. */
+#ggWorkspace .gg-team-card>b.gg-team-name,#coachDashboard .gc-team-heading h3.gg-team-name{display:flex;align-items:baseline;gap:8px;min-width:0;max-width:100%;overflow-wrap:normal;word-break:normal;hyphens:none}
+#ggWorkspace .gg-team-card>b.gg-team-name>.gg-team-dot,#coachDashboard .gc-team-heading h3.gg-team-name>.gg-team-dot{margin:0;flex:0 0 10px}
+.gg-team-name>.gg-team-name-text{display:block;flex:1 1 0;min-width:0;margin:0;white-space:normal;overflow-wrap:normal;word-break:normal;hyphens:none}
+.gg-team-name-word{display:inline-block;white-space:nowrap}

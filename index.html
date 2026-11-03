@@ -805,11 +805,19 @@ input:focus,select:focus{border-color:var(--yellow);box-shadow:0 0 0 3px #ffc107
 
 <script src="assets/demo-clubs.js?v=2"></script>
 <script src="assets/coach-access.js?v=1"></script>
-<script src="assets/team-store.js?v=4"></script>
-<script src="assets/schedule-store.js?v=2"></script><link rel="stylesheet" href="assets/activity-ui.css?v=2"><script src="assets/activity-ui.js?v=2"></script><script src="assets/schedule-editor.js?v=3"></script><script src="assets/teams-view.js?v=3"></script><script src="assets/facilities-view.js?v=2"></script>
+<script src="assets/team-store.js?v=6"></script>
+<script src="assets/schedule-store.js?v=3"></script><link rel="stylesheet" href="assets/activity-ui.css?v=3"><script src="assets/activity-ui.js?v=3"></script><script src="assets/schedule-editor.js?v=5"></script><script src="assets/teams-view.js?v=3"></script><script src="assets/facilities-view.js?v=2"></script>
 <script src="assets/club-staff.js?v=3"></script>
 <script>
 let selectedRole='', data={};
+// Remove only cached external calendars and their imported events; preserve manual schedules and teams.
+try{
+ localStorage.removeItem('gg-frb-622-2056-v1');
+ localStorage.removeItem('gg-team-calendar-links-v1');
+ const saved=JSON.parse(localStorage.getItem('gg-events-v59')||'[]');
+ if(Array.isArray(saved)){const kept=saved.filter(e=>!['frb-622-2056','linked-calendar'].includes(e.externalSource)&&!String(e.id||'').startsWith('frb-2026-622-'));if(kept.length!==saved.length)localStorage.setItem('gg-events-v59',JSON.stringify(kept));}
+}catch{}
+
 function showLoader(done){
  const loader=document.getElementById('gg-loader');
  loader.classList.add('active'); loader.setAttribute('aria-hidden','false');
@@ -1259,7 +1267,7 @@ window.ggConfirmImport=function(){const arr=teamData(selectedTeam);ggPendingImpo
 window.ggNumber=function(id,input){const n=input.value;if(n&&!/^(\d{1,3})$/.test(n)){input.setCustomValidity('Usa un dorsal entre 0 y 999');input.reportValidity();return}if(n&&teamData(selectedTeam).some((p,i)=>i!==id&&p.number===n)){input.setCustomValidity('Este dorsal ya está asignado');input.reportValidity();return}input.setCustomValidity('');teamData(selectedTeam)[id].number=n;document.getElementById('ggRosterStatus').textContent=save()?'Dorsal guardado.':'No se ha podido guardar el dorsal.'};
 window.ggInfo=function(id){const p=teamData(selectedTeam)[id];dialog.innerHTML='<div class="gg-eyebrow">INFORMACIÓN IMPORTANTE</div><h2>'+esc(p.name)+'</h2><h3>Alergias</h3><p class="gg-muted">'+esc(p.allergies)+'</p><h3>Necesidades especiales</h3><p class="gg-muted">'+esc(p.needs)+'</p><button class="gg-button" onclick="document.getElementById(\'ggPlayerDialog\').close()">Cerrar</button>';dialog.showModal()};
 function monday(){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7)+weekOffset*7);return d}
-function ggDemoEvents(){const start=new Date(2026,8,7);return teams().filter(t=>t.demo).flatMap((t,ti)=>{const rows=ti%2===0?[[0,18],[2,18.5],[4,18],[5,11]]:[[1,19],[3,17.5],[6,12]];return rows.map(([day,hour],i)=>{const d=new Date(start);d.setDate(d.getDate()+day);return {id:'demo-'+t.id+'-'+day,recurring:true,until:'2027-06-30',team:t.id,day,hour,duration:i===rows.length-1?1.5:1,type:i===rows.length-1?'match':'training',date:d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),place:(data.facilities||[]).find(f=>(f.sports||[]).includes(t.sport))?.name||'Instalación por asignar',title:i===rows.length-1?'Partido':'Entrenamiento'}})})}
+function ggDemoEvents(){const start=new Date(2026,8,7);return teams().filter(t=>t.demo).flatMap((t,ti)=>{const rows=ti%2===0?[[0,18],[2,18.5],[4,18],[5,11]]:[[1,19],[3,17.5],[6,12]];return rows.map(([day,hour],i)=>{const d=new Date(start);d.setDate(d.getDate()+day);return {id:'demo-'+t.id+'-'+day,recurring:true,until:'2027-06-30',team:t.id,day,hour,duration:i===rows.length-1?1.5:1,type:i===rows.length-1?'match':'training',date:d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),place:(data.facilities||[]).find(f=>(f.sports||[]).includes(t.sport))?.name||'Instalación por asignar',activityKind:i===rows.length-1?'league':'training',title:i===rows.length-1?'Partido de liga':'Entrenamiento'}})})}
 const scheduleRepository=GGScheduleStore.createRepository(localStorage);
 const scheduleDate=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 function scheduleRecords(){return scheduleRepository.records(clubKey(),ggDemoEvents());}
@@ -1294,7 +1302,7 @@ function renderInlineSchedule(){
  const d=new Date(start);d.setDate(d.getDate()+i);const date=scheduleDate(d),items=rows.filter(e=>e.day===i);
  return '<div class="gg-inline-day"'+(date===scheduleDate(new Date())?' data-today="true"':'')+'><strong>'+day+' <time datetime="'+date+'">'+d.getDate()+'/'+(d.getMonth()+1)+'</time></strong>'+items.map(e=>{
  const label=GGActivityUI.label(e);
- return '<'+(editable?'button type="button"':'div')+' class="gg-inline-event" style="'+ggTeamStyle(e.team)+'"'+(editable?' data-event="'+esc(e.id)+'"':'')+'>'+GGActivityUI.icon(e)+'<b>'+time(e.hour)+' – '+time(e.hour+e.duration)+'</b><span>'+label+'</span><small>'+esc(schedulePlace(e))+'</small><small>'+Math.round(e.duration*60)+' min · '+(e.recurring?'Semanal':'Puntual')+'</small>'+(editable?'<span class="gg-inline-edit-label">Editar actividad →</span>':'')+'</'+(editable?'button':'div')+'>';
+ return '<'+(editable?'button type="button"':'div')+' class="gg-inline-event" style="'+ggTeamStyle(e.team)+'"'+(editable?' data-event="'+esc(e.id)+'"':'')+'>'+GGActivityUI.icon(e)+'<b>'+(e.timePending?'Hora por confirmar':time(e.hour)+(e.durationEstimated?' · FRB':' – '+time(e.hour+e.duration)))+'</b><span>'+esc(e.externalSource?e.title:label)+'</span><small>'+esc(schedulePlace(e))+'</small><small>'+(e.durationEstimated?'Fin orientativo':Math.round(e.duration*60)+' min')+' · '+(e.recurring?'Semanal':'Puntual')+'</small>'+(editable?'<span class="gg-inline-edit-label">'+(e.externalSource?'Ver partido FRB →':'Editar actividad →')+'</span>':'')+'</'+(editable?'button':'div')+'>';
  }).join('')+(!items.length?'<span class="gg-muted">Sin actividad</span>':'')+(editable?'<button type="button" class="gg-inline-day-add" data-date="'+date+'">+ Añadir<span class="gg-sr-only"> actividad el '+day+'</span></button>':'')+'</div>';
  }).join('')+'</div>';
  workspace.append(section);
@@ -2769,9 +2777,10 @@ window.ggRemoveLogoWhiteBackground=async function(src){
 <link rel="stylesheet" href="assets/backgrounds.css?v=2">
 <link rel="stylesheet" href="assets/profile-intro.css?v=6">
 <script src="assets/profile-intro.js?v=6"></script>
-<link rel="stylesheet" href="assets/club-calendar.css?v=7"><script src="assets/club-selectors.js?v=2"></script><script src="assets/club-calendar.js?v=9"></script>
+<link rel="stylesheet" href="assets/club-calendar.css?v=7"><script src="assets/club-selectors.js?v=2"></script><script src="assets/club-calendar.js?v=10"></script>
 <link rel="stylesheet" href="assets/shared-headings.css?v=7"><script src="assets/shared-ui.js?v=5"></script>
 <link rel="stylesheet" href="assets/coach-view.css?v=5">
 <link rel="stylesheet" href="assets/training.css?v=8"><script src="assets/tactical-board.js?v=13"></script><script src="assets/training-documents.js?v=2"></script><script src="assets/training-store.js?v=2"></script><script src="assets/training-documents-ui.js?v=3"></script><script src="assets/training-ui.js?v=5"></script>
-<script src="assets/coach-view.js?v=9"></script>
+<script src="assets/coach-view.js?v=nosync-9"></script>
 <style id="gg-community-inbox-v127">.gg-community-tabs{display:flex;gap:8px;flex-wrap:wrap}#ggInboxList .gg-demo-card{margin:10px 0;border-radius:14px}</style><style id="gg-community-inbox-v128">#gcTabs .active:last-child:nth-child(odd),#gcTabs button:last-child:nth-child(odd){grid-column:1/-1;justify-self:center;width:calc((100% - 16px)/2);min-width:0}@media(max-width:420px){#gcTabs button:last-child:nth-child(odd){width:calc((100% - 12px)/2)}}#ggCommunityInboxList .gg-inbox-thread{display:flex;flex-direction:column;text-align:left;width:100%;gap:5px;margin:10px 0;padding:16px;cursor:pointer}#ggCommunityInboxList .gg-inbox-thread small{color:#777}#ggCommunityInboxList form label{display:block;margin:12px 0}#ggCommunityInboxList .gg-demo-input{display:block;width:100%;box-sizing:border-box;margin-top:6px}#ggCommunityInboxList form{margin-top:14px}</style></body></html>
+
