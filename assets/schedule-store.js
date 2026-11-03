@@ -2,6 +2,9 @@
 (function(root){
 'use strict';
 const DAY=86400000;
+const activityKinds=[{value:'training',label:'Entrenamiento',type:'training'},{value:'friendly',label:'Partido amistoso',type:'match'},{value:'league',label:'Partido de liga',type:'match'},{value:'tournament',label:'Torneo',type:'match'},{value:'match',label:'Partido',type:'match'},{value:'other',label:'Otra actividad',type:'other'},{value:'meeting',label:'Reunión',type:'other'},{value:'holiday',label:'Vacaciones',type:'other'},{value:'incident',label:'Incidencia',type:'other'}];
+function kindOf(event){const value=event?.activityKind||event?.type||'other',aliases={'Entrenamiento':'training','Partido':'match','Amistoso':'friendly','Partido amistoso':'friendly','Partido de liga':'league','Liga':'league','Torneo':'tournament','Reunión':'meeting','Vacaciones':'holiday','Incidencia':'incident','Evento':'other'};return activityKinds.some(k=>k.value===value)?value:aliases[value]||'other';}
+const activityInfo=event=>activityKinds.find(k=>k.value===kindOf(event));
 function stamp(value){if(!/^\d{4}-\d{2}-\d{2}$/.test(value||''))return NaN;const n=Date.parse(value+'T00:00:00Z');return Number.isFinite(n)&&new Date(n).toISOString().slice(0,10)===value?n:NaN;}
 const date=n=>new Date(n).toISOString().slice(0,10);
 function expand(rows,start){const from=stamp(start),end=from+6*DAY;return rows.flatMap(e=>{const origin=stamp(e.date);if(!e.recurring)return origin>=from&&origin<=end?[{...e,day:Math.round((origin-from)/DAY)}]:[];const first=origin+Math.max(0,Math.ceil((from-origin)/(7*DAY)))*7*DAY;return first<=end&&first<=stamp(e.until)?[{...e,date:date(first),day:Math.round((first-from)/DAY)}]:[];});}
@@ -25,6 +28,7 @@ function createRepository(storage){
   return clone([...seeds.filter(e=>!overridden.has(e.id)),...local.filter(e=>!e.deleted)]);
  }
  function validate(e){
+  if(e.activityKind!==undefined&&(!activityKinds.some(k=>k.value===e.activityKind)||activityInfo(e).type!==e.type))throw Error('Revisa el tipo de actividad.');
   if(!e.team||!e.place?.trim()||!Number.isFinite(stamp(e.date)))throw Error('Completa equipo, instalación y fecha válida.');
   if(!Number.isFinite(e.hour)||!Number.isFinite(e.duration)||e.hour<0||e.duration<.25||e.duration>6||e.hour+e.duration>24)throw Error('Revisa la hora y la duración (15–360 minutos, dentro del mismo día).');
   if(e.recurring&&(!Number.isFinite(stamp(e.until))||e.until<e.date))throw Error('La fecha final debe ser igual o posterior a la primera sesión.');
@@ -35,5 +39,5 @@ function createRepository(storage){
   import(club,items){items.forEach(validate);const next=items.map((e,i)=>({...e,club,id:'import-'+Date.now().toString(36)+'-'+i+'-'+Math.random().toString(36).slice(2)}));commit(rows.concat(next));}
  };
 }
-root.GGScheduleStore={createRepository,expand,conflicts,overlaps};
+root.GGScheduleStore={createRepository,expand,conflicts,overlaps,activityKinds,kindOf,activityInfo};
 })(typeof window!=='undefined'?window:globalThis);

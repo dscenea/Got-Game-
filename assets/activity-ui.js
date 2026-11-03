@@ -1,0 +1,22 @@
+/* Shared, code-native activity symbols and team identity. No event owns a copy of its team's colour. */
+(function(root){'use strict';
+ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const paths={training:'<path d="m5 20 5-15h4l5 15ZM3 20h18M8 12h8M6 17h12"/>',friendly:'<path d="m3 8 4-3 4 2 3-2 7 4-3 8-4 3-8-5-3-7ZM7 6l-3 8m15-6-3 8M11 7l-3 4 3 2 3-3 5 5M8 16l3-3m0 5 3-3"/>',league:'<path d="M8 3h8v7a4 4 0 0 1-8 0ZM8 5H4v3a5 5 0 0 0 5 5m7-8h4v3a5 5 0 0 1-5 5M12 14v5m-5 2h10M9 19h6"/>',tournament:'<path d="M3 3h5v5H3ZM3 16h5v5H3ZM16 9h5v6h-5ZM8 5h4v14H8m4-7h4"/>',match:'<circle cx="12" cy="12" r="9"/><path d="m12 7 5 4-2 6H9l-2-6ZM12 3v4M3 10l4 1m13-1-3 1M6 20l3-3m9 3-3-3"/>',other:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 2v6m10-6v6M3 11h18m-12 5h6"/>',meeting:'<circle cx="8" cy="7" r="3"/><path d="M2 21v-4a6 6 0 0 1 12 0v4M17 4a3 3 0 0 1 0 6m1 3a5 5 0 0 1 4 5v3"/>',holiday:'<path d="M4 20h16M11 20l2-13M4 9q1-8 9-4-2-5 5-2m-5 2q8-2 8 5-5-3-8-3-4-1-9 2Z"/>',incident:'<path d="m12 3 10 18H2ZM12 8v6m0 3v1"/>'};
+ const label=e=>root.GGScheduleStore.activityInfo(e).label;
+ function icon(e){const kind=root.GGScheduleStore.kindOf(e);return '<span class="gg-activity-icon" role="img" aria-label="'+esc(label(e))+'" title="'+esc(label(e))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+paths[kind]+'</svg></span>';}
+ const color=t=>root.GGTeamStore.colorFor(t);
+ function ink(hex){const n=hex.slice(1).match(/../g).map(x=>parseInt(x,16));return n.reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0)>170?'#'+n.map(v=>Math.round(v*.48).toString(16).padStart(2,'0')).join(''):hex;}
+ function style(t,fallback){const c=t?color(t):root.GGTeamStore.validColor(fallback)?fallback:'#4b647b';return '--team-color:'+c+';--team-bg:'+c+'16;--team-border:'+c+';--team-icon:'+ink(c)+';--team-ink:#20242a;';}
+ const dot=t=>'<span class="gg-team-dot" style="background:'+color(t)+'" aria-hidden="true"></span>';
+ function enhanceSelect(select,render){
+  if(!select)return;select.hidden=true;select.dataset.ggPickerNative="true";select.required=false;let picker=select.nextElementSibling;
+  if(!picker?.classList.contains('gg-visual-picker')){picker=document.createElement('details');picker.className='gg-visual-picker';select.after(picker);select.addEventListener('change',()=>update());}
+  function update(){const options=[...select.options],chosen=options.find(o=>o.value===select.value)||options[0];picker.innerHTML='<summary aria-haspopup="listbox" aria-label="'+esc((select.getAttribute('aria-label')||'Seleccionar')+' · '+(chosen?.textContent||''))+'"><span>'+ (chosen?render(chosen):'Seleccionar')+'</span><span aria-hidden="true">⌄</span></summary><div role="listbox" aria-label="'+esc(select.getAttribute('aria-label')||'Opciones')+'">'+options.map(o=>'<button type="button" role="option" aria-selected="'+(o.value===select.value)+'" data-value="'+esc(o.value)+'" '+(o.disabled?'disabled':'')+'>'+render(o)+'<span class="gg-picker-check" aria-hidden="true">'+(o.value===select.value?'✓':'')+'</span></button>').join('')+'</div>';
+   picker.querySelectorAll('[data-value]').forEach(b=>b.onclick=()=>{select.value=b.dataset.value;picker.open=false;select.dispatchEvent(new Event('change',{bubbles:true}));picker.querySelector('summary').focus();});
+   picker.onkeydown=e=>{const buttons=[...picker.querySelectorAll('[data-value]:not(:disabled)')],index=buttons.indexOf(document.activeElement);if(e.key==='Escape'){e.preventDefault();e.stopPropagation();picker.open=false;picker.querySelector('summary').focus();}else if(['ArrowDown','ArrowUp','Home','End'].includes(e.key)){e.preventDefault();picker.open=true;buttons[e.key==='Home'?0:e.key==='End'?buttons.length-1:index<0?(e.key==='ArrowUp'?buttons.length-1:0):(index+(e.key==='ArrowUp'?-1:1)+buttons.length)%buttons.length]?.focus();}};
+  }update();return update;
+ }
+ function teamSelect(select,teams){return enhanceSelect(select,o=>{const t=teams().find(t=>String(t.id)===o.value);return (t?dot(t):'')+'<span>'+esc(o.textContent)+'</span>';});}
+ function typeSelect(select){return enhanceSelect(select,o=>icon({activityKind:o.value})+'<span>'+esc(o.textContent)+'</span>');}
+ root.GGActivityUI={esc,label,icon,color,style,dot,teamSelect,typeSelect};
+})(typeof window!=='undefined'?window:globalThis);

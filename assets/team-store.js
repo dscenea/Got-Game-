@@ -1,6 +1,9 @@
 /* Club-scoped team catalogue. Roster and calendar identifiers remain stable on edits. */
 (function(root){
 'use strict';
+const colors=['#b42338','#1d5cab','#14806a','#8050a0','#ad5b0b','#4b647b','#a43478','#5c6b1d'];
+const validColor=value=>/^#[0-9a-f]{6}$/i.test(value||'');
+function colorFor(team){if(validColor(team?.color))return team.color;let hash=0;for(const c of String(team?.id||team?.name||''))hash=(hash*31+c.charCodeAt(0))>>>0;return colors[hash%colors.length];}
 function createRepository(storage){
  const key='gg-team-catalog-v1';let state={};
  try{const saved=JSON.parse(storage.getItem(key)||'{}');if(saved&&typeof saved==='object'&&!Array.isArray(saved))state=saved}catch{}
@@ -20,6 +23,9 @@ function createRepository(storage){
    for(const [sport,name,coach] of extra){const id=sport+' · '+name;if(sports.includes(sport)&&!rows.some(t=>t.id===id||t.sport===sport&&fold(t.name)===fold(name)))rows.push({id,name,sport,coach,demo:true});}
    if(rows.length!==state[club].length)commit(club,rows);
   }
+  const used=new Set(state[club].filter(t=>validColor(t.color)).map(t=>t.color.toLowerCase()));
+  const colored=state[club].map((t,i)=>{if(validColor(t.color))return t;const color=colors.find(c=>!used.has(c))||colors[i%colors.length];used.add(color);return {...t,color};});
+  if(colored.some((t,i)=>t!==state[club][i]))commit(club,colored);
   return state[club].filter(t=>sports.includes(t.sport)).map(t=>({...t}));
  }
  function validate(club,sports,input,id){
@@ -29,13 +35,14 @@ function createRepository(storage){
   if(coach.length>80)throw Error('El nombre del entrenador no puede superar los 80 caracteres.');
   if((state[club]||[]).some(t=>t.id!==id&&t.sport===sport&&fold(t.name)===fold(name)))throw Error('Ya existe un equipo con ese nombre en este deporte.');
   if(input.basketFormat!==undefined&&!['auto','mini','standard'].includes(input.basketFormat))throw Error('Selecciona una modalidad de baloncesto válida.');
-  return {name,coach,sport,...(sport==='Baloncesto'&&input.basketFormat!==undefined?{basketFormat:input.basketFormat}:{})};
+  if(input.color!==undefined&&!validColor(input.color))throw Error('Selecciona un color de equipo válido.');
+  return {name,coach,sport,...(input.color!==undefined?{color:input.color.toLowerCase()}:{}),...(sport==='Baloncesto'&&input.basketFormat!==undefined?{basketFormat:input.basketFormat}:{})};
  }
  return {
   list:ensure,
-  create(club,sports,input){const values=validate(club,sports,input);const team={...values,id:'gg-team-'+(root.crypto?.randomUUID?.()||Date.now().toString(36)+'-'+Math.random().toString(36).slice(2)),demo:false};commit(club,[...(state[club]||[]),team]);return {...team}},
+  create(club,sports,input){const values=validate(club,sports,input);const team={...values,color:values.color||colors.find(c=>!(state[club]||[]).some(t=>t.color===c))||colors[(state[club]||[]).length%colors.length],id:'gg-team-'+(root.crypto?.randomUUID?.()||Date.now().toString(36)+'-'+Math.random().toString(36).slice(2)),demo:false};commit(club,[...(state[club]||[]),team]);return {...team}},
   update(club,sports,id,input){const rows=state[club]||[],old=rows.find(t=>t.id===id);if(!old)throw Error('El equipo ya no está disponible.');if(input.sport!==old.sport)throw Error('El deporte de un equipo creado se conserva para mantener su plantilla e historial.');const values=validate(club,sports,input,id);const team={...old,...values};commit(club,rows.map(t=>t.id===id?team:t));return {...team}}
  };
 }
-root.GGTeamStore={createRepository};
+root.GGTeamStore={createRepository,colors,validColor,colorFor};
 })(typeof window!=='undefined'?window:globalThis);
